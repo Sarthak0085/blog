@@ -8,8 +8,8 @@ import { usePathname } from "next/navigation";
 export const Navbar = () => {
   const pathname = usePathname();
   return (
-    <nav className="bg-secondary flex justify-between items-center p-4 rounded-xl w-[600px] shadow-sm">
-      <div className="flex gap-x-2">
+    <aside className="bg-secondary flex flex-col justify-between items-center rounded-xl w-auto shadow-sm">
+      <div className="flex flex-col gap-y-2">
         <Button asChild variant={pathname === "/admin" ? "default" : "outline"}>
           <Link href={"/admin"}>Admin</Link>
         </Button>
@@ -33,6 +33,6 @@ export const Navbar = () => {
         </Button>
       </div>
       <UserButton />
-    </nav>
+    </aside>
   );
 };

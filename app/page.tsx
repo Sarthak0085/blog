@@ -1,4 +1,5 @@
 import LoginButton from "@/components/auth/login-button";
+import { Blogs } from "@/components/blog/blogs";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Poppins } from "next/font/google";
@@ -30,6 +31,7 @@ export default function Home() {
             </Button>
           </LoginButton>
         </div>
+        <Blogs />
       </div>
     </div>
   );

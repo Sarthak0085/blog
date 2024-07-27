@@ -49,3 +49,15 @@ export const SettingsSchema = z.object({
     message: "New Password is required",
     path: ["newPassword"]
 });
+
+export const AddBlogSchema = z.object({
+    title: z.string().min(3, { message: "Title must be bigger than 3 letters" }),
+    slug: z.string().min(3, { message: "Slug must be bigger than 3 letters" }),
+    shortSummary: z.string()
+        .min(100, { message: "Short Summary must be between 100 to 300 characters" })
+        .max(300, { message: "Short Summary must be between 100 to 300 characters" }),
+    content: z.string(),
+    category: z.string().min(1, "Category is required"),
+    tags: z.optional(z.string().min(1, "Tags are required")),
+    status: z.string(),
+});

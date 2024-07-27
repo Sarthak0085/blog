@@ -7,11 +7,15 @@ export default function ProtectedLayout({
 }) {
   return (
     <div
-      className="h-full w-full py-4 flex flex-col gap-y-10 items-center justify-center 
+      className="min-h-[100vh] w-full p-4 flex gap-x-10 
       bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-400 to-blue-800"
     >
-      <Navbar />
-      {children}
+      <div className="overflow-hidden min-h-[900px] min-w-[200px]">
+        <Navbar />
+      </div>
+      <div className="flex items-center min-w-[100vh-200px] px-auto">
+        {children}
+      </div>
     </div>
   );
 }
