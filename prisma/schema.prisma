@@ -25,10 +25,15 @@ model User {
   emailVerified         DateTime?              @map("email_verified")
   image                 String?
   password              String?
+  bio                   String?
   role                  UserRole               @default(USER)
   accounts              Account[]
   isTwoFactorEnabled    Boolean                @default(false)
   TwoFactorConfirmation TwoFactorConfirmation?
+  blogs                 Blog[]
+  likes                 Like[]
+  comments              Comment[]
+  SavedPost             SavedPost[]
 }
 
 model Account {
@@ -84,4 +89,71 @@ model TwoFactorConfirmation {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId])
+}
+
+model Blog {
+  id           String     @id @default(cuid())
+  title        String     @unique
+  slug         String     @unique
+  content      String
+  shortSummary String
+  categoryId   String
+  status       BlogStatus @default(DRAFT)
+  tags         String[]
+  views        Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  Comment      Comment[]
+  Like         Like[]
+
+  category Category @relation(fields: [categoryId], references: [id])
+
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String?
+
+  SavedPost SavedPost[]
+}
+
+enum BlogStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model Category {
+  id    String @id @default(cuid())
+  name  String @unique
+  blogs Blog[]
+}
+
+model Like {
+  id     String @id @default(cuid())
+  userId String
+  blogId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  blog Blog @relation(fields: [blogId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, blogId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  userId    String
+  blogId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  blog Blog @relation(fields: [blogId], references: [id], onDelete: Cascade)
+}
+
+model SavedPost {
+  id     String @id @default(cuid())
+  userId String
+  blogId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  blog Blog @relation(fields: [blogId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, blogId]) // Ensure a user can only save a blog post once
 }

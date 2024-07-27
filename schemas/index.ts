@@ -1,4 +1,4 @@
-import { UserRole } from "@prisma/client";
+import { BlogStatus, UserRole } from "@prisma/client";
 import * as z from "zod";
 
 export const LoginSchema = z.object({
@@ -58,6 +58,10 @@ export const AddBlogSchema = z.object({
         .max(300, { message: "Short Summary must be between 100 to 300 characters" }),
     content: z.string(),
     category: z.string().min(1, "Category is required"),
-    tags: z.optional(z.string().min(1, "Tags are required")),
-    status: z.string(),
+    tags: z.optional(z.string()),
+    status: z.enum([BlogStatus.DRAFT, BlogStatus.PUBLISHED]),
+});
+
+export const CategorySchema = z.object({
+    name: z.string().min(2, "Category name is required.")
 });

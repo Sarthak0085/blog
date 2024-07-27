@@ -27,6 +27,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { BlogStatus } from "@prisma/client";
+import { createBlog } from "@/actions/create-blog";
+import { toast } from "sonner";
 
 export const AddBlogForm = () => {
   // const [error, setError] = useStat<string | undefined>("");
@@ -43,9 +46,8 @@ export const AddBlogForm = () => {
       content: "",
       category: "",
       shortSummary: "",
-
       tags: "",
-      status: "",
+      status: BlogStatus.DRAFT,
     },
   });
 
@@ -60,18 +62,30 @@ export const AddBlogForm = () => {
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const title = event.target.value;
-
     form.setValue("title", title);
     form.setValue("slug", generateSlug(title));
-  };
-
-  const onSubmit = (values: z.infer<typeof AddBlogSchema>) => {
-    console.log("values :", values);
   };
 
   const changeHandleContent = (e: any) => {
     setContent(e.text);
     form.setValue("content", content);
+  };
+
+  const onSubmit = (values: z.infer<typeof AddBlogSchema>) => {
+    console.log("values :", values);
+    startTransition(() => {
+      createBlog(values)
+        .then((data) => {
+          if (data.success) {
+            toast.success(data.success);
+          } else {
+            toast.error(data?.error);
+          }
+        })
+        .catch(() =>
+          toast.error("Something went wrong. Please try again after sometime.")
+        );
+    });
   };
 
   return (
@@ -246,7 +260,7 @@ export const AddBlogForm = () => {
                       <Input
                         {...field}
                         disabled={isPending}
-                        placeholder="React, NextJs, New App"
+                        placeholder="Enter comma separated tag (Eg :- React, NextJs, Javascript)"
                         type="text"
                       />
                     </FormControl>
@@ -272,8 +286,12 @@ export const AddBlogForm = () => {
                           <SelectValue placeholder="Select a Role" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value={"Draft"}>Draft</SelectItem>
-                          <SelectItem value={"Publish"}>Publish</SelectItem>
+                          <SelectItem value={BlogStatus.DRAFT}>
+                            DRAFT
+                          </SelectItem>
+                          <SelectItem value={BlogStatus.PUBLISHED}>
+                            PUBLISHED
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </FormControl>

@@ -64,7 +64,7 @@ To create a link, use the following syntax:
 
 To add an image, use this syntax:
 
-![Alt Text](https://example.com/image.jpg)
+![Alt Text]()
 
 ### Code Blocks
 
@@ -123,7 +123,7 @@ export const BlogDetails = ({ slug }: { slug: string | string[] }) => {
   //   }, [slug]);
 
   // markdown code highlighter
-  const Code = ({ node, inline, className, children, ...props }) => {
+  const Code = ({ node, inline, className, children, ...props }: any) => {
     const match = /language-(\w+)/.exec(className || "");
 
     const handleCopy = () => {
@@ -138,7 +138,7 @@ export const BlogDetails = ({ slug }: { slug: string | string[] }) => {
       return <code>{inline}</code>;
     } else if (match) {
       return (
-        <div className="relative">
+        <div className="relative my-2">
           <SyntaxHighlighter
             style={a11yDark}
             language={match[1]}
@@ -156,7 +156,7 @@ export const BlogDetails = ({ slug }: { slug: string | string[] }) => {
             {String(children).replace(/\n$/, "")}
           </SyntaxHighlighter>
           <button
-            className="absolute top-0 right-0 z-1 bg-[#3d3d3d] text-white p-10"
+            className="absolute top-0 right-0 z-1 bg-[#3d3d3d] text-white p-3"
             onClick={handleCopy}
             aria-label={"Copy Button"}
             title={"Copy Button"}
@@ -167,7 +167,7 @@ export const BlogDetails = ({ slug }: { slug: string | string[] }) => {
       );
     } else {
       return (
-        <code className="bg-[#3d3e3e] text-white" {...props}>
+        <code className="bg-[#3d3e3e] text-white px-2 py-1" {...props}>
           {children}
         </code>
       );
@@ -180,24 +180,29 @@ export const BlogDetails = ({ slug }: { slug: string | string[] }) => {
     <div
       style={{
         backgroundImage: `url(${backgroundImageUrl})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        height: "100vh",
-        width: "100%",
       }}
+      className="relative bg-cover bg-center min-h-screen w-full bg-fixed flex justify-center items-center"
     >
-      <div className="w-full md:w-[70%] lg:w-[60%] xl:w-[50%] flex flex-col space-y-4 items-center justify-center px-10 py-10">
+      <div className="relative w-full md:w-[70%] lg:w-[60%] xl:w-[50%] flex flex-col space-y-4 px-10 py-10">
         <div>
-          <Breadcrumb>
+          <Breadcrumb className="text-start">
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                <BreadcrumbLink
+                  href="/"
+                  className="text-[purple] font-semibold"
+                >
+                  Home
+                </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator>
                 <SlashIcon />
               </BreadcrumbSeparator>
               <BreadcrumbItem>
-                <BreadcrumbLink href={`/blogs?category=${data.category}`}>
+                <BreadcrumbLink
+                  href={`/blogs?category=${data.category}`}
+                  className="text-[purple] font-semibold"
+                >
                   {data.category}
                 </BreadcrumbLink>
               </BreadcrumbItem>
@@ -205,7 +210,10 @@ export const BlogDetails = ({ slug }: { slug: string | string[] }) => {
                 <SlashIcon />
               </BreadcrumbSeparator>
               <BreadcrumbItem>
-                <BreadcrumbLink href={`/blog/${slug}`}>
+                <BreadcrumbLink
+                  href={`/blog/${slug}`}
+                  className="text-[purple] font-semibold"
+                >
                   {data.slug}
                 </BreadcrumbLink>
               </BreadcrumbItem>
@@ -219,6 +227,7 @@ export const BlogDetails = ({ slug }: { slug: string | string[] }) => {
           author={data.author.name}
           date={data.createdAt}
           content={data.content}
+          category={data.category}
         />
         <div className="text-muted-foreground">{data.shortSummary}</div>
         <Image
@@ -229,28 +238,27 @@ export const BlogDetails = ({ slug }: { slug: string | string[] }) => {
           height={500}
         />
 
-        <div className="text-muted-foreground">
+        <div className="text-black">
           <ReactMarkdown
             remarkPlugins={[RemarkGfm]}
-            // components={{ code: Code as any, h1: "h1", h2: "h2", h3: "h3" }}
             components={{
               h1: ({ children }) => (
-                <h1 className="text-[40px] font-bold">{children}</h1>
+                <h1 className="text-[26px] font-bold py-1">{children}</h1>
               ),
               h2: ({ children }) => (
-                <h2 className="text-[32px] font-semibold">{children}</h2>
+                <h2 className="text-[24px] font-semibold py-1">{children}</h2>
               ),
               h3: ({ children }) => (
-                <h3 className="text-[24px] font-semibold">{children}</h3>
+                <h3 className="text-[22px] font-semibold py-1">{children}</h3>
               ),
               h4: ({ children }) => (
-                <h4 className="text-[20px] font-normal">{children}</h4>
+                <h4 className="text-[20px] font-normal py-1">{children}</h4>
               ),
               h5: ({ children }) => (
-                <h5 className="text-[18px] font-normal">{children}</h5>
+                <h5 className="text-[18px] font-normal py-1">{children}</h5>
               ),
               h6: ({ children }) => (
-                <h6 className="text-[16px] font-normal">{children}</h6>
+                <h6 className="text-[16px] font-normal py-1">{children}</h6>
               ),
               p: ({ children }) => (
                 <p className="text-[16px] font-normal leading-normal">
@@ -258,10 +266,14 @@ export const BlogDetails = ({ slug }: { slug: string | string[] }) => {
                 </p>
               ),
               ul: ({ children }) => (
-                <ul className="my-[1rem] mx-0 pl-3 list-disc">{children}</ul>
+                <ul className="my-[1rem] mx-0 pl-3 list-disc py-1">
+                  {children}
+                </ul>
               ),
               ol: ({ children }) => (
-                <ol className="my-[1rem] mx-0 pl-3 list-decimal">{children}</ol>
+                <ol className="my-[1rem] mx-0 pl-3 list-decimal py-1">
+                  {children}
+                </ol>
               ),
               li: ({ children }) => (
                 <li className="text-[16px] font-normal">{children}</li>
@@ -278,11 +290,14 @@ export const BlogDetails = ({ slug }: { slug: string | string[] }) => {
               ),
               img: ({ src, alt }) => (
                 <Image
-                  src={src || ""}
+                  src={
+                    src ??
+                    "https://imgs.search.brave.com/bEdhPwVY999DtrOvmIRnmmMKJrDrxNNcMabCyDXr8Ss/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/cHVibGljZG9tYWlu/cGljdHVyZXMubmV0/L3BpY3R1cmVzLzI4/MDAwMC92ZWxrYS9u/b3QtZm91bmQtaW1h/Z2UtMTUzODM4NjQ3/ODdsdS5qcGc"
+                  }
                   alt={alt || "image"}
                   width={"100"}
                   height={"100"}
-                  className="w-full h-auto"
+                  className="w-full h-auto py-2 rounded-md"
                 />
               ),
               div: ({ children }) => (
