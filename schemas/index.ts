@@ -65,12 +65,43 @@ export const AddBlogSchema = z.object({
 
 // export type Blog = z.infer<typeof AddBlogSchema>
 
-export const CategorySchema = z.object({
+export const CreateCategorySchema = z.object({
     name: z.string().min(2, "Category name is required.")
 });
 
+export type CreateCategory = z.infer<typeof CreateCategorySchema>
+
 export const UpdateCategorySchema = z.object({
-    id: z.string().min(1, "Category Id is required"),
+    categoryId: z.string().min(1, "Category Id is required"),
     name: z.string().min(2, "Category name is required."),
     userId: z.string().min(1, "UserId is required")
+});
+
+export type UpdateCategory = z.infer<typeof UpdateCategorySchema>
+
+export const DeleteCategorySchema = z.object({
+    categoryId: z.string().min(1, "Category id is required."),
+    userId: z.string().min(1, "UserId is required")
+});
+
+
+export const DeleteUserSchema = z.object({
+    userId: z.string().min(1, "UserId is required."),
+});
+
+export const BlockUserSchema = z.object({
+    userId: z.string().min(1, "UserId is required."),
+    isBlocked: z.boolean(),
+});
+
+export const LikeSchema = z.object({
+    blogId: z.string().min(1, "BlogId is required"),
+});
+
+export const DislikeSchema = z.object({
+    blogId: z.string().min(1, "BlogId is required"),
+});
+
+export const FavouriteSchema = z.object({
+    blogId: z.string().min(1, "BlogId is required"),
 });

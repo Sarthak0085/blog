@@ -72,6 +72,7 @@ export const {
                 session.user.name = token.name;
                 session.user.email = token.email as string;
                 session.user.OAuth = token.OAuth as boolean;
+                session.user.isBlocked = token.isBlocked as boolean;
             }
 
             return session
@@ -90,6 +91,7 @@ export const {
             token.isTwoFactorEnabled = existingUser?.isTwoFactorEnabled;
             token.name = existingUser.name;
             token.email = existingUser.email;
+            token.isBlocked = existingUser.isBlocked;
 
             return token;
         }

@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@//components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { CategoryModal } from "./category-modal";
 
 interface BlogsTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -31,7 +32,9 @@ export function BlogTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem onClick={handleEditCategory}>Edit</DropdownMenuItem>
+        <CategoryModal asChild isUpdate={true} initialValues={}>
+          <DropdownMenuItem>Edit</DropdownMenuItem>
+        </CategoryModal>
         <DropdownMenuItem>Make a copy</DropdownMenuItem>
         <DropdownMenuItem>Favorite</DropdownMenuItem>
         <DropdownMenuSeparator />
