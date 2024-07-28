@@ -15,11 +15,19 @@ export const getBlogByTitle = async (title: string) => {
 
 export const getBlogBySlug = async (slug: string) => {
     try {
-        const blog = await db.blog.findUnique({
+        const blog = await db.blog.findFirst({
             where: {
-                slug
+                slug: slug
+            },
+            include: {
+                category: true,
+                likes: true,
+                comments: true,
+                user: true,
             }
         });
+
+        console.log(blog);
 
         return blog;
     } catch (error) {

@@ -14,7 +14,7 @@ import { AddBlogSchema } from "@/schemas";
 import * as z from "zod";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useState, useTransition } from "react";
+import { ChangeEvent, useState, useTransition } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "../ui/button";
 import MarkdownEditor from "react-markdown-editor-lite";
@@ -28,13 +28,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { BlogStatus } from "@prisma/client";
-import { createBlog } from "@/actions/create-blog";
+import { createBlog } from "@/actions/blog-actions";
 import { toast } from "sonner";
+import Image from "next/image";
+import { redirect, useRouter } from "next/navigation";
 
 export const AddBlogForm = () => {
-  // const [error, setError] = useStat<string | undefined>("");
-  // const [success, setSuccess] = useState<string | undefined>("");
-  // const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [content, setContent] = useState("");
 
@@ -47,6 +46,7 @@ export const AddBlogForm = () => {
       category: "",
       shortSummary: "",
       tags: "",
+      image: "",
       status: BlogStatus.DRAFT,
     },
   });
@@ -71,27 +71,49 @@ export const AddBlogForm = () => {
     form.setValue("content", content);
   };
 
+  const router = useRouter();
+
   const onSubmit = (values: z.infer<typeof AddBlogSchema>) => {
     console.log("values :", values);
     startTransition(() => {
       createBlog(values)
         .then((data) => {
-          if (data.success) {
+          // Check for success and handle accordingly
+          if (data?.success) {
             toast.success(data.success);
-          } else {
-            toast.error(data?.error);
+            router.push("/admin/get-blogs");
+          }
+          if (data?.error) {
+            toast.error(
+              data?.error || "An error occurred while creating the blog."
+            );
           }
         })
-        .catch(() =>
-          toast.error("Something went wrong. Please try again after sometime.")
-        );
+        .catch((error) => {
+          console.error("Error creating blog:", error);
+          toast.error("Something went wrong. Please try again after sometime.");
+        });
     });
   };
 
+  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        form.setValue("image", reader.result as string);
+      };
+      reader.readAsDataURL(file); // Convert the file to base64
+      reader.onerror = (error) => {
+        console.error("Error converting file to base64:", error); // Logs an error if the conversion fails
+      };
+    }
+  };
+
   return (
-    <Card className="w-full min-h-full max-w-[900px] bg-transparent">
+    <Card>
       <CardHeader>
-        <p className="text-2xl font-semibold text-center">Add New Blog</p>
+        <h2 className="text-2xl font-semibold text-center">Add New Blog</h2>
       </CardHeader>
       <CardContent className="space-y-4">
         <Form {...form}>
@@ -295,6 +317,34 @@ export const AddBlogForm = () => {
                         </SelectContent>
                       </Select>
                     </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div>
+              <FormField
+                control={form.control}
+                name="image"
+                render={(field) => (
+                  <FormItem>
+                    <FormLabel>Image</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange as any}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                    {field.field.value && (
+                      <Image
+                        src={field.field.value}
+                        alt="Image Preview"
+                        className="mt-2 w-full h-auto"
+                        width={400}
+                        height={400}
+                      />
+                    )}
                   </FormItem>
                 )}
               />

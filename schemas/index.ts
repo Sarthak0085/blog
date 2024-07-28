@@ -59,9 +59,18 @@ export const AddBlogSchema = z.object({
     content: z.string(),
     category: z.string().min(1, "Category is required"),
     tags: z.optional(z.string()),
+    image: z.string(),
     status: z.enum([BlogStatus.DRAFT, BlogStatus.PUBLISHED]),
 });
 
+// export type Blog = z.infer<typeof AddBlogSchema>
+
 export const CategorySchema = z.object({
     name: z.string().min(2, "Category name is required.")
+});
+
+export const UpdateCategorySchema = z.object({
+    id: z.string().min(1, "Category Id is required"),
+    name: z.string().min(2, "Category name is required."),
+    userId: z.string().min(1, "UserId is required")
 });

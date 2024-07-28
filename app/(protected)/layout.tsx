@@ -6,16 +6,13 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div
-      className="min-h-[100vh] w-full p-4 flex gap-x-10 
-      bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-400 to-blue-800"
-    >
-      <div className="overflow-hidden min-h-[900px] min-w-[200px]">
+    <div className="flex w-full min-h-screen space-x-4 py-5">
+      <div className="fixed hidden lg:block w-[200px] max-w-[400px] top-5 left-3 overflow-y-auto">
         <Navbar />
       </div>
-      <div className="flex items-center min-w-[100vh-200px] px-auto">
+      <main className="w-full pl-[200px] flex items-center my-5 justify-center">
         {children}
-      </div>
+      </main>
     </div>
   );
 }

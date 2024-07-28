@@ -8,9 +8,13 @@ import { usePathname } from "next/navigation";
 export const Navbar = () => {
   const pathname = usePathname();
   return (
-    <aside className="bg-secondary flex flex-col justify-between items-center rounded-xl w-auto shadow-sm">
-      <div className="flex flex-col gap-y-2">
-        <Button asChild variant={pathname === "/admin" ? "default" : "outline"}>
+    <aside className="bg-secondary py-10 flex flex-col justify-between items-center rounded-xl shadow-sm">
+      <div className="flex flex-col gap-y-5">
+        <Button
+          className="w-full"
+          asChild
+          variant={pathname === "/admin" ? "default" : "outline"}
+        >
           <Link href={"/admin"}>Admin</Link>
         </Button>
         <Button
@@ -32,7 +36,9 @@ export const Navbar = () => {
           <Link href={"/settings"}>Settings</Link>
         </Button>
       </div>
-      <UserButton />
+      <div className="pt-5">
+        <UserButton />
+      </div>
     </aside>
   );
 };

@@ -1,8 +1,8 @@
 interface Props {
-  author: string;
-  date: string | Date;
-  content: string;
-  category: string;
+  author: string | undefined | null;
+  date: string | Date | undefined;
+  content: string | undefined;
+  category: string | undefined;
 }
 
 export const AuthorAndDateDisplay = ({
@@ -13,7 +13,7 @@ export const AuthorAndDateDisplay = ({
 }: Props) => {
   function ReadTime(content: string) {
     const wordsPerMinute = 200;
-    const words = content.trim().split(/\s+/).length;
+    const words = content?.trim().split(/\s+/).length;
     const readTime = Math.ceil(words / wordsPerMinute);
     return readTime;
   }
@@ -29,8 +29,8 @@ export const AuthorAndDateDisplay = ({
   return (
     <div className="w-full text-sm text-gray-600 text-nowrap">
       <span>By {author}</span> • <span>{category}</span> •{" "}
-      <span>{formatDateToUS(date)}</span> •{" "}
-      <span>{ReadTime(content)} min Read</span>
+      <span>{formatDateToUS(date || new Date())}</span> •{" "}
+      <span>{ReadTime(content || "")} min Read</span>
     </div>
   );
 };
