@@ -247,6 +247,8 @@ export const getBlogDetailsBySlug = async (slug: string) => {
                 category: true,
                 likes: true,
                 comments: true,
+                dislikes: true,
+                favourites: true,
             }
         });
 

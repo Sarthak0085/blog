@@ -17,6 +17,16 @@ export type ExtendBlog = Blog & {
         userId: string;
         blogId: string;
     }[];
+    dislikes: {
+        id: string;
+        userId: string;
+        blogId: string;
+    }[];
+    favourites: {
+        id: string;
+        userId: string;
+        blogId: string;
+    }[];
     user: {
         id: string;
         name: string | null;

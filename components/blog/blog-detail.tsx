@@ -1,44 +1,111 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { AuthorAndDateDisplay } from "./author-date-display";
-import { toast } from "sonner";
 import { ExtendBlog } from "@/utils/types";
-import {
-  getBlogDetailsBySlug,
-  incrementViewCount,
-} from "@/actions/blog-actions";
+import { incrementViewCount } from "@/actions/blog-actions";
 import Link from "next/link";
-import { PulseLoader } from "react-spinners";
 import { MarkdownContent } from "@/components/blog/markdown-content";
 import { BlogBreadCrumb } from "@/components/blog/blog-bread-crumb";
-import { Button } from "@/components/ui/button";
-import { FaRegThumbsUp } from "react-icons/fa";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { Features } from "./features";
+import * as z from "zod";
+import { likeBlog } from "@/actions/like-blog";
+import { toast } from "sonner";
+import { DislikeSchema, FavouriteSchema, LikeSchema } from "@/schemas";
 
-export const BlogDetails = ({ slug }: { slug: string }) => {
-  const [data, setData] = useState<ExtendBlog | null>(null);
-  const [loading, setLoading] = useState(true);
+export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
+  const user = useCurrentUser();
+  const [isPending, startTransition] = useTransition();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getBlogDetailsBySlug(slug as string);
-        if (!data) {
-          toast.error("Blog post not found");
-        } else {
-          setData(data?.data as ExtendBlog);
-        }
-      } catch (error) {
-        console.error("Error fetching blog data:", error);
-        toast.error("Error while fetching data");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const [like, setLike] = useState({
+    isLiked: !!data?.likes.find((item) => item.userId === user?.id),
+    count: data?.likes?.length,
+  });
+  const [dislike, setDislike] = useState({
+    isDisliked: !!data?.dislikes.find((item) => item.userId === user?.id),
+    count: data?.dislikes?.length,
+  });
+  const [favourites, setFavourites] = useState({
+    isFavourite: !!data?.favourites.find((item) => item.userId === user?.id),
+    count: data?.favourites?.length,
+  });
 
-    fetchData();
-  }, []);
+  const handleLike = (values: z.infer<typeof LikeSchema>) => {
+    const prevLike = like;
+    setLike((prev) => ({
+      isLiked: !prev.isLiked,
+      count: (prev.count || 0) + 1,
+    }));
+
+    startTransition(() => {
+      likeBlog(values)
+        .then((data) => {
+          if (data?.success) {
+            toast.success("Blog liked Successfully");
+          }
+          if (data?.error) {
+            setLike(prevLike);
+            toast.error(data?.error);
+          }
+        })
+        .catch((error) => {
+          setLike(prevLike);
+          toast.error(error);
+        });
+    });
+  };
+
+  const handleDislike = (values: z.infer<typeof DislikeSchema>) => {
+    const prevDislike = dislike;
+    setDislike((prev) => ({
+      isDisliked: !prev.isDisliked,
+      count: (prev.count || 0) + 1,
+    }));
+
+    startTransition(() => {
+      likeBlog(values)
+        .then((data) => {
+          if (data?.success) {
+            toast.success("Blog liked Successfully");
+          }
+          if (data?.error) {
+            setDislike(prevDislike);
+            toast.error(data?.error);
+          }
+        })
+        .catch((error) => {
+          setDislike(prevDislike);
+          toast.error(error);
+        });
+    });
+  };
+
+  const toggleFavourite = (values: z.infer<typeof FavouriteSchema>) => {
+    const prevFav = favourites;
+    setFavourites((prev) => ({
+      isFavourite: !prev.isFavourite,
+      count: (prev.count || 0) + 1,
+    }));
+
+    startTransition(() => {
+      likeBlog(values)
+        .then((data) => {
+          if (data?.success) {
+            toast.success(data?.success);
+          }
+          if (data?.error) {
+            setFavourites(prevFav);
+            toast.error(data?.error);
+          }
+        })
+        .catch((error) => {
+          setFavourites(prevFav);
+          toast.error(error);
+        });
+    });
+  };
 
   useEffect(() => {
     const incrementViews = async () => {
@@ -54,13 +121,6 @@ export const BlogDetails = ({ slug }: { slug: string }) => {
   const backgroundImageUrl =
     "https://tailwindcss.com/_next/static/media/docs@30.8b9a76a2.avif";
 
-  if (loading) {
-    return (
-      <div className="w-full h-[100vh] flex items-center justify-center text-blue-600">
-        <PulseLoader margin={2} size={20} />
-      </div>
-    );
-  }
   return (
     <div
       style={{
@@ -70,10 +130,7 @@ export const BlogDetails = ({ slug }: { slug: string }) => {
     >
       <div className="relative w-full md:w-[75%] lg:w-[65%] xl:w-[55%] flex flex-col space-y-4 px-10 py-10">
         <div>
-          <BlogBreadCrumb
-            category={data?.category?.name}
-            slug={slug || data?.slug}
-          />
+          <BlogBreadCrumb category={data?.category?.name} slug={data?.slug} />
         </div>
         <div className="flex space-x-4">
           {data?.tags.map((item, index) => (
@@ -94,6 +151,16 @@ export const BlogDetails = ({ slug }: { slug: string }) => {
           date={data?.createdAt}
           content={data?.content}
           category={data?.category?.name}
+        />
+        <Features
+          like={like}
+          dislike={dislike}
+          favourites={favourites}
+          handleLike={handleLike}
+          handleDislike={handleDislike}
+          toggleFavourite={toggleFavourite}
+          isPending={isPending}
+          data={data}
         />
         <div className="text-muted-foreground bold">{data?.shortSummary}</div>
         <Image
