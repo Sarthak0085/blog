@@ -13,6 +13,8 @@ import Link from "next/link";
 import { PulseLoader } from "react-spinners";
 import { MarkdownContent } from "@/components/blog/markdown-content";
 import { BlogBreadCrumb } from "@/components/blog/blog-bread-crumb";
+import { Button } from "@/components/ui/button";
+import { FaRegThumbsUp } from "react-icons/fa";
 
 export const BlogDetails = ({ slug }: { slug: string }) => {
   const [data, setData] = useState<ExtendBlog | null>(null);
@@ -47,7 +49,7 @@ export const BlogDetails = ({ slug }: { slug: string }) => {
     };
 
     incrementViews();
-  }, [data?.id]);
+  }, [data]);
 
   const backgroundImageUrl =
     "https://tailwindcss.com/_next/static/media/docs@30.8b9a76a2.avif";
@@ -93,7 +95,7 @@ export const BlogDetails = ({ slug }: { slug: string }) => {
           content={data?.content}
           category={data?.category?.name}
         />
-        <div className="text-muted-foreground">{data?.shortSummary}</div>
+        <div className="text-muted-foreground bold">{data?.shortSummary}</div>
         <Image
           src={data?.imageUrl || ""}
           alt={`image of :- ${data?.slug}`}

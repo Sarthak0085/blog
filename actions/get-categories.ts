@@ -4,7 +4,11 @@ import { db } from "@/lib/db"
 
 export const getAllCategories = async () => {
     try {
-        const categories = await db.category.findMany({})
+        const categories = await db.category.findMany({
+            include: {
+                blogs: true
+            }
+        })
         if (!categories) {
             return {
                 error: "No Category Present"

@@ -24,6 +24,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 interface CategoryFormProps {
   isUpdate?: boolean;
   initialValues?: { id: string; name: string; userId: string };
+  setOpen: (open: boolean) => void;
 }
 
 type CategoryFormValues =
@@ -33,6 +34,7 @@ type CategoryFormValues =
 export const CategoryForm = ({
   isUpdate = false,
   initialValues,
+  setOpen,
 }: CategoryFormProps) => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -70,6 +72,7 @@ export const CategoryForm = ({
             }
             if (data?.success) {
               setSuccess(data?.success);
+              window.location.reload();
             }
           })
           .catch(() => setError("Something went wrong"));
@@ -81,6 +84,7 @@ export const CategoryForm = ({
             }
             if (data?.success) {
               setSuccess(data?.success);
+              window.location.reload();
             }
           })
           .catch(() => setError("Something went wrong"));

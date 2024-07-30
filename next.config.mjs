@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
      images: {
-    domains: ['picsum.photos', 'example.com', 'res.cloudinary.com'], // Add the hostname here
+    domains: ['picsum.photos', 'example.com', 'res.cloudinary.com', 'www.freecodecamp.org'], // Add the hostname here
   },
 };
 

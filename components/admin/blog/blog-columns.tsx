@@ -51,7 +51,7 @@ export const blogColumns: ColumnDef<ExtendBlog>[] = [
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="w-[80px]">{blogId}</div>
+              <div className="w-[80px] cursor-text">{blogId}</div>
             </TooltipTrigger>
             <TooltipContent>{id}</TooltipContent>
           </Tooltip>
@@ -74,7 +74,7 @@ export const blogColumns: ColumnDef<ExtendBlog>[] = [
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="flex space-x-2">
-                <span className="max-w-[500px] truncate font-medium hover:underline cursor-pointer">
+                <span className="max-w-[500px] truncate font-medium cursor-text">
                   {title.length > 20 ? `${newTitle}...` : newTitle}
                 </span>
               </div>

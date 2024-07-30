@@ -1,11 +1,19 @@
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { CategoryForm } from "./category-form";
+import { useState } from "react";
 
 interface CategoryModalProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   asChild?: boolean;
   isUpdate?: boolean;
   initialValues?: { id: string; name: string; userId: string };
+  open: boolean;
+  setOpen: (open: boolean) => void;
 }
 
 export const CategoryModal = ({
@@ -13,12 +21,23 @@ export const CategoryModal = ({
   initialValues,
   isUpdate,
   asChild,
+  open,
+  setOpen,
 }: CategoryModalProps) => {
   return (
-    <Dialog>
-      <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
+    <Dialog open={open} onOpenChange={() => setOpen(!open)}>
+      <DialogTrigger asChild={asChild} onClick={() => setOpen(!open)}>
+        {children}
+      </DialogTrigger>
       <DialogContent className="p-0 w-auto bg-transparent border-none">
-        <CategoryForm initialValues={initialValues} isUpdate={isUpdate} />
+        <DialogTitle hidden>
+          {isUpdate ? "Update Category" : "Create Category"}
+        </DialogTitle>
+        <CategoryForm
+          initialValues={initialValues}
+          isUpdate={isUpdate}
+          setOpen={setOpen}
+        />
       </DialogContent>
     </Dialog>
   );

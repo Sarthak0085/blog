@@ -4,7 +4,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ExtendCategory } from "@/utils/types";
-import { CheckIcon, QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 import {
   Tooltip,
   TooltipContent,
@@ -12,6 +11,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Blog } from "@prisma/client";
+import { CategoriesTableRowActions } from "./category-table-row-actions";
 
 export const categoryColumns: ColumnDef<ExtendCategory>[] = [
   {
@@ -44,7 +44,18 @@ export const categoryColumns: ColumnDef<ExtendCategory>[] = [
       <DataTableColumnHeader column={column} title="Id" />
     ),
     cell: ({ row }) => {
-      return <div className="w-[80px]">{row.getValue("id")}</div>;
+      const id: string = row.getValue("id");
+      const categoryId = id.slice(0, 10);
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="w-[80px] cursor-text">{categoryId}</div>
+            </TooltipTrigger>
+            <TooltipContent>{id}</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
     },
     enableSorting: false,
     enableHiding: false,
@@ -62,7 +73,7 @@ export const categoryColumns: ColumnDef<ExtendCategory>[] = [
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="flex space-x-2">
-                <span className="max-w-[500px] truncate font-medium hover:underline cursor-pointer">
+                <span className="max-w-[500px] truncate font-medium cursor-text">
                   {title.length > 20 ? `${newTitle}...` : newTitle}
                 </span>
               </div>
@@ -72,6 +83,28 @@ export const categoryColumns: ColumnDef<ExtendCategory>[] = [
         </TooltipProvider>
       );
     },
+  },
+  {
+    accessorKey: "userId",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="User Id" />
+    ),
+    cell: ({ row }) => {
+      const id: string = row.getValue("id");
+      const categoryId = id.slice(0, 10);
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="w-[80px] cursor-text">{categoryId}</div>
+            </TooltipTrigger>
+            <TooltipContent>{id}</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
+    },
+    enableSorting: false,
+    enableHiding: false,
   },
   {
     accessorKey: "blogs",
@@ -91,6 +124,6 @@ export const categoryColumns: ColumnDef<ExtendCategory>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <BlogTableRowActions row={row} />,
+    cell: ({ row }) => <CategoriesTableRowActions row={row} />,
   },
 ];
