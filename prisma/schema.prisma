@@ -18,6 +18,11 @@ enum UserRole {
   ADMIN
 }
 
+enum UserBlock {
+  BLOCK
+  UNBLOCK
+}
+
 model User {
   id                    String                 @id @default(cuid())
   name                  String?
@@ -29,7 +34,7 @@ model User {
   role                  UserRole               @default(USER)
   accounts              Account[]
   isTwoFactorEnabled    Boolean                @default(false)
-  isBlocked             Boolean                @default(false)
+  isBlocked             UserBlock              @default(UNBLOCK)
   TwoFactorConfirmation TwoFactorConfirmation?
   blogs                 Blog[]
   likes                 Like[]

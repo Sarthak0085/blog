@@ -78,7 +78,6 @@ export const AddBlogForm = () => {
     startTransition(() => {
       createBlog(values)
         .then((data) => {
-          // Check for success and handle accordingly
           if (data?.success) {
             toast.success(data.success);
             router.push("/admin/get-blogs");

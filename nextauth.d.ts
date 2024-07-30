@@ -1,11 +1,11 @@
-import { UserRole } from "@prisma/client"
+import { UserBlock, UserRole } from "@prisma/client"
 import NextAuth, { type DefaultSession } from "next-auth";
 
 export type ExtendUser = DefaultSession["user"] & {
     role: UserRole;
     isTwoFactorEnabled: boolean;
     OAuth: boolean;
-    isBlocked: boolean;
+    isBlocked: UserBlock;
 }
 
 declare module "next-auth" {
