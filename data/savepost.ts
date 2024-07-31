@@ -13,20 +13,19 @@ export const getSavedPostByUserIdAndBlogId = async (userId: string, blogId: stri
         });
         return savedPost;
     } catch (error) {
-        console.error("Error getting like:", error);
-        throw new CustomError("Failed to get like", 400);
+        throw new CustomError("Failed to get saved post", 400);
     }
 }
 
 export const getSavedPostById = async (id: string) => {
     try {
-        const savedPost = await db.favourite.findUnique({
+        const savedPost = await db.savedPost.findUnique({
             where: {
                 id: id
             }
         });
         return savedPost;
     } catch (error) {
-        throw new CustomError("Failed to get Favourite", 400);
+        throw new CustomError("Failed to get saved post", 400);
     }
 }

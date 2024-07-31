@@ -1,22 +1,22 @@
 "use server";
 
-import { getDislikeById } from "@/data/dislike";
+import { getFavouriteById } from "@/data/favourite";
 import { currentUser } from "@/lib/auth";
 import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
-import { DeleteDislikeSchema } from "@/schemas";
-import { validateDeleteDislike } from "@/validations";
+import { DeleteFavouriteSchema } from "@/schemas";
+import { validateDeleteFavourite } from "@/validations";
 import * as z from "zod";
 
-export const deleteDislike = async (values: z.infer<typeof DeleteDislikeSchema>) => {
+export const deleteFavourite = async (values: z.infer<typeof DeleteFavouriteSchema>) => {
     try {
-        const validatedData = validateDeleteDislike(values);
-        const { dislikeId } = validatedData;
+        const validatedData = validateDeleteFavourite(values);
+        const { favouriteId } = validatedData;
 
-        const dislike = await getDislikeById(dislikeId);
+        const favourite = await getFavouriteById(favouriteId);
 
-        if (!dislike || !dislike?.id) {
-            throw new CustomError("Dislike not found", 404);
+        if (!favourite || !favourite?.id) {
+            throw new CustomError("Favourite not found", 404);
         }
 
         const user = await currentUser();
@@ -25,27 +25,27 @@ export const deleteDislike = async (values: z.infer<typeof DeleteDislikeSchema>)
             throw new CustomError("Unauthorized. Please login first.", 401);
         }
 
-        if (dislike.userId === user?.id) {
-            await db.dislike.delete({
+        if (favourite.userId === user?.id) {
+            await db.favourite.delete({
                 where: {
-                    id: dislikeId
+                    id: favouriteId
                 }
             });
 
             return {
-                success: "Dislike Deleted Successfully"
+                success: "Favourite Deleted Successfully"
             }
         }
         else {
             if (user?.role === "ADMIN") {
-                await db.dislike.delete({
+                await db.favourite.delete({
                     where: {
-                        id: dislikeId,
+                        id: favouriteId,
                     }
                 })
 
                 return {
-                    success: "Dislike deleted successfully"
+                    success: "Favourite deleted successfully"
                 }
             }
         }

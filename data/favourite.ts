@@ -18,7 +18,7 @@ export const getFavouriteByUserIdAndBlogId = async (userId: string, blogId: stri
     }
 }
 
-export const getDislikeById = async (id: string) => {
+export const getFavouriteById = async (id: string) => {
     try {
         const favourite = await db.favourite.findUnique({
             where: {
