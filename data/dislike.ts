@@ -13,7 +13,19 @@ export const getDislikeByUserIdAndBlogId = async (userId: string, blogId: string
         });
         return like;
     } catch (error) {
-        console.error("Error getting like:", error);
         throw new CustomError("Failed to get like", 400);
+    }
+}
+
+export const getDislikeById = async (id: string) => {
+    try {
+        const dislike = await db.dislike.findUnique({
+            where: {
+                id: id
+            }
+        });
+        return dislike;
+    } catch (error) {
+        throw new CustomError("Failed to get dislike", 400);
     }
 }

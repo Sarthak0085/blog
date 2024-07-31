@@ -109,6 +109,22 @@ export const SavedPostSchema = z.object({
     blogId: z.string().min(1, "BlogId is required"),
 });
 
+export const DeleteLikeSchema = z.object({
+    likeId: z.string().min(1, "LikeId is required"),
+});
+
+export const DeleteDislikeSchema = z.object({
+    dislikeId: z.string().min(1, "DislikeId is required"),
+});
+
+export const DeleteSavedPostSchema = z.object({
+    savedPostId: z.string().min(1, "Saved Post Id is required"),
+});
+
+export const DeleteFavouriteSchema = z.object({
+    favouriteId: z.string().min(1, "Favourite Id is required"),
+});
+
 export const EditUserSchema = z.object({
     role: z.enum([UserRole.ADMIN, UserRole.USER]),
     isBlocked: z.enum([UserBlock.BLOCK, UserBlock.UNBLOCK]),
