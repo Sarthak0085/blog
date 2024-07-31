@@ -10,7 +10,12 @@ export const getAllLikes = async () => {
             include: {
                 blog: true,
                 user: true,
-            }
+            },
+            orderBy: [
+                {
+                    createdAt: 'desc',
+                },
+            ],
         });
 
         if (!likes) {
@@ -47,7 +52,15 @@ export const getAllLikesByUserId = async () => {
             include: {
                 blog: true,
                 user: true,
-            }
+            },
+            orderBy: [
+                {
+                    isPinned: 'desc',
+                },
+                {
+                    createdAt: 'desc',
+                },
+            ],
         })
         if (!likes) {
             throw new CustomError("No dislikes present", 404);

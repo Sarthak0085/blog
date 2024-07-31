@@ -10,7 +10,12 @@ export const getAllFavourites = async () => {
             include: {
                 blog: true,
                 user: true,
-            }
+            },
+            orderBy: [
+                {
+                    createdAt: 'desc',
+                },
+            ],
         })
         if (!favourites) {
             throw new CustomError("No Favourite Present", 404);
@@ -46,7 +51,15 @@ export const getAllFavouritesByUserId = async () => {
             include: {
                 blog: true,
                 user: true,
-            }
+            },
+            orderBy: [
+                {
+                    isPinned: 'desc',
+                },
+                {
+                    createdAt: 'desc',
+                },
+            ],
         })
         if (!favourites) {
             throw new CustomError("No Favourite Present", 404);

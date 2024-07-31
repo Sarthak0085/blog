@@ -7,7 +7,15 @@ export const getAllCategories = async () => {
         const categories = await db.category.findMany({
             include: {
                 blogs: true
-            }
+            },
+            orderBy: [
+                {
+                    isPinned: 'desc',
+                },
+                {
+                    createdAt: 'desc',
+                },
+            ],
         })
         if (!categories) {
             return {

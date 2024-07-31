@@ -1,6 +1,6 @@
 "use client";
 
-import { verification } from "@/actions/verification";
+import { verification } from "@/actions/auth/verification";
 import { CardWrapper } from "@/components/auth/card-wrapper";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";

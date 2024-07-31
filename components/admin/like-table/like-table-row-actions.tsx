@@ -11,6 +11,13 @@ import {
   DropdownMenuTrigger,
 } from "@//components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { Like } from "@prisma/client";
+import { ExtendLike } from "@/utils/types";
+import { useState, useTransition } from "react";
+import { deleteLike } from "@/actions/likes/delete-like";
+import { toast } from "sonner";
+import { DeleteConfirmModal } from "../delete-confirmation-modal";
+import Link from "next/link";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -19,7 +26,29 @@ interface DataTableRowActionsProps<TData> {
 export function LikeTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const user = row.original;
+  const like = row.original as ExtendLike;
+  const [open, setOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  const handleDeleteLike = () => {
+    startTransition(() => {
+      deleteLike({ likeId: like?.id })
+        .then((data) => {
+          if (data?.success) {
+            toast.success(data?.success);
+            setOpen(false);
+            window.location.reload();
+          }
+          if (data?.error) {
+            toast.error(data?.error);
+          }
+        })
+        .catch(() => {
+          toast.error("Something went wrong!");
+        });
+    });
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -32,15 +61,25 @@ export function LikeTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Edit</DropdownMenuItem>
+        <Link href={`/blog/${like?.blog?.slug}`}>
+          <DropdownMenuItem>View</DropdownMenuItem>
+        </Link>
         <DropdownMenuItem>Make a copy</DropdownMenuItem>
         <DropdownMenuItem>Favorite</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          Delete
-          <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-        </DropdownMenuItem>
+        <DeleteConfirmModal
+          open={open}
+          setOpen={setOpen}
+          handleDelete={handleDeleteLike}
+          isPending={isPending}
+          text={"Like will be removed from blog"}
+        >
+          <DropdownMenuItem>
+            Remove
+            <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
+          </DropdownMenuItem>
+        </DeleteConfirmModal>
       </DropdownMenuContent>
     </DropdownMenu>
   );

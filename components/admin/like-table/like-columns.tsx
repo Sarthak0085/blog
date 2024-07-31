@@ -129,6 +129,24 @@ export const likeColumns: ColumnDef<Like>[] = [
     },
   },
   {
+    accessorKey: "createdAt",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Created At" />
+    ),
+    cell: ({ row }) => {
+      const createdAt: Date = row.getValue("createdAt");
+      return (
+        <div className="flex space-x-2 items-center">
+          {new Date(createdAt).toLocaleDateString("en-US", {
+            month: "short",
+            day: "2-digit",
+            year: "numeric",
+          })}
+        </div>
+      );
+    },
+  },
+  {
     id: "actions",
     cell: ({ row }) => <LikeTableRowActions row={row} />,
   },

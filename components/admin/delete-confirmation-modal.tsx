@@ -1,6 +1,7 @@
 import {
   Dialog,
   DialogContent,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -12,6 +13,7 @@ interface DeleteConfirmModalProps {
   handleDelete: () => void;
   children: React.ReactNode;
   isPending?: boolean;
+  text?: string;
 }
 
 export const DeleteConfirmModal = ({
@@ -20,12 +22,14 @@ export const DeleteConfirmModal = ({
   handleDelete,
   children,
   isPending,
+  text,
 }: DeleteConfirmModalProps) => {
   return (
     <Dialog open={open} onOpenChange={() => setOpen(!open)}>
       <DialogTrigger onClick={() => setOpen(false)}>{children}</DialogTrigger>
       <DialogContent className="p-0 w-auto bg-transparent border-none">
         <DialogTitle hidden>Are you sure you want to delete ?</DialogTitle>
+        {text && <DialogHeader>{text}</DialogHeader>}
         <div className="w-full items-center justify-between">
           <Button
             aria-label="Cancel"

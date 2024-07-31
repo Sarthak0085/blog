@@ -10,7 +10,12 @@ export const getAllSavedPosts = async () => {
             include: {
                 blog: true,
                 user: true,
-            }
+            },
+            orderBy: [
+                {
+                    createdAt: 'desc',
+                },
+            ],
         });
         if (!savedPosts) {
             throw new CustomError("No Saved Posts Present", 400);
@@ -46,7 +51,15 @@ export const getAllSavedPostsByUserId = async () => {
             include: {
                 blog: true,
                 user: true,
-            }
+            },
+            orderBy: [
+                {
+                    isPinned: 'desc',
+                },
+                {
+                    createdAt: 'desc',
+                },
+            ],
         })
         if (!savedPosts) {
             throw new CustomError("No Saved Posts Present", 404);
