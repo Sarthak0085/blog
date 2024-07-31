@@ -9,6 +9,30 @@ import { uploadFilesToCloudinary } from "@/utils/helpers";
 import { BlogStatus } from "@prisma/client";
 import * as z from "zod";
 
+const extractImageUrls = (content: string): string[] => {
+    const imageRegex = /!\[.*?\]\((.*?)\)/g;
+    const urls = [];
+    let match;
+    while ((match = imageRegex.exec(content)) !== null) {
+        urls.push(match[1]);
+    }
+    return urls;
+};
+
+
+const replaceImageUrlsInContent = async (content: string): Promise<string> => {
+    const imageUrls = extractImageUrls(content);
+    let updatedContent = content;
+
+    for (const url of imageUrls) {
+        const result = await uploadFilesToCloudinary(url);
+        updatedContent = updatedContent.replace(url, result?.url as string);
+    }
+
+    return updatedContent;
+};
+
+
 export const createBlog = async (values: z.infer<typeof AddBlogSchema>) => {
     const validatedFields = AddBlogSchema.safeParse(values);
 
@@ -48,6 +72,15 @@ export const createBlog = async (values: z.infer<typeof AddBlogSchema>) => {
 
     const transformedTags = tags?.split(",").map(tag => tag.trim()).filter(tag => tag);
 
+    let updatedContent;
+    try {
+        updatedContent = await replaceImageUrlsInContent(content);
+    } catch (error) {
+        return {
+            error: "Error while processing images in content."
+        };
+    }
+
     const result = await uploadFilesToCloudinary(image, slug);
 
     if (!result) {
@@ -63,7 +96,7 @@ export const createBlog = async (values: z.infer<typeof AddBlogSchema>) => {
             title,
             slug,
             categoryId: existedCategory.id,
-            content,
+            content: updatedContent,
             tags: transformedTags,
             shortSummary,
             status,

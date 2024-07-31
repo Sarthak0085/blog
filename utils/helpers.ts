@@ -12,13 +12,13 @@ interface Result {
     url: string | undefined;
 }
 
-export const uploadFilesToCloudinary = async (file: string, slug: string): Promise<Result> => {
+export const uploadFilesToCloudinary = async (file: string, slug?: string): Promise<Result> => {
     return new Promise((resolve, reject) => {
         cloudinary.uploader.upload(
             file,
             {
                 resource_type: "auto",
-                public_id: `blog/${slug}/${randomUUID()}`,
+                public_id: slug ? `blog/${slug}` : `blog/content/${randomUUID()}`,
             },
             (error, result) => {
                 if (error) return reject(error);

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/tooltip";
 import { ExtendUser } from "@/nextauth";
 
-export const blogColumns: ColumnDef<ExtendUser>[] = [
+export const userColumns: ColumnDef<ExtendUser>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -139,19 +139,17 @@ export const blogColumns: ColumnDef<ExtendUser>[] = [
       const user: UserBlock = row.getValue("isBlocked");
       return (
         <div className="flex space-x-2">
-          <span className="max-w-[500px] truncate font-medium">
-            {user === "BLOCK" ? (
-              <>
-                <LockClosedIcon className="h-5 w-5 text-red-600 mr-2" />
-                <span className="text-red-600 font-bold">Blocked</span>
-              </>
-            ) : (
-              <>
-                <CheckCircledIcon className="h-5 w-5 text-green-600 mr-2" />{" "}
-                <span className="text-green-600 font-bold">Active</span>
-              </>
-            )}
-          </span>
+          {user === "BLOCK" ? (
+            <span className="max-w-[500px] truncate font-medium flex items-center">
+              <LockClosedIcon className="h-5 w-5 text-red-600 mr-2" />
+              <span className="text-red-600 font-bold">Blocked</span>
+            </span>
+          ) : (
+            <span className="max-w-[500px] truncate font-medium flex items-center">
+              <CheckCircledIcon className="h-5 w-5 text-green-600 mr-2" />{" "}
+              <span className="text-green-600 font-bold">Active</span>
+            </span>
+          )}
         </div>
       );
     },

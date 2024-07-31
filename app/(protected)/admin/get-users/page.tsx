@@ -1,30 +1,34 @@
 "use client";
 
-import { ExtendLike } from "@/utils/types";
+import { AllBlogsTable } from "@/components/admin/blog/blogs-table";
+import { blogColumns } from "@/components/admin/blog/blog-columns";
+import { ExtendBlog } from "@/utils/types";
 import { useEffect, useState } from "react";
 import { PulseLoader } from "react-spinners";
-import { getAllLikes } from "@/actions/likes/get-likes";
-import { AllLikesTable } from "@/components/admin/like-table/like-table";
-import { likeColumns } from "@/components/admin/like-table/like-columns";
+import { getAllUsers } from "@/actions/user/get-users";
+import { ExtendUser } from "@/nextauth";
+import { AllUsersTables } from "@/components/admin/user/users-table";
+import { userColumns } from "@/components/admin/user/user-columns";
 
-export default function GetLikesPage() {
+export default function GetBlogsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
-  const [data, setData] = useState<ExtendLike[]>([]);
+  const [data, setData] = useState<ExtendUser[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getAllLikes();
+        const data = await getAllUsers();
         if (data?.error) {
-          console.error("Error while fetching Likes.");
+          console.error("Error while fetching Blogs.");
           setError(data?.error);
         }
         if (data?.data) {
-          setData(data?.data as ExtendLike[]);
+          setData(data?.data as any);
         }
       } catch (error) {
-        setError("Error while fetching Likes.");
+        console.error("Error fetching blog data:", error);
+        setError("Error while fetching Blogs.");
       } finally {
         setLoading(false);
       }
@@ -54,11 +58,11 @@ export default function GetLikesPage() {
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Welcome back!!</h2>
           <p className="text-muted-foreground">
-            Here&apos;s a list of all the likes!
+            Here&apos;s a list of all the users!
           </p>
         </div>
       </div>
-      <AllLikesTable data={data} columns={likeColumns} />
+      <AllUsersTables data={data} columns={userColumns} />
     </div>
   );
 }
