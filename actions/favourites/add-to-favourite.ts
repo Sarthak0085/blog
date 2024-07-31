@@ -1,22 +1,22 @@
 "use server";
 
 import { getBlogById } from "@/data/blog";
-import { getDislikeByUserIdAndBlogId } from "@/data/dislike";
+import { getFavouriteByUserIdAndBlogId } from "@/data/favourite";
 import { currentUser } from "@/lib/auth";
 import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
-import { DislikeSchema } from "@/schemas";
-import { validateDislikeInput } from "@/validations/";
+import { FavouriteSchema } from "@/schemas";
+import { validateFavouriteInput } from "@/validations";
 import * as z from "zod";
 
-export const dislikeBlog = async (values: z.infer<typeof DislikeSchema>) => {
+export const addOrRemoveToFavourite = async (values: z.infer<typeof FavouriteSchema>) => {
     try {
-        const validatedData = validateDislikeInput(values);
+        const validatedData = validateFavouriteInput(values);
 
         const { blogId } = validatedData;
         const user = await currentUser();
 
-        if (!user || user.isBlocked || !user?.id) {
+        if (!user || user.isBlocked === "BLOCK" || !user?.id) {
             throw new CustomError("Unauthorized. Please login to access this.", 403);
         }
 
@@ -26,10 +26,10 @@ export const dislikeBlog = async (values: z.infer<typeof DislikeSchema>) => {
             throw new CustomError("Blog not found", 404);
         }
 
-        const isDisliked = await getDislikeByUserIdAndBlogId(user?.id, blogId);
+        const isFavourite = await getFavouriteByUserIdAndBlogId(user?.id, blogId);
 
-        if (isDisliked) {
-            await db.dislike.delete({
+        if (isFavourite) {
+            await db.favourite.delete({
                 where: {
                     userId_blogId: {
                         userId: user?.id,
@@ -39,23 +39,23 @@ export const dislikeBlog = async (values: z.infer<typeof DislikeSchema>) => {
             });
 
             return {
-                success: "Dislike removed.",
+                success: "Removed from Favourite",
             };
         } else {
-            const dislike = await db.dislike.create({
+            const favourite = await db.favourite.create({
                 data: {
                     userId: user?.id,
                     blogId: blogId,
                 },
             });
 
-            if (!dislike) {
+            if (!favourite) {
                 throw new CustomError("An unexpected error occurred. Please try again later.", 500);
             }
 
             return {
-                success: "You disliked this blog.",
-                data: dislike
+                success: "Added to Favourite.",
+                data: favourite
             };
         }
     } catch (error) {

@@ -6,7 +6,7 @@ import { blogColumns } from "@/components/admin/blog/blog-columns";
 import { ExtendBlog, ExtendCategory } from "@/utils/types";
 import { useEffect, useState } from "react";
 import { PulseLoader } from "react-spinners";
-import { getAllCategories } from "@/actions/get-categories";
+import { getAllCategories } from "@/actions/category/get-categories";
 import { Category } from "@prisma/client";
 import { CategoriesTable } from "@/components/admin/category/category-table";
 import { categoryColumns } from "@/components/admin/category/category-columns";

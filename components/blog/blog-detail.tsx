@@ -11,9 +11,12 @@ import { BlogBreadCrumb } from "@/components/blog/blog-bread-crumb";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { Features } from "./features";
 import * as z from "zod";
-import { likeBlog } from "@/actions/like-blog";
+import { likeBlog } from "@/actions/likes/like-blog";
 import { toast } from "sonner";
 import { DislikeSchema, FavouriteSchema, LikeSchema } from "@/schemas";
+import { dislikeBlog } from "@/actions/dislikes/dislike-blog";
+import { addOrRemoveToFavourite } from "@/actions/add-to-favourite";
+import { savedBlogPost } from "@/actions/saved-blog-post";
 
 export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
   const user = useCurrentUser();
@@ -31,19 +34,23 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
     isFavourite: !!data?.favourites.find((item) => item.userId === user?.id),
     count: data?.favourites?.length,
   });
+  const [savedPost, setSavedPost] = useState({
+    isSaved: !!data?.savedPosts.find((item) => item.userId === user?.id),
+    count: data?.savedPosts?.length,
+  });
 
   const handleLike = (values: z.infer<typeof LikeSchema>) => {
     const prevLike = like;
     setLike((prev) => ({
       isLiked: !prev.isLiked,
-      count: (prev.count || 0) + 1,
+      count: prev.isLiked ? (prev.count || 1) - 1 : (prev.count || 0) + 1,
     }));
 
     startTransition(() => {
       likeBlog(values)
         .then((data) => {
           if (data?.success) {
-            toast.success("Blog liked Successfully");
+            toast.success(data?.success);
           }
           if (data?.error) {
             setLike(prevLike);
@@ -61,14 +68,14 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
     const prevDislike = dislike;
     setDislike((prev) => ({
       isDisliked: !prev.isDisliked,
-      count: (prev.count || 0) + 1,
+      count: prev.isDisliked ? (prev.count || 1) - 1 : (prev.count || 0) + 1,
     }));
 
     startTransition(() => {
-      likeBlog(values)
+      dislikeBlog(values)
         .then((data) => {
           if (data?.success) {
-            toast.success("Blog liked Successfully");
+            toast.success(data?.success);
           }
           if (data?.error) {
             setDislike(prevDislike);
@@ -86,11 +93,11 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
     const prevFav = favourites;
     setFavourites((prev) => ({
       isFavourite: !prev.isFavourite,
-      count: (prev.count || 0) + 1,
+      count: prev.isFavourite ? (prev.count || 1) - 1 : (prev.count || 0) + 1,
     }));
 
     startTransition(() => {
-      likeBlog(values)
+      addOrRemoveToFavourite(values)
         .then((data) => {
           if (data?.success) {
             toast.success(data?.success);
@@ -102,6 +109,31 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
         })
         .catch((error) => {
           setFavourites(prevFav);
+          toast.error(error);
+        });
+    });
+  };
+
+  const handleSavedPost = (values: z.infer<typeof LikeSchema>) => {
+    const prevLike = like;
+    setSavedPost((prev) => ({
+      isSaved: !prev.isSaved,
+      count: prev.isSaved ? (prev.count || 1) - 1 : (prev.count || 0) + 1,
+    }));
+
+    startTransition(() => {
+      savedBlogPost(values)
+        .then((data) => {
+          if (data?.success) {
+            toast.success(data?.success);
+          }
+          if (data?.error) {
+            setLike(prevLike);
+            toast.error(data?.error);
+          }
+        })
+        .catch((error) => {
+          setLike(prevLike);
           toast.error(error);
         });
     });
@@ -156,9 +188,11 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
           like={like}
           dislike={dislike}
           favourites={favourites}
+          savedPost={savedPost}
           handleLike={handleLike}
           handleDislike={handleDislike}
           toggleFavourite={toggleFavourite}
+          handleSavedPost={handleSavedPost}
           isPending={isPending}
           data={data}
         />

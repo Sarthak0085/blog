@@ -106,6 +106,10 @@ export const FavouriteSchema = z.object({
     blogId: z.string().min(1, "BlogId is required"),
 });
 
+export const SavedPostSchema = z.object({
+    blogId: z.string().min(1, "BlogId is required"),
+});
+
 export const EditUserSchema = z.object({
     role: z.enum([UserRole.ADMIN, UserRole.USER]),
     isBlocked: z.enum([UserBlock.BLOCK, UserBlock.UNBLOCK]),

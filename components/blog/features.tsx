@@ -1,7 +1,17 @@
 import { Button } from "@/components/ui/button";
-import { DislikeSchema, FavouriteSchema, LikeSchema } from "@/schemas";
+import {
+  DislikeSchema,
+  FavouriteSchema,
+  LikeSchema,
+  SavedPostSchema,
+} from "@/schemas";
 import { ExtendBlog } from "@/utils/types";
-import { ChatBubbleIcon, EyeOpenIcon } from "@radix-ui/react-icons";
+import {
+  BookmarkFilledIcon,
+  BookmarkIcon,
+  ChatBubbleIcon,
+  EyeOpenIcon,
+} from "@radix-ui/react-icons";
 import {
   FaRegThumbsDown,
   FaRegThumbsUp,
@@ -20,6 +30,8 @@ interface FeaturesProps {
   toggleFavourite: (values: z.infer<typeof FavouriteSchema>) => void;
   data: ExtendBlog | null;
   isPending: boolean;
+  savedPost: { isSaved: boolean; count: number | undefined };
+  handleSavedPost: (values: z.infer<typeof SavedPostSchema>) => void;
 }
 
 export function Features({
@@ -30,6 +42,8 @@ export function Features({
   handleLike,
   toggleFavourite,
   isPending,
+  savedPost,
+  handleSavedPost,
   data,
 }: FeaturesProps) {
   const count = (value: number | undefined) => {
@@ -47,57 +61,92 @@ export function Features({
   };
 
   return (
-    <div className="flex text-muted-forground w-full justify-evenly">
+    <div className="flex text-muted-forground space-x-4 w-full justify-start">
       <div className="flex items-center">
-        <Button variant={"icon"} className="text-left" aria-readonly>
+        <Button
+          title="Views"
+          aria-label="Views"
+          variant={"icon"}
+          className="text-left cursor-default"
+          aria-readonly
+        >
           <EyeOpenIcon color="blue" />
         </Button>
         <span>{count(data?.views)}</span>
       </div>
+      {((like.isLiked && !dislike.isDisliked) ||
+        (!like.isLiked && !dislike.isDisliked)) && (
+        <div className="flex items-center">
+          <Button
+            title="Like"
+            aria-label="Like"
+            variant={"icon"}
+            className="text-left"
+            disabled={isPending}
+            onClick={() => handleLike({ blogId: data?.id as string })}
+          >
+            {like.isLiked ? (
+              <FaThumbsUp color="blue" size={16} />
+            ) : (
+              <FaRegThumbsUp color="blue" size={16} />
+            )}
+          </Button>
+          <span>{count(like.count)}</span>
+        </div>
+      )}
+      {((!like.isLiked && dislike.isDisliked) ||
+        (!like.isLiked && !dislike.isDisliked)) && (
+        <div className="flex items-center">
+          <Button
+            title="Dislike"
+            aria-label="Dislike"
+            variant={"icon"}
+            className="text-left"
+            disabled={isPending}
+            onClick={() => handleDislike({ blogId: data?.id as string })}
+          >
+            {dislike.isDisliked ? (
+              <FaThumbsDown color="blue" size={16} />
+            ) : (
+              <FaRegThumbsDown color="blue" size={16} />
+            )}
+          </Button>
+          <span>{count(dislike.count)}</span>
+        </div>
+      )}
       <div className="flex items-center">
         <Button
-          variant={"icon"}
-          className="text-left"
-          disabled={isPending}
-          onClick={() => handleLike({ blogId: data?.id as string })}
-        >
-          {like.isLiked ? (
-            <FaThumbsUp color="blue" />
-          ) : (
-            <FaRegThumbsUp color="blue" />
-          )}
-        </Button>
-        <span>{count(like.count)}</span>
-      </div>
-      <div className="flex items-center">
-        <Button
-          variant={"icon"}
-          className="text-left"
-          disabled={isPending}
-          onClick={() => handleDislike({ blogId: data?.id as string })}
-        >
-          {dislike.isDisliked ? (
-            <FaThumbsDown color="blue" />
-          ) : (
-            <FaRegThumbsDown color="blue" />
-          )}
-        </Button>
-        <span>{count(dislike.count)}</span>
-      </div>
-      <div className="flex items-center">
-        <Button
+          title="Favourite"
+          aria-label="Favourite"
           variant={"icon"}
           className="text-left"
           disabled={isPending}
           onClick={() => toggleFavourite({ blogId: data?.id as string })}
         >
           {favourites.isFavourite ? (
-            <IoMdHeart color="red" />
+            <IoMdHeart color="red" size={20} />
           ) : (
-            <IoMdHeartEmpty color="red" />
+            <IoMdHeartEmpty color="red" size={20} />
           )}
         </Button>
         <span>{count(favourites.count)}</span>
+      </div>
+      <div className="flex items-center">
+        <Button
+          title="Saved Post"
+          aria-label="Saved Post"
+          variant={"icon"}
+          className="text-left"
+          disabled={isPending}
+          onClick={() => handleSavedPost({ blogId: data?.id as string })}
+        >
+          {savedPost.isSaved ? (
+            <BookmarkFilledIcon color="gray" height={20} width={20} />
+          ) : (
+            <BookmarkIcon color="gray" height={20} width={20} />
+          )}
+        </Button>
+        <span>{count(savedPost.count)}</span>
       </div>
       <div className="flex items-center">
         <Button variant={"icon"} className="text-left">

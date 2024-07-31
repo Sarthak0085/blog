@@ -79,7 +79,7 @@ export const likeBlog = async (values: z.infer<typeof LikeSchema>) => {
         const { blogId } = validatedData;
         const user = await currentUser();
 
-        if (!user || user.isBlocked || !user?.id) {
+        if (!user || user.isBlocked === "BLOCK" || !user?.id) {
             throw new CustomError("Unauthorized. Please login to access this.", 403);
         }
 

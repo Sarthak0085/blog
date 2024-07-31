@@ -5,6 +5,7 @@ import {
     DislikeSchema,
     LikeSchema,
     FavouriteSchema,
+    SavedPostSchema,
 } from "@/schemas";
 import CustomError from "@/lib/customError";
 import * as z from "zod";
@@ -61,6 +62,16 @@ export const validateDislikeInput = (values: z.infer<typeof DislikeSchema>) => {
 
 export const validateFavouriteInput = (values: z.infer<typeof FavouriteSchema>) => {
     const validatedFields = FavouriteSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+        throw new CustomError("Invalid Fields", 400);
+    }
+
+    return validatedFields.data;
+};
+
+export const validateSavedPost = (values: z.infer<typeof SavedPostSchema>) => {
+    const validatedFields = SavedPostSchema.safeParse(values);
 
     if (!validatedFields.success) {
         throw new CustomError("Invalid Fields", 400);

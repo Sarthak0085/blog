@@ -1,22 +1,22 @@
 "use server";
 
 import { getBlogById } from "@/data/blog";
-import { getFavouriteByUserIdAndBlogId } from "@/data/favourite";
+import { getDislikeByUserIdAndBlogId } from "@/data/dislike";
 import { currentUser } from "@/lib/auth";
 import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
-import { FavouriteSchema } from "@/schemas";
-import { validateFavouriteInput } from "@/validations";
+import { DislikeSchema } from "@/schemas";
+import { validateDislikeInput } from "@/validations/";
 import * as z from "zod";
 
-export const dislikeBlog = async (values: z.infer<typeof FavouriteSchema>) => {
+export const dislikeBlog = async (values: z.infer<typeof DislikeSchema>) => {
     try {
-        const validatedData = validateFavouriteInput(values);
+        const validatedData = validateDislikeInput(values);
 
         const { blogId } = validatedData;
         const user = await currentUser();
 
-        if (!user || user.isBlocked || !user?.id) {
+        if (!user || user.isBlocked === "BLOCK" || !user?.id) {
             throw new CustomError("Unauthorized. Please login to access this.", 403);
         }
 
@@ -26,7 +26,7 @@ export const dislikeBlog = async (values: z.infer<typeof FavouriteSchema>) => {
             throw new CustomError("Blog not found", 404);
         }
 
-        const isDisliked = await getFavouriteByUserIdAndBlogId(user?.id, blogId);
+        const isDisliked = await getDislikeByUserIdAndBlogId(user?.id, blogId);
 
         if (isDisliked) {
             await db.dislike.delete({

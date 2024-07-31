@@ -17,8 +17,8 @@ import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { useState, useTransition } from "react";
-import { createCategory } from "@/actions/create-category";
-import { updateCategory } from "@/actions/update-category";
+import { createCategory } from "@/actions/category/create-category";
+import { updateCategory } from "@/actions/category/update-category";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 interface CategoryFormProps {

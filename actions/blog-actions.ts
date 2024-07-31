@@ -92,6 +92,9 @@ export const getAllBlogs = async () => {
                 likes: true,
                 comments: true,
                 user: true,
+                dislikes: true,
+                favourites: true,
+                savedPosts: true,
             },
         });
 
@@ -153,6 +156,9 @@ export const getAllDraftBlogsByUserId = async () => {
                 likes: true,
                 comments: true,
                 user: true,
+                dislikes: true,
+                favourites: true,
+                savedPosts: true,
             },
         });
 
@@ -187,6 +193,9 @@ export const getAllPublishedBlogsByUserId = async () => {
                 likes: true,
                 comments: true,
                 user: true,
+                dislikes: true,
+                favourites: true,
+                savedPosts: true,
             },
         });
 
@@ -220,6 +229,9 @@ export const getAllBlogsByUserId = async () => {
                 likes: true,
                 comments: true,
                 user: true,
+                dislikes: true,
+                favourites: true,
+                savedPosts: true,
             },
         });
 
@@ -249,6 +261,7 @@ export const getBlogDetailsBySlug = async (slug: string) => {
                 comments: true,
                 dislikes: true,
                 favourites: true,
+                savedPosts: true,
             }
         });
 

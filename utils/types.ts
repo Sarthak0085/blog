@@ -1,4 +1,4 @@
-import { Blog, Category, UserRole } from "@prisma/client";
+import { Blog, Category, Dislike, Favourite, Like, SavedPost, User, UserRole } from "@prisma/client";
 
 export type ExtendBlog = Blog & {
     category: {
@@ -27,6 +27,11 @@ export type ExtendBlog = Blog & {
         userId: string;
         blogId: string;
     }[];
+    savedPosts: {
+        id: string;
+        userId: string;
+        blogId: string;
+    }[];
     user: {
         id: string;
         name: string | null;
@@ -43,3 +48,29 @@ export type ExtendBlog = Blog & {
 export type ExtendCategory = Category & {
     blogs: Blog[]
 };
+
+export type ExtendLike = Like & {
+    user: User,
+    blog: Blog,
+};
+
+export type ExtendDislike = Dislike & {
+    user: User,
+    blog: Blog,
+};
+
+export type ExtendFavourites = Favourite & {
+    user: User,
+    blog: Blog,
+};
+
+export type ExtendSavedPost = SavedPost & {
+    user: User,
+    blog: Blog,
+};
+
+export type ExtendComment = Comment & {
+    user: User,
+    blog: Blog,
+};
+
