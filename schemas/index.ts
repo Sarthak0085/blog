@@ -81,7 +81,6 @@ export type UpdateCategory = z.infer<typeof UpdateCategorySchema>
 
 export const DeleteCategorySchema = z.object({
     categoryId: z.string().min(1, "Category id is required."),
-    userId: z.string().min(1, "UserId is required")
 });
 
 
@@ -91,7 +90,7 @@ export const DeleteUserSchema = z.object({
 
 export const BlockUserSchema = z.object({
     userId: z.string().min(1, "UserId is required."),
-    isBlocked: z.boolean(),
+    isBlocked: z.enum([UserBlock.BLOCK, UserBlock.UNBLOCK]),
 });
 
 export const LikeSchema = z.object({

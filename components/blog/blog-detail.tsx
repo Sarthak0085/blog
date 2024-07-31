@@ -15,8 +15,8 @@ import { likeBlog } from "@/actions/likes/like-blog";
 import { toast } from "sonner";
 import { DislikeSchema, FavouriteSchema, LikeSchema } from "@/schemas";
 import { dislikeBlog } from "@/actions/dislikes/dislike-blog";
-import { addOrRemoveToFavourite } from "@/actions/add-to-favourite";
-import { savedBlogPost } from "@/actions/saved-blog-post";
+import { addOrRemoveToFavourite } from "@/actions/favourites/add-to-favourite";
+import { savedBlogPost } from "@/actions/savedpost/saved-blog-post";
 
 export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
   const user = useCurrentUser();

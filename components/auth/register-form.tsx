@@ -18,7 +18,7 @@ import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { useState, useTransition } from "react";
 import { RegisterSchema } from "@/schemas";
-import { register } from "@/actions/register";
+import { register } from "@/actions/auth/register";
 
 export const RegisterForm = () => {
   const [error, setError] = useState<string | undefined>("");

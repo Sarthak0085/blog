@@ -18,9 +18,9 @@ export const deleteCategory = async (values: z.infer<typeof DeleteCategorySchema
             throw new CustomError("Unauthorized. Please login first", 401);
         }
 
-        const { userId, categoryId } = validatedData;
+        const { categoryId } = validatedData;
 
-        if (user?.id !== userId || user?.role !== UserRole.ADMIN) {
+        if (!user?.id || user?.role !== UserRole.ADMIN) {
             throw new CustomError("Forbidden. You are not allowed to do this", 403);
         }
 

@@ -12,7 +12,11 @@ import {
 } from "@//components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { CategoryModal } from "./category-modal";
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import { DeleteConfirmModal } from "../delete-confirmation-modal";
+import { deleteCategory } from "@/actions/category/delete-category";
+import { Category } from "@prisma/client";
+import { toast } from "sonner";
 
 interface CategoriesTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -22,6 +26,27 @@ export function CategoriesTableRowActions<TData>({
   row,
 }: CategoriesTableRowActionsProps<TData>) {
   const [open, setOpen] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  const handleDeleteCategory = () => {
+    startTransition(() => {
+      deleteCategory({ categoryId: (row?.original as Category).id })
+        .then((data) => {
+          if (data?.success) {
+            toast.success(data?.success);
+            setOpenDeleteModal(false);
+          }
+          if (data?.error) {
+            toast.error(data?.error);
+          }
+        })
+        .catch(() => {
+          toast.error("Something went wrong. Please try again after Sometime");
+        });
+    });
+  };
+
   return (
     <>
       <DropdownMenu>
@@ -42,22 +67,22 @@ export function CategoriesTableRowActions<TData>({
             open={open}
             setOpen={setOpen}
           >
-            <Button
-              variant={"ghost"}
-              className="w-full"
-              onClick={() => setOpen(true)}
-            >
-              <DropdownMenuItem>Edit</DropdownMenuItem>
-            </Button>
+            <DropdownMenuItem>Edit</DropdownMenuItem>
           </CategoryModal>
           <DropdownMenuItem>Make a copy</DropdownMenuItem>
           <DropdownMenuItem>Favorite</DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            Delete
-            <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          <DeleteConfirmModal
+            open={openDeleteModal}
+            setOpen={setOpenDeleteModal}
+            handleDelete={handleDeleteCategory}
+          >
+            <DropdownMenuItem>
+              Delete
+              <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </DeleteConfirmModal>
         </DropdownMenuContent>
       </DropdownMenu>
     </>

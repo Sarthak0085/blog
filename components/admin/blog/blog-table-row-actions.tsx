@@ -11,6 +11,8 @@ import {
   DropdownMenuTrigger,
 } from "@//components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { useState, useTransition } from "react";
+import { DeleteConfirmModal } from "../delete-confirmation-modal";
 
 interface BlogsTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -19,6 +21,29 @@ interface BlogsTableRowActionsProps<TData> {
 export function BlogTableRowActions<TData>({
   row,
 }: BlogsTableRowActionsProps<TData>) {
+  const [open, setOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  const handleDeleteBlog = () => {
+    startTransition(() => {
+      //  delete({ userId: user?.id })
+      //    .then((data) => {
+      //      if (data?.success) {
+      //        toast.success(data?.success);
+      //        setOpen(false);
+      //        window.location.reload();
+      //      }
+      //      if (data?.error) {
+      //        toast.error(data?.error);
+      //      }
+      //    })
+      //    .catch(() => {
+      //      toast.error(
+      //        "Something went wrong. Please try again after sometime."
+      //      );
+      //    });
+    });
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -36,10 +61,17 @@ export function BlogTableRowActions<TData>({
         <DropdownMenuItem>Favorite</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          Delete
-          <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-        </DropdownMenuItem>
+        <DeleteConfirmModal
+          open={open}
+          setOpen={setOpen}
+          handleDelete={handleDeleteBlog}
+          isPending={isPending}
+        >
+          <DropdownMenuItem>
+            Delete
+            <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
+          </DropdownMenuItem>
+        </DeleteConfirmModal>
       </DropdownMenuContent>
     </DropdownMenu>
   );

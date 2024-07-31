@@ -4,20 +4,20 @@ import { currentUser } from "@/lib/auth";
 import CustomError from "@/lib/customError";
 import { db } from "@/lib/db"
 
-export const getAllDislikes = async () => {
+export const getAllSavedPosts = async () => {
     try {
-        const dislikes = await db.dislike.findMany({
+        const savedPosts = await db.savedPost.findMany({
             include: {
                 blog: true,
                 user: true,
             }
-        })
-        if (!dislikes) {
-            throw new CustomError("No dislikes present", 404);
+        });
+        if (!savedPosts) {
+            throw new CustomError("No Saved Posts Present", 400);
         }
 
         return {
-            data: dislikes
+            data: savedPosts
         }
     } catch (error) {
         if (error instanceof CustomError) {
@@ -33,13 +33,13 @@ export const getAllDislikes = async () => {
     }
 }
 
-export const getAllDislikesByUserId = async () => {
+export const getAllSavedPostsByUserId = async () => {
     try {
         const user = await currentUser();
         if (!user || user.isBlocked === "BLOCK" || !user?.id) {
             throw new CustomError("Unauthorized! Please login to access this", 401);
         }
-        const dislikes = await db.dislike.findMany({
+        const savedPosts = await db.savedPost.findMany({
             where: {
                 userId: user?.id
             },
@@ -48,12 +48,12 @@ export const getAllDislikesByUserId = async () => {
                 user: true,
             }
         })
-        if (!dislikes) {
-            throw new CustomError("No dislikes present", 404);
+        if (!savedPosts) {
+            throw new CustomError("No Saved Posts Present", 404);
         }
 
         return {
-            data: dislikes
+            data: savedPosts
         }
     } catch (error) {
         if (error instanceof CustomError) {
