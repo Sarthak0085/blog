@@ -2,6 +2,7 @@
 
 import { getBlogById } from "@/data/blog";
 import { getFavouriteByUserIdAndBlogId } from "@/data/favourite";
+import { getSavedPostByUserIdAndBlogId } from "@/data/savepost";
 import { currentUser } from "@/lib/auth";
 import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
@@ -26,7 +27,7 @@ export const savedBlogPost = async (values: z.infer<typeof SavedPostSchema>) => 
             throw new CustomError("Blog not found", 404);
         }
 
-        const isSaved = await getFavouriteByUserIdAndBlogId(user?.id, blogId);
+        const isSaved = await getSavedPostByUserIdAndBlogId(user?.id, blogId);
 
         if (isSaved) {
             await db.savedPost.delete({
