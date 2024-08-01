@@ -72,7 +72,7 @@ export function DislikeTableRowActions<TData>({
           setOpen={setOpen}
           handleDelete={handleDeleteLike}
           isPending={isPending}
-          text={"Like will be removed from blog"}
+          text={"Dislike will be removed from blog"}
         >
           <DropdownMenuItem>
             Remove

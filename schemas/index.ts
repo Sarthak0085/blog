@@ -105,6 +105,10 @@ export const FavouriteSchema = z.object({
     blogId: z.string().min(1, "BlogId is required"),
 });
 
+export const FavouritePinnedSchema = z.object({
+    favouriteId: z.string().min(1, "BlogId is required"),
+});
+
 export const SavedPostSchema = z.object({
     blogId: z.string().min(1, "BlogId is required"),
 });

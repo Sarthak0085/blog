@@ -1,11 +1,13 @@
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "../ui/card";
 
 interface DeleteConfirmModalProps {
   open: boolean;
@@ -27,10 +29,10 @@ export const DeleteConfirmModal = ({
   return (
     <Dialog open={open} onOpenChange={() => setOpen(!open)}>
       <DialogTrigger onClick={() => setOpen(false)}>{children}</DialogTrigger>
-      <DialogContent className="p-0 w-auto bg-transparent border-none">
-        <DialogTitle hidden>Are you sure you want to delete ?</DialogTitle>
+      <DialogContent className="w-[400px] shadow-md items-center justify-center">
+        <DialogTitle>Are you sure you want to delete ?</DialogTitle>
         {text && <DialogHeader>{text}</DialogHeader>}
-        <div className="w-full items-center justify-between">
+        <div className="w-full flex items-center justify-between">
           <Button
             aria-label="Cancel"
             variant={"cancel"}
