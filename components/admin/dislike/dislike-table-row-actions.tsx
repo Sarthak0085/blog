@@ -137,7 +137,7 @@ export function DislikeTableRowActions<TData>({
               onClick={() => handleClick()}
             >
               <MdDeleteOutline size={20} />
-              <span>Delete</span>
+              <span>Remove</span>
             </Button>
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -150,37 +150,5 @@ export function DislikeTableRowActions<TData>({
         text={"Comment will be deleted from blog"}
       />
     </>
-    // <DropdownMenu>
-    //   <DropdownMenuTrigger asChild>
-    //     <Button
-    //       variant="ghost"
-    //       className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
-    //     >
-    //       <DotsHorizontalIcon className="h-4 w-4" />
-    //       <span className="sr-only">Open menu</span>
-    //     </Button>
-    //   </DropdownMenuTrigger>
-    //   <DropdownMenuContent align="end" className="w-[160px]">
-    //     <Link href={`/blog/${dislike?.blog?.slug}`}>
-    //       <DropdownMenuItem>View</DropdownMenuItem>
-    //     </Link>
-    //     <DropdownMenuItem>Make a copy</DropdownMenuItem>
-    //     <DropdownMenuItem>Favorite</DropdownMenuItem>
-    //     <DropdownMenuSeparator />
-    //     <DropdownMenuSeparator />
-    //     <DeleteConfirmModal
-    //       open={open}
-    //       setOpen={setOpen}
-    //       handleDelete={handleDeleteLike}
-    //       isPending={isPending}
-    //       text={"Dislike will be removed from blog"}
-    //     >
-    //       <DropdownMenuItem>
-    //         Remove
-    //         <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-    //       </DropdownMenuItem>
-    //     </DeleteConfirmModal>
-    //   </DropdownMenuContent>
-    // </DropdownMenu>
   );
 }

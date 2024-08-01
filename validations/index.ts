@@ -17,6 +17,7 @@ import {
     CreateCommentSchema,
     UpdateCommentSchema,
     PinnedDislikeSchema,
+    PinnedLikeSchema,
 } from "@/schemas";
 import CustomError from "@/lib/customError";
 import * as z from "zod";
@@ -183,6 +184,16 @@ export const validatePinnedComment = (values: z.infer<typeof PinnedCommentSchema
 
 export const validatePinnedDislike = (values: z.infer<typeof PinnedDislikeSchema>) => {
     const validatedFields = PinnedDislikeSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+        throw new CustomError("Invalid Fields", 400);
+    }
+
+    return validatedFields.data;
+};
+
+export const validatePinnedLike = (values: z.infer<typeof PinnedLikeSchema>) => {
+    const validatedFields = PinnedLikeSchema.safeParse(values);
 
     if (!validatedFields.success) {
         throw new CustomError("Invalid Fields", 400);
