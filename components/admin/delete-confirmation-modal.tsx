@@ -30,7 +30,9 @@ export const DeleteConfirmModal = ({
     <Dialog open={open} onOpenChange={() => setOpen(!open)}>
       <DialogTrigger onClick={() => setOpen(false)}>{children}</DialogTrigger>
       <DialogContent className="w-[400px] shadow-md items-center justify-center">
-        <DialogTitle>Are you sure you want to delete ?</DialogTitle>
+        <DialogTitle>
+          Are you sure you want to {text ? "remove" : "delete"} ?
+        </DialogTitle>
         {text && <DialogHeader>{text}</DialogHeader>}
         <div className="w-full flex items-center justify-between">
           <Button
@@ -47,7 +49,7 @@ export const DeleteConfirmModal = ({
             disabled={isPending}
             onClick={() => handleDelete()}
           >
-            Delete
+            {text ? "Remove" : "Delete"}
           </Button>
         </div>
       </DialogContent>

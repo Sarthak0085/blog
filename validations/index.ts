@@ -11,6 +11,7 @@ import {
     DeleteFavouriteSchema,
     DeleteSavedPostSchema,
     FavouritePinnedSchema,
+    SavedPostPinnedSchema,
 } from "@/schemas";
 import CustomError from "@/lib/customError";
 import * as z from "zod";
@@ -127,6 +128,16 @@ export const validateDeleteSavedPost = (values: z.infer<typeof DeleteSavedPostSc
 
 export const validateFavouritePinned = (values: z.infer<typeof FavouritePinnedSchema>) => {
     const validatedFields = FavouritePinnedSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+        throw new CustomError("Invalid Fields", 400);
+    }
+
+    return validatedFields.data;
+};
+
+export const validateSavedPostPinned = (values: z.infer<typeof SavedPostPinnedSchema>) => {
+    const validatedFields = SavedPostPinnedSchema.safeParse(values);
 
     if (!validatedFields.success) {
         throw new CustomError("Invalid Fields", 400);

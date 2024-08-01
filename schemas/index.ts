@@ -113,6 +113,10 @@ export const SavedPostSchema = z.object({
     blogId: z.string().min(1, "BlogId is required"),
 });
 
+export const SavedPostPinnedSchema = z.object({
+    savedPostId: z.string().min(1, "BlogId is required"),
+});
+
 export const DeleteLikeSchema = z.object({
     likeId: z.string().min(1, "LikeId is required"),
 });
