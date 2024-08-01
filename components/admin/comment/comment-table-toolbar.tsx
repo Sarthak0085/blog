@@ -2,18 +2,15 @@
 
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
-import { DataTableFacetedFilter } from "@/components/table/data-table-faced-filter";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DataTableViewOptions } from "@/components/table/data-table-view-options";
-import { BlogStatus } from "@prisma/client";
-import { statuses } from "./blog-columns";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
 }
 
-export function BlogDataTableToolbar<TData>({
+export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
@@ -22,20 +19,27 @@ export function BlogDataTableToolbar<TData>({
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         <Input
-          placeholder="Filter by title..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter content..."
+          value={(table.getColumn("content")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
+            table.getColumn("content")?.setFilterValue(event.target.value)
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {table.getColumn("status") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("status")}
-            title="Status"
-            options={statuses}
+        {/* {table.getColumn("status") && (
+          <LikeDataTableFacetedFilter
+            column={table.getColumn("role")}
+            title="Role"
+            options={roleOptions}
           />
         )}
+        {table.getColumn("priority") && (
+          <LikeDataTableFacetedFilter
+            column={table.getColumn("priority")}
+            title="Priority"
+            options={blockOptions}
+          />
+        )} */}
         {isFiltered && (
           <Button
             variant="ghost"

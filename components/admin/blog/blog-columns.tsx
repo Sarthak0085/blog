@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ExtendBlog } from "@/utils/types";
-import { Category, Comment, Like, User } from "@prisma/client";
+import { BlogStatus, Category, Comment, Like, User } from "@prisma/client";
 import { CheckIcon, QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 import { BlogTableRowActions } from "./blog-table-row-actions";
 import {
@@ -13,6 +13,17 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+
+export const statuses = [
+  {
+    label: "DRAFT",
+    value: BlogStatus.DRAFT,
+  },
+  {
+    label: "PUBLISHED",
+    value: BlogStatus.PUBLISHED,
+  },
+];
 
 export const blogColumns: ColumnDef<ExtendBlog>[] = [
   {

@@ -25,12 +25,11 @@ export const updateComment = async (values: z.infer<typeof UpdateCommentSchema>)
             throw new CustomError("Unauthorized. Please login first.", 401);
         }
 
-        if (comment.userId === user?.id) {
+        if (comment.userId !== user?.id) {
             throw new CustomError("Forbidden. You are not allowed to do this!", 403);
         }
 
 
-        if (comment.userId === user?.id) {
             await db.comment.update({
                 where: {
                     id
@@ -46,7 +45,6 @@ export const updateComment = async (values: z.infer<typeof UpdateCommentSchema>)
             return {
                 success: "Comment Updated Successfully"
             }
-        }
     } catch (error) {
         if (error instanceof CustomError) {
             return {

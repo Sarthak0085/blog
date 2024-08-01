@@ -51,17 +51,17 @@ export function UserDataTableToolbar<TData>({
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {table.getColumn("status") && (
+        {table.getColumn("role") && (
           <UserDataTableFacetedFilter
             column={table.getColumn("role")}
             title="Role"
             options={roleOptions}
           />
         )}
-        {table.getColumn("priority") && (
+        {table.getColumn("isBlocked") && (
           <DataTableFacetedFilter
-            column={table.getColumn("priority")}
-            title="Priority"
+            column={table.getColumn("isBlocked")}
+            title="Block Status"
             options={blockOptions}
           />
         )}

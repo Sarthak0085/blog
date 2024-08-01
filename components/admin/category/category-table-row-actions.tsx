@@ -77,6 +77,7 @@ export function CategoriesTableRowActions<TData>({
             open={openDeleteModal}
             setOpen={setOpenDeleteModal}
             handleDelete={handleDeleteCategory}
+            isPending={isPending}
           >
             <DropdownMenuItem>
               Delete

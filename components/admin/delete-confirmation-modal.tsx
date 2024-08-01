@@ -1,13 +1,11 @@
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "../ui/card";
 
 interface DeleteConfirmModalProps {
   open: boolean;
