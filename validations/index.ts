@@ -12,6 +12,10 @@ import {
     DeleteSavedPostSchema,
     FavouritePinnedSchema,
     SavedPostPinnedSchema,
+    DeleteCommentSchema,
+    PinnedCommentSchema,
+    CreateCommentSchema,
+    UpdateCommentSchema,
 } from "@/schemas";
 import CustomError from "@/lib/customError";
 import * as z from "zod";
@@ -138,6 +142,46 @@ export const validateFavouritePinned = (values: z.infer<typeof FavouritePinnedSc
 
 export const validateSavedPostPinned = (values: z.infer<typeof SavedPostPinnedSchema>) => {
     const validatedFields = SavedPostPinnedSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+        throw new CustomError("Invalid Fields", 400);
+    }
+
+    return validatedFields.data;
+};
+
+export const validateComment = (values: z.infer<typeof CreateCommentSchema>) => {
+    const validatedFields = CreateCommentSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+        throw new CustomError("Invalid Fields", 400);
+    }
+
+    return validatedFields.data;
+};
+
+export const validateCommentDelete = (values: z.infer<typeof DeleteCommentSchema>) => {
+    const validatedFields = DeleteCommentSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+        throw new CustomError("Invalid Fields", 400);
+    }
+
+    return validatedFields.data;
+};
+
+export const validatePinnedComment = (values: z.infer<typeof PinnedCommentSchema>) => {
+    const validatedFields = PinnedCommentSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+        throw new CustomError("Invalid Fields", 400);
+    }
+
+    return validatedFields.data;
+};
+
+export const validateUpdateComment = (values: z.infer<typeof UpdateCommentSchema>) => {
+    const validatedFields = UpdateCommentSchema.safeParse(values);
 
     if (!validatedFields.success) {
         throw new CustomError("Invalid Fields", 400);

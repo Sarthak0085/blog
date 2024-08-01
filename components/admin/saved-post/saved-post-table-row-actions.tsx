@@ -2,15 +2,13 @@
 
 import { Row } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { ExtendFavourites, ExtendSavedPost } from "@/utils/types";
+import { ExtendSavedPost } from "@/utils/types";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { DeleteConfirmModal } from "../delete-confirmation-modal";
 import Link from "next/link";
-import { deleteFavourite } from "@/actions/favourites/delete-favourite";
 import { IoEyeOutline, IoRemoveCircleOutline } from "react-icons/io5";
 import { TbPinned, TbPinnedFilled } from "react-icons/tb";
-import { pinnedFavourite } from "@/actions/favourites/pinned-favourite";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { deleteSavedPost } from "@/actions/savedpost/delete-saved-post";
 import { pinnedSavedPost } from "@/actions/savedpost/pinned-saved-post";
@@ -86,7 +84,7 @@ export function SavedPostTableRowActions<TData>({
             className="flex h-8 w-8 p-0 bg-transparent"
             onClick={() => handlePinned()}
           >
-            <TbPinned color="blue" size={20} />
+            <TbPinned color="gray" size={20} />
           </Button>
         ) : (
           <Button
@@ -96,7 +94,7 @@ export function SavedPostTableRowActions<TData>({
             className="flex h-8 w-8 p-0 bg-transparent"
             onClick={() => handlePinned()}
           >
-            <TbPinnedFilled color="blue" size={20} />
+            <TbPinnedFilled color="gray" size={20} />
           </Button>
         ))}
       <DeleteConfirmModal

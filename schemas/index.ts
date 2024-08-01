@@ -136,4 +136,25 @@ export const DeleteFavouriteSchema = z.object({
 export const EditUserSchema = z.object({
     role: z.enum([UserRole.ADMIN, UserRole.USER]),
     isBlocked: z.enum([UserBlock.BLOCK, UserBlock.UNBLOCK]),
-})
+});
+
+export const CreateCommentSchema = z.object({
+    blogId: z.string().min(1, "BlogId is required"),
+    content: z.string().min(1, "Content is required"),
+    parentId: z.optional(z.string().min(1, "parentId is required")),
+});
+
+export const UpdateCommentSchema = z.object({
+    id: z.string().min(1, "comment Id is required"),
+    blogId: z.string().min(1, "BlogId is required"),
+    content: z.string().min(1, "Content is required"),
+    parentId: z.optional(z.string().min(1, "parentId is required")),
+});
+
+export const DeleteCommentSchema = z.object({
+    commentId: z.string().min(1, "CommentId is required"),
+});
+
+export const PinnedCommentSchema = z.object({
+    commentId: z.string().min(1, "CommentId is required"),
+});

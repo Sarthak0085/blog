@@ -186,6 +186,7 @@ model Comment {
   content  String
   userId   String
   blogId   String
+  parentId String?
   isPinned Boolean @default(false)
 
   createdAt DateTime @default(now())
