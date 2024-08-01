@@ -4,8 +4,8 @@ import { ExtendLike } from "@/utils/types";
 import { useEffect, useState } from "react";
 import { PulseLoader } from "react-spinners";
 import { getAllLikes } from "@/actions/likes/get-likes";
-import { AllLikesTable } from "@/components/admin/like-table/like-table";
-import { likeColumns } from "@/components/admin/like-table/like-columns";
+import { AllLikesTable } from "@/components/admin/like/like-table";
+import { likeColumns } from "@/components/admin/like/like-columns";
 
 export default function GetLikesPage() {
   const [loading, setLoading] = useState(true);
