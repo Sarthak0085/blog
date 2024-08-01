@@ -2,6 +2,13 @@
 
 import { Row } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@//components/ui/dropdown-menu";
 import { ExtendSavedPost } from "@/utils/types";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -12,6 +19,7 @@ import { TbPinned, TbPinnedFilled } from "react-icons/tb";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { deleteSavedPost } from "@/actions/savedpost/delete-saved-post";
 import { pinnedSavedPost } from "@/actions/savedpost/pinned-saved-post";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -23,9 +31,10 @@ export function SavedPostTableRowActions<TData>({
   const user = useCurrentUser();
   const savedPost = row.original as ExtendSavedPost;
   const [open, setOpen] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  const handleDeleteLike = () => {
+  const handleDeleteSavedPost = () => {
     startTransition(() => {
       deleteSavedPost({ savedPostId: savedPost?.id })
         .then((data) => {
@@ -63,54 +72,81 @@ export function SavedPostTableRowActions<TData>({
     });
   };
 
+  const handleClick = () => {
+    setOpen(false);
+    setTimeout(() => {
+      setOpenDeleteModal(true);
+    }, 50);
+  };
+
   return (
-    <div className="flex items-center justify-center space-x-2">
-      <Link href={`/blog/${savedPost?.blog?.slug}`}>
-        <Button
-          title="View Blog"
-          aria-label="View Blog"
-          variant="ghost"
-          className="flex h-8 w-8 p-0 bg-transparent"
-        >
-          <IoEyeOutline color="blue" size={20} />
-        </Button>
-      </Link>
-      {user?.id === savedPost.userId &&
-        (!savedPost?.isPinned ? (
+    <>
+      <DropdownMenu defaultOpen={open}>
+        <DropdownMenuTrigger asChild>
           <Button
-            title="Pinned"
-            aria-label="Pinned"
             variant="ghost"
-            className="flex h-8 w-8 p-0 bg-transparent"
-            onClick={() => handlePinned()}
+            className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+            onClick={() => setOpen((prev) => !prev)}
           >
-            <TbPinned color="gray" size={20} />
+            <DotsHorizontalIcon className="h-4 w-4" />
+            <span className="sr-only">Open menu</span>
           </Button>
-        ) : (
-          <Button
-            title="Unpinned"
-            aria-label="Unpinned"
-            variant="ghost"
-            className="flex h-8 w-8 p-0 bg-transparent"
-            onClick={() => handlePinned()}
-          >
-            <TbPinnedFilled color="gray" size={20} />
-          </Button>
-        ))}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-[100px]">
+          <DropdownMenuItem className="p-0">
+            <Link href={`/blog/${savedPost?.blog?.slug}`}>
+              <Button
+                className="w-full !justify-start px-2 py-2 space-x-2 h-auto  font-medium text-[blue] hover:text-[blue]"
+                variant="ghost"
+              >
+                <IoEyeOutline color="blue" size={20} />
+                <span> View </span>
+              </Button>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className="p-0">
+            {user?.id === savedPost.userId &&
+              (!savedPost?.isPinned ? (
+                <Button
+                  variant="ghost"
+                  className="w-full !justify-start space-x-2 font-medium p-1 bg-transparent text-muted-foreground"
+                  onClick={() => handlePinned()}
+                >
+                  <TbPinned size={20} />
+                  <span>Pinned</span>
+                </Button>
+              ) : (
+                <Button
+                  variant="ghost"
+                  className="w-full !justify-start space-x-2 font-medium p-1 bg-transparent text-muted-foreground"
+                  onClick={() => handlePinned()}
+                >
+                  <TbPinnedFilled size={20} />
+                  <span>UnPinned</span>
+                </Button>
+              ))}
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className="p-0">
+            <Button
+              variant="ghost"
+              className="w-full !justify-start space-x-2 font-medium p-1 bg-transparent text-[red] hover:text-[red]"
+              onClick={() => handleClick()}
+            >
+              <IoRemoveCircleOutline size={20} />
+              <span>Remove</span>
+            </Button>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       <DeleteConfirmModal
-        open={open}
-        setOpen={setOpen}
-        handleDelete={handleDeleteLike}
+        open={openDeleteModal}
+        setOpen={setOpenDeleteModal}
+        handleDelete={handleDeleteSavedPost}
         isPending={isPending}
-        text={"This saved blog post will be removed"}
-      >
-        <IoRemoveCircleOutline
-          title="Remove Saved Post"
-          aria-label="Remove Saved Post"
-          color="red"
-          size={20}
-        />
-      </DeleteConfirmModal>
-    </div>
+        text={"Saved blog post will be removed."}
+      />
+    </>
   );
 }

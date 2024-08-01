@@ -2,6 +2,13 @@
 
 import { Row } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@//components/ui/dropdown-menu";
 import { ExtendFavourites } from "@/utils/types";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -12,6 +19,7 @@ import { IoEyeOutline, IoRemoveCircleOutline } from "react-icons/io5";
 import { TbPinned, TbPinnedFilled } from "react-icons/tb";
 import { pinnedFavourite } from "@/actions/favourites/pinned-favourite";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -23,9 +31,10 @@ export function FavouriteTableRowActions<TData>({
   const user = useCurrentUser();
   const favourite = row.original as ExtendFavourites;
   const [open, setOpen] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  const handleDeleteLike = () => {
+  const handleDeleteFavourite = () => {
     startTransition(() => {
       deleteFavourite({ favouriteId: favourite?.id })
         .then((data) => {
@@ -63,54 +72,81 @@ export function FavouriteTableRowActions<TData>({
     });
   };
 
+  const handleClick = () => {
+    setOpen(false);
+    setTimeout(() => {
+      setOpenDeleteModal(true);
+    }, 50);
+  };
+
   return (
-    <div className="flex items-center justify-center space-x-2">
-      <Link href={`/blog/${favourite?.blog?.slug}`}>
-        <Button
-          title="View Blog"
-          aria-label="View Blog"
-          variant="ghost"
-          className="flex h-8 w-8 p-0 bg-transparent"
-        >
-          <IoEyeOutline color="blue" size={20} />
-        </Button>
-      </Link>
-      {user?.id === favourite.userId &&
-        (!favourite?.isPinned ? (
+    <>
+      <DropdownMenu defaultOpen={open}>
+        <DropdownMenuTrigger asChild>
           <Button
-            title="Pinned"
-            aria-label="Pinned"
             variant="ghost"
-            className="flex h-8 w-8 p-0 bg-transparent"
-            onClick={() => handlePinned()}
+            className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+            onClick={() => setOpen((prev) => !prev)}
           >
-            <TbPinned color="blue" size={20} />
+            <DotsHorizontalIcon className="h-4 w-4" />
+            <span className="sr-only">Open menu</span>
           </Button>
-        ) : (
-          <Button
-            title="Unpinned"
-            aria-label="Unpinned"
-            variant="ghost"
-            className="flex h-8 w-8 p-0 bg-transparent"
-            onClick={() => handlePinned()}
-          >
-            <TbPinnedFilled color="blue" size={20} />
-          </Button>
-        ))}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-[100px]">
+          <DropdownMenuItem className="p-0">
+            <Link href={`/blog/${favourite?.blog?.slug}`}>
+              <Button
+                className="w-full !justify-start px-2 py-2 space-x-2 h-auto  font-medium text-[blue] hover:text-[blue]"
+                variant="ghost"
+              >
+                <IoEyeOutline color="blue" size={20} />
+                <span> View </span>
+              </Button>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className="p-0">
+            {user?.id === favourite.userId &&
+              (!favourite?.isPinned ? (
+                <Button
+                  variant="ghost"
+                  className="w-full !justify-start space-x-2 font-medium p-1 bg-transparent text-muted-foreground"
+                  onClick={() => handlePinned()}
+                >
+                  <TbPinned size={20} />
+                  <span>Pinned</span>
+                </Button>
+              ) : (
+                <Button
+                  variant="ghost"
+                  className="w-full !justify-start space-x-2 font-medium p-1 bg-transparent text-muted-foreground"
+                  onClick={() => handlePinned()}
+                >
+                  <TbPinnedFilled size={20} />
+                  <span>UnPinned</span>
+                </Button>
+              ))}
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className="p-0">
+            <Button
+              variant="ghost"
+              className="w-full !justify-start space-x-2 font-medium p-1 bg-transparent text-[red] hover:text-[red]"
+              onClick={() => handleClick()}
+            >
+              <IoRemoveCircleOutline size={20} />
+              <span>Remove</span>
+            </Button>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       <DeleteConfirmModal
-        open={open}
-        setOpen={setOpen}
-        handleDelete={handleDeleteLike}
+        open={openDeleteModal}
+        setOpen={setOpenDeleteModal}
+        handleDelete={handleDeleteFavourite}
         isPending={isPending}
         text={"Favourite will be removed from blog"}
-      >
-        <IoRemoveCircleOutline
-          title="Remove Favourite"
-          aria-label="Remove Favourite"
-          color="red"
-          size={20}
-        />
-      </DeleteConfirmModal>
-    </div>
+      />
+    </>
   );
 }
