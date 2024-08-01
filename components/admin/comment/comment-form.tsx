@@ -41,7 +41,7 @@ export const CommentForm = ({ initialValues, setOpen }: CategoryFormProps) => {
       id: initialValues?.id || "",
       blogId: initialValues?.blogId || "",
       content: initialValues?.content || "",
-      parentId: initialValues?.parentId || "",
+      parentId: initialValues?.parentId as any,
     },
   });
 

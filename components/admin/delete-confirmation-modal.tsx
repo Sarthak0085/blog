@@ -11,7 +11,7 @@ interface DeleteConfirmModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   handleDelete: () => void;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   isPending?: boolean;
   text?: string;
 }
@@ -27,7 +27,7 @@ export const DeleteConfirmModal = ({
   return (
     <Dialog open={open} onOpenChange={() => setOpen(!open)}>
       <DialogTrigger onClick={() => setOpen(false)}>{children}</DialogTrigger>
-      <DialogContent className="w-[400px] shadow-md items-center justify-center">
+      <DialogContent className="w-[400px] h-[200px] shadow-md items-center justify-center">
         <DialogTitle>
           Are you sure you want to {text ? "remove" : "delete"} ?
         </DialogTitle>
@@ -47,7 +47,7 @@ export const DeleteConfirmModal = ({
             disabled={isPending}
             onClick={() => handleDelete()}
           >
-            {text ? "Remove" : "Delete"}
+            {text ? "Confirm" : "Delete"}
           </Button>
         </div>
       </DialogContent>

@@ -24,6 +24,7 @@ const buttonVariants = cva(
           "border border-[red] text-[red] bg-white hover:bg-[red] hover:text-white p-1",
         delete:
           "border border-[red] text-white bg-[red] hover:text-[red] hover:bg-white p-1",
+        edit: "text-[#FFC107] hover:text-[#FFC107]",
       },
       size: {
         default: "h-9 px-4 py-2",

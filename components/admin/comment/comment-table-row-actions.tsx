@@ -15,6 +15,15 @@ import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { deleteComment } from "@/actions/comments/delete-comment";
 import { pinnedComment } from "@/actions/comments/pinned-comment";
 import { CommentModal } from "./comment-modal";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -26,10 +35,13 @@ export function CommentTableRowActions<TData>({
   const user = useCurrentUser();
   const comment = row.original as ExtendComment;
   const [open, setOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  const handleDeleteLike = () => {
+  console.log(comment);
+
+  const handleDeleteComment = () => {
     startTransition(() => {
       deleteComment({ commentId: comment?.id })
         .then((data) => {
@@ -66,64 +78,96 @@ export function CommentTableRowActions<TData>({
     });
   };
 
+  const handleClick = (value: string) => {
+    setOpenModal(false);
+    setTimeout(() => {
+      if (value === "edit") setOpen(true);
+      else setOpenDeleteModal(true);
+    }, 50);
+  };
+
   return (
-    <div className="flex items-center justify-center space-x-2">
-      <Link href={`/blog/${comment?.blog?.slug}`}>
-        <Button
-          title="View"
-          aria-label="View"
-          variant="ghost"
-          className="flex h-8 w-8 p-0 bg-transparent"
-        >
-          <IoEyeOutline color="blue" size={20} />
-        </Button>
-      </Link>
-      {user?.id === comment.userId && (
-        <CommentModal initialValues={comment} setOpen={setOpen} open={open}>
-          <CiEdit
-            title="Edit Comment"
-            aria-label="Edit Comment"
-            color="blue"
-            size={20}
-          />
-        </CommentModal>
-      )}
-      {user?.id === comment.userId &&
-        (!comment?.isPinned ? (
+    <>
+      <DropdownMenu defaultOpen={openModal}>
+        <DropdownMenuTrigger asChild>
           <Button
-            title="Pinned"
-            aria-label="Pinned"
             variant="ghost"
-            className="flex h-8 w-8 p-0 bg-transparent"
-            onClick={() => handlePinned()}
+            className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+            onClick={() => setOpenModal((prev) => !prev)}
           >
-            <TbPinned color="blue" size={20} />
+            <DotsHorizontalIcon className="h-4 w-4" />
+            <span className="sr-only">Open menu</span>
           </Button>
-        ) : (
-          <Button
-            title="Unpinned"
-            aria-label="Unpinned"
-            variant="ghost"
-            className="flex h-8 w-8 p-0 bg-transparent"
-            onClick={() => handlePinned()}
-          >
-            <TbPinnedFilled color="blue" size={20} />
-          </Button>
-        ))}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-[100px]">
+          <DropdownMenuItem className="p-0">
+            <Link href={`/blog/${comment?.blog?.slug}`}>
+              <Button
+                className="w-full !justify-start px-2 py-2 space-x-2 h-auto  font-medium text-[blue] hover:text-[blue]"
+                variant="ghost"
+              >
+                <IoEyeOutline color="blue" size={20} />
+                <span> View </span>
+              </Button>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          {user?.id === comment.userId && (
+            <DropdownMenuItem className="p-0">
+              <Button
+                className="w-full !justify-start p-1 space-x-2 font-medium"
+                variant={"edit"}
+                onClick={() => handleClick("edit")}
+              >
+                <CiEdit color="#FFC107" size={20} />
+                <span> Edit </span>
+              </Button>
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className="p-0">
+            {user?.id === comment.userId &&
+              (!comment?.isPinned ? (
+                <Button
+                  variant="ghost"
+                  className="w-full !justify-start space-x-2 font-medium p-1 bg-transparent text-muted-foreground"
+                  onClick={() => handlePinned()}
+                >
+                  <TbPinned size={20} />
+                  <span>Pinned</span>
+                </Button>
+              ) : (
+                <Button
+                  variant="ghost"
+                  className="w-full !justify-start space-x-2 font-medium p-1 bg-transparent text-muted-foreground"
+                  onClick={() => handlePinned()}
+                >
+                  <TbPinnedFilled size={20} />
+                  <span>UnPinned</span>
+                </Button>
+              ))}
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className="p-0">
+            <Button
+              variant="ghost"
+              className="w-full !justify-start space-x-2 font-medium p-1 bg-transparent text-[red] hover:text-[red]"
+              onClick={() => handleClick("delete")}
+            >
+              <MdDeleteOutline size={20} />
+              <span>Delete</span>
+            </Button>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <CommentModal initialValues={comment} setOpen={setOpen} open={open} />
       <DeleteConfirmModal
         open={openDeleteModal}
         setOpen={setOpenDeleteModal}
-        handleDelete={handleDeleteLike}
+        handleDelete={handleDeleteComment}
         isPending={isPending}
         text={"Comment will be deleted from blog"}
-      >
-        <MdDeleteOutline
-          title="Delete Comment"
-          aria-label="Delete Comment"
-          color="red"
-          size={20}
-        />
-      </DeleteConfirmModal>
-    </div>
+      />
+    </>
   );
 }

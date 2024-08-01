@@ -97,14 +97,14 @@ export const commentColumns: ColumnDef<ExtendComment>[] = [
     ),
     cell: ({ row }) => {
       const content: string = row.getValue("content");
-      const contentSliced = content?.slice(0, 25);
+      const contentSliced = content?.slice(0, 22);
       return (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="flex  space-x-2 items-center">
                 <span className="max-w-[500px] truncate capitalize font-medium cursor-text">
-                  {content?.length > 25
+                  {content?.length > 22
                     ? `${contentSliced}...`
                     : `${contentSliced}`}
                 </span>
@@ -114,9 +114,6 @@ export const commentColumns: ColumnDef<ExtendComment>[] = [
           </Tooltip>
         </TooltipProvider>
       );
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
     },
   },
   {

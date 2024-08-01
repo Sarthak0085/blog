@@ -148,7 +148,7 @@ export const UpdateCommentSchema = z.object({
     id: z.string().min(1, "comment Id is required"),
     blogId: z.string().min(1, "BlogId is required"),
     content: z.string().min(1, "Content is required"),
-    parentId: z.optional(z.string().min(1, "parentId is required")),
+    parentId: z.union([z.string().min(1, "parentId is required"), z.null()]),
 });
 
 export const DeleteCommentSchema = z.object({
@@ -157,4 +157,8 @@ export const DeleteCommentSchema = z.object({
 
 export const PinnedCommentSchema = z.object({
     commentId: z.string().min(1, "CommentId is required"),
+});
+
+export const PinnedDislikeSchema = z.object({
+    dislikeId: z.string().min(1, "DislikeId is required"),
 });
