@@ -5,7 +5,12 @@ export type ExtendBlog = Blog & {
         id: string;
         name: string;
     };
-    comments: ExtendComment[];
+    comments: {
+        id: string;
+        content: string;
+        userId: string;
+        blogId: string;
+    }[];
     likes: {
         id: string;
         userId: string;

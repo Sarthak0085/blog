@@ -32,7 +32,7 @@ export const uploadFilesToCloudinary = async (file: string, slug?: string): Prom
     });
 };
 
-export const deleteImage = async (publicId: string) => {
+export const deleteImageFromCloudinary = async (publicId: string) => {
     return new Promise((resolve, reject) => {
         cloudinary.uploader.destroy(publicId, (error, result) => {
             if (error) {

@@ -63,13 +63,27 @@ export const AddBlogSchema = z.object({
     status: z.enum([BlogStatus.DRAFT, BlogStatus.PUBLISHED]),
 });
 
-// export type Blog = z.infer<typeof AddBlogSchema>
+export const UpdateBlogSchema = z.object({
+    id: z.string().min(1, { message: "Category Id is required" }),
+    title: z.string().min(3, { message: "Title must be bigger than 3 letters" }),
+    slug: z.string().min(3, { message: "Slug must be bigger than 3 letters" }),
+    shortSummary: z.string()
+        .min(100, { message: "Short Summary must be between 100 to 300 characters" })
+        .max(300, { message: "Short Summary must be between 100 to 300 characters" }),
+    content: z.string(),
+    category: z.string().min(1, "Category is required"),
+    tags: z.optional(z.string()),
+    image: z.string(),
+    status: z.enum([BlogStatus.DRAFT, BlogStatus.PUBLISHED]),
+});
+
+export const DeleteBlogSchema = z.object({
+    blogId: z.string().min(1, { message: "Blog Id is required" }),
+})
 
 export const CreateCategorySchema = z.object({
     name: z.string().min(2, "Category name is required.")
 });
-
-export type CreateCategory = z.infer<typeof CreateCategorySchema>
 
 export const UpdateCategorySchema = z.object({
     categoryId: z.string().min(1, "Category Id is required"),

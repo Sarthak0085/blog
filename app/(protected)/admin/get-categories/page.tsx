@@ -1,13 +1,9 @@
 "use client";
 
-import { getAllBlogs } from "@/actions/blog-actions";
-import { AllBlogsTable } from "@/components/admin/blog/blogs-table";
-import { blogColumns } from "@/components/admin/blog/blog-columns";
-import { ExtendBlog, ExtendCategory } from "@/utils/types";
+import { ExtendCategory } from "@/utils/types";
 import { useEffect, useState } from "react";
 import { PulseLoader } from "react-spinners";
 import { getAllCategories } from "@/actions/category/get-categories";
-import { Category } from "@prisma/client";
 import { CategoriesTable } from "@/components/admin/category/category-table";
 import { categoryColumns } from "@/components/admin/category/category-columns";
 import { Button } from "@/components/ui/button";

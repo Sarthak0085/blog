@@ -1,6 +1,6 @@
 "use client";
 
-import { getBlogDetailsBySlug } from "@/actions/blog-actions";
+import { getBlogDetailsBySlug } from "@/actions/blog/blog-details";
 import { BlogDetails } from "@/components/blog/blog-detail";
 import { ExtendBlog } from "@/utils/types";
 import { useParams } from "next/navigation";
@@ -20,7 +20,7 @@ export default function BlogPage() {
         if (!data) {
           toast.error("Blog post not found");
         } else {
-          setData(data?.data as ExtendBlog);
+          setData(data?.data as unknown as ExtendBlog);
         }
       } catch (error) {
         console.error("Error fetching blog data:", error);

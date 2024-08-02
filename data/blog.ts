@@ -43,6 +43,8 @@ export const getBlogById = async (id: string) => {
             }
         });
 
+        console.log("blog", blog);
+
         return blog;
     } catch (error) {
         return null

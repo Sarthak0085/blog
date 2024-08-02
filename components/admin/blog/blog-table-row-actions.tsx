@@ -13,6 +13,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { useState, useTransition } from "react";
 import { DeleteConfirmModal } from "../delete-confirmation-modal";
+import { CiEdit } from "react-icons/ci";
+import Link from "next/link";
+import { Blog } from "@prisma/client";
 
 interface BlogsTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -21,6 +24,7 @@ interface BlogsTableRowActionsProps<TData> {
 export function BlogTableRowActions<TData>({
   row,
 }: BlogsTableRowActionsProps<TData>) {
+  const blog = row.original as Blog;
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -56,6 +60,18 @@ export function BlogTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
+        <DropdownMenuItem className="p-0">
+          <Link href={`/admin/edit-blog/${blog?.id}`}>
+            <Button
+              className="w-full !justify-start p-1 space-x-2 font-medium"
+              variant={"edit"}
+            >
+              <CiEdit color="#FFC107" size={20} />
+              <span> Edit </span>
+            </Button>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <DropdownMenuItem>Edit</DropdownMenuItem>
         <DropdownMenuItem>Make a copy</DropdownMenuItem>
         <DropdownMenuItem>Favorite</DropdownMenuItem>

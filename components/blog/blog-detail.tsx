@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { AuthorAndDateDisplay } from "./author-date-display";
 import { ExtendBlog } from "@/utils/types";
-import { incrementViewCount } from "@/actions/blog-actions";
 import Link from "next/link";
 import { MarkdownContent } from "@/components/blog/markdown-content";
 import { BlogBreadCrumb } from "@/components/blog/blog-bread-crumb";
@@ -18,6 +17,7 @@ import { dislikeBlog } from "@/actions/dislikes/dislike-blog";
 import { addOrRemoveToFavourite } from "@/actions/favourites/add-to-favourite";
 import { savedBlogPost } from "@/actions/savedpost/saved-blog-post";
 import { BlogComments } from "./blog-comments";
+import { incrementViewCount } from "@/actions/blog/get-blogs";
 
 export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
   const user = useCurrentUser();

@@ -1,11 +1,11 @@
 "use client";
 
-import { getAllBlogs } from "@/actions/blog-actions";
 import { AllBlogsTable } from "@/components/admin/blog/blogs-table";
 import { blogColumns } from "@/components/admin/blog/blog-columns";
 import { ExtendBlog } from "@/utils/types";
 import { useEffect, useState } from "react";
 import { PulseLoader } from "react-spinners";
+import { getAllBlogs } from "@/actions/blog/get-blogs";
 
 export default function GetBlogsPage() {
   const [loading, setLoading] = useState(true);
@@ -21,7 +21,7 @@ export default function GetBlogsPage() {
           setError(data?.error);
         }
         if (data?.data) {
-          setData(data?.data as ExtendBlog[]);
+          setData(data?.data as unknown as ExtendBlog[]);
         }
       } catch (error) {
         console.error("Error fetching blog data:", error);

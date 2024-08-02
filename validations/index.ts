@@ -20,6 +20,9 @@ import {
     PinnedLikeSchema,
     LikeCommentSchema,
     PinnedCategorySchema,
+    AddBlogSchema,
+    UpdateBlogSchema,
+    DeleteBlogSchema,
 } from "@/schemas";
 import CustomError from "@/lib/customError";
 import * as z from "zod";
@@ -226,6 +229,36 @@ export const validatePinnedLike = (values: z.infer<typeof PinnedLikeSchema>) => 
 
 export const validateUpdateComment = (values: z.infer<typeof UpdateCommentSchema>) => {
     const validatedFields = UpdateCommentSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+        throw new CustomError("Invalid Fields", 400);
+    }
+
+    return validatedFields.data;
+};
+
+export const validateCreateBlog = (values: z.infer<typeof AddBlogSchema>) => {
+    const validatedFields = AddBlogSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+        throw new CustomError("Invalid Fields", 400);
+    }
+
+    return validatedFields.data;
+};
+
+export const validateUpdateBlog = (values: z.infer<typeof UpdateBlogSchema>) => {
+    const validatedFields = UpdateBlogSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+        throw new CustomError("Invalid Fields", 400);
+    }
+
+    return validatedFields.data;
+};
+
+export const validateDeleteBlog = (values: z.infer<typeof DeleteBlogSchema>) => {
+    const validatedFields = DeleteBlogSchema.safeParse(values);
 
     if (!validatedFields.success) {
         throw new CustomError("Invalid Fields", 400);

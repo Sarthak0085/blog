@@ -10,11 +10,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AddBlogSchema } from "@/schemas";
+import { AddBlogSchema, UpdateBlogSchema } from "@/schemas";
 import * as z from "zod";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { ChangeEvent, useState, useTransition } from "react";
+import { ChangeEvent, useEffect, useState, useTransition } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import MarkdownEditor from "react-markdown-editor-lite";
@@ -27,27 +27,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { BlogStatus } from "@prisma/client";
-import { createBlog } from "@/actions/blog-actions";
+import { Blog, BlogStatus, Category } from "@prisma/client";
 import { toast } from "sonner";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { createBlog } from "@/actions/blog/create-blog";
+import { EditBlog } from "@/actions/blog/update-blog";
+import { ExtendBlog } from "@/utils/types";
+import { getAllCategories } from "@/actions/category/get-categories";
 
-export const AddBlogForm = () => {
+
+type BlogSchema =
+  | z.infer<typeof UpdateBlogSchema>
+  | z.infer<typeof AddBlogSchema>;
+
+export const BlogForm = ({ blogData, isUpdate = false }: { blogData?: ExtendBlog | undefined; isUpdate?: boolean }) => {
   const [isPending, startTransition] = useTransition();
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState(blogData?.content ?? "");
+  const [categories, setCategories] = useState<Category[]>([]);
 
-  const form = useForm<z.infer<typeof AddBlogSchema>>({
-    resolver: zodResolver(AddBlogSchema),
+  const form = useForm<BlogSchema>({
+    resolver: zodResolver(isUpdate ? UpdateBlogSchema : AddBlogSchema),
     defaultValues: {
-      title: "",
-      slug: "",
-      content: "",
-      category: "",
-      shortSummary: "",
-      tags: "",
-      image: "",
-      status: BlogStatus.DRAFT,
+      title: blogData?.title ?? "",
+      slug: blogData?.slug ?? "",
+      content: blogData?.content ?? "",
+      category: blogData?.category?.name ?? "",
+      shortSummary: blogData?.shortSummary ?? "",
+      tags: blogData?.tags.join(",") ?? "",
+      image: blogData?.imageUrl ?? "",
+      status: blogData?.status ?? BlogStatus.DRAFT,
+      ...(blogData && {
+        id: blogData?.id ?? ""
+      })
     },
   });
 
@@ -73,27 +85,69 @@ export const AddBlogForm = () => {
 
   const router = useRouter();
 
-  const onSubmit = (values: z.infer<typeof AddBlogSchema>) => {
+  const onSubmit = (values: BlogSchema) => {
     console.log("values :", values);
     startTransition(() => {
-      createBlog(values)
-        .then((data) => {
-          if (data?.success) {
-            toast.success(data.success);
-            router.push("/admin/get-blogs");
-          }
-          if (data?.error) {
-            toast.error(
-              data?.error || "An error occurred while creating the blog."
-            );
-          }
-        })
-        .catch((error) => {
-          console.error("Error creating blog:", error);
-          toast.error("Something went wrong. Please try again after sometime.");
-        });
+      if (isUpdate) {
+        EditBlog(values as z.infer<typeof UpdateBlogSchema>)
+          .then((data) => {
+            if (data?.success) {
+              toast.success(data.success);
+              router.push("/admin/get-blogs");
+            }
+            if (data?.error) {
+              toast.error(
+                data?.error || "An error occurred while creating the blog."
+              );
+            }
+          })
+          .catch((error) => {
+            console.error("Error creating blog:", error);
+            toast.error("Something went wrong. Please try again after sometime.");
+          });
+      } else {
+        createBlog(values)
+          .then((data) => {
+            if (data?.success) {
+              toast.success(data.success);
+              router.push("/admin/get-blogs");
+            }
+            if (data?.error) {
+              toast.error(
+                data?.error || "An error occurred while creating the blog."
+              );
+            }
+          })
+          .catch((error) => {
+            console.error("Error creating blog:", error);
+            toast.error("Something went wrong. Please try again after sometime.");
+          });
+      }
     });
   };
+
+  useEffect(() => {
+    form.setValue("image", blogData?.imageUrl ?? "");
+  }, [blogData]);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getAllCategories();
+        console.log(data);
+        if (!data) {
+          toast.error("Categories not found");
+        } else {
+          setCategories(data?.data as Category[]);
+        }
+      } catch (error) {
+        toast.error("Error while fetching categories");
+      }
+    }
+
+    fetchData();
+  }, [])
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -102,9 +156,9 @@ export const AddBlogForm = () => {
       reader.onloadend = () => {
         form.setValue("image", reader.result as string);
       };
-      reader.readAsDataURL(file); // Convert the file to base64
+      reader.readAsDataURL(file);
       reader.onerror = (error) => {
-        console.error("Error converting file to base64:", error); // Logs an error if the conversion fails
+        console.error("Error converting file to base64:", error);
       };
     }
   };
@@ -112,7 +166,7 @@ export const AddBlogForm = () => {
   return (
     <Card>
       <CardHeader>
-        <h2 className="text-2xl font-semibold text-center">Add New Blog</h2>
+        <h2 className="text-2xl font-semibold text-center">{isUpdate ? "Edit Blog" : "Add New Blog"}</h2>
       </CardHeader>
       <CardContent className="space-y-4">
         <Form {...form}>
@@ -261,8 +315,9 @@ export const AddBlogForm = () => {
                           <SelectValue placeholder="Select a Role" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value={"React"}>React</SelectItem>
-                          <SelectItem value={"Next Js"}>Next Js</SelectItem>
+                          {categories?.map((category) => (
+                            <SelectItem key={category?.id} value={category?.name}>{category?.name}</SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -349,7 +404,7 @@ export const AddBlogForm = () => {
               />
             </div>
             <Button type="submit" disabled={isPending} className="w-full">
-              Create
+              {isUpdate ? "Update" : "Create"}
             </Button>
           </form>
         </Form>
