@@ -13,6 +13,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { ExtendUser } from "@/nextauth";
+import { TbPinnedFilled } from "react-icons/tb";
 
 export const userColumns: ColumnDef<ExtendUser>[] = [
   {
@@ -46,12 +47,14 @@ export const userColumns: ColumnDef<ExtendUser>[] = [
     ),
     cell: ({ row }) => {
       const id: string = row.getValue("id");
-      const blogId = id.slice(0, 10);
+      const userId = id.slice(0, 10);
       return (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="w-[80px] cursor-text">{blogId}</div>
+              <div className="w-[90px] cursor-text justify-end flex items-center space-x-1">
+                <span>{userId}</span>
+              </div>
             </TooltipTrigger>
             <TooltipContent>{id}</TooltipContent>
           </Tooltip>

@@ -50,11 +50,16 @@ export const favouriteColumns: ColumnDef<Favourite>[] = [
     cell: ({ row }) => {
       const id: string = row.getValue("id");
       const favouriteId = id.slice(0, 10);
+      const isPinned = row.original.isPinned;
       return (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="w-[80px] cursor-text">{favouriteId}</div>
+              <div className="w-[90px] cursor-text justify-end flex items-center space-x-1">
+                <span>{isPinned && <TbPinnedFilled size={16} className="-rotate-45 mt-[1px]" />}</span>
+                <span>{favouriteId}</span>
+              </div>
+
             </TooltipTrigger>
             <TooltipContent>{id}</TooltipContent>
           </Tooltip>

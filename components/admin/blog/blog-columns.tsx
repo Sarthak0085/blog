@@ -15,17 +15,29 @@ import {
 } from "@/components/ui/tooltip";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { TbPinnedFilled } from "react-icons/tb";
+import { MdOutlineArchive } from "react-icons/md";
+import { FaRegCalendarCheck } from "react-icons/fa";
 
 export const statuses = [
   {
-    label: "DRAFT",
+    label: BlogStatus.DRAFT,
     value: BlogStatus.DRAFT,
     icon: QuestionMarkCircledIcon
   },
   {
-    label: "PUBLISHED",
+    label: BlogStatus.PUBLISHED,
     value: BlogStatus.PUBLISHED,
     icon: IoMdCheckmarkCircleOutline
+  },
+  {
+    label: BlogStatus.ARCHIEVED,
+    value: BlogStatus.ARCHIEVED,
+    icon: MdOutlineArchive
+  },
+  {
+    label: BlogStatus.SCHEDULED,
+    value: BlogStatus.SCHEDULED,
+    icon: FaRegCalendarCheck
   },
 ];
 
@@ -68,7 +80,7 @@ export const blogColumns: ColumnDef<ExtendBlog>[] = [
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="w-[90px] cursor-text justify-end flex items-center space-x-1">
-                <span>{isPinned && <TbPinnedFilled size={16} className="-rotate-45" />}</span>
+                <span>{isPinned && <TbPinnedFilled size={16} className="-rotate-45 mt-[1px]" />}</span>
                 <span>{blogId}</span>
               </div>
             </TooltipTrigger>

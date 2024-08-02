@@ -14,6 +14,7 @@ import {
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FaUser } from "react-icons/fa";
+import { TbPinnedFilled } from "react-icons/tb";
 
 export const savedPostColumns: ColumnDef<Favourite>[] = [
   {
@@ -47,12 +48,17 @@ export const savedPostColumns: ColumnDef<Favourite>[] = [
     ),
     cell: ({ row }) => {
       const id: string = row.getValue("id");
-      const favouriteId = id.slice(0, 10);
+      const savepostId = id.slice(0, 10);
+      const isPinned = row.original.isPinned;
       return (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="w-[80px] cursor-text">{favouriteId}</div>
+              <div className="w-[90px] cursor-text justify-end flex items-center space-x-1">
+                <span>{isPinned && <TbPinnedFilled size={16} className="-rotate-45 mt-[1px]" />}</span>
+                <span>{savepostId}</span>
+              </div>
+
             </TooltipTrigger>
             <TooltipContent>{id}</TooltipContent>
           </Tooltip>

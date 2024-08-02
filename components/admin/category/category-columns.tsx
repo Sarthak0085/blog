@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Blog } from "@prisma/client";
 import { CategoriesTableRowActions } from "./category-table-row-actions";
+import { TbPinnedFilled } from "react-icons/tb";
 
 export const categoryColumns: ColumnDef<ExtendCategory>[] = [
   {
@@ -46,11 +47,15 @@ export const categoryColumns: ColumnDef<ExtendCategory>[] = [
     cell: ({ row }) => {
       const id: string = row.getValue("id");
       const categoryId = id.slice(0, 10);
+      const isPinned = row.original.isPinned;
       return (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="w-[80px] cursor-text">{categoryId}</div>
+              <div className="w-[90px] cursor-text justify-end flex items-center space-x-1">
+                <span>{isPinned && <TbPinnedFilled size={16} className="-rotate-45 mt-[1px]" />}</span>
+                <span>{categoryId}</span>
+              </div>
             </TooltipTrigger>
             <TooltipContent>{id}</TooltipContent>
           </Tooltip>

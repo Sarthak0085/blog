@@ -102,25 +102,26 @@ model TwoFactorConfirmation {
 }
 
 model Blog {
-  id            String      @id @default(cuid())
-  title         String      @unique
-  slug          String      @unique
-  content       String
-  shortSummary  String
-  categoryId    String
-  imagePublicId String?
-  imageUrl      String?
-  isPinned      Boolean     @default(false)
-  status        BlogStatus  @default(DRAFT)
-  tags          String[]
-  views         Int         @default(0)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  comments      Comment[]
-  likes         Like[]
-  savedPosts    SavedPost[]
-  dislikes      Dislike[]
-  favourites    Favourite[]
+  id                   String      @id @default(cuid())
+  title                String      @unique
+  slug                 String      @unique
+  content              String
+  shortSummary         String
+  categoryId           String
+  imagePublicId        String?
+  imageUrl             String?
+  isPinned             Boolean     @default(false)
+  status               BlogStatus  @default(DRAFT)
+  publishedDateAndTime DateTime?
+  tags                 String[]
+  views                Int         @default(0)
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+  comments             Comment[]
+  likes                Like[]
+  savedPosts           SavedPost[]
+  dislikes             Dislike[]
+  favourites           Favourite[]
 
   category Category @relation(fields: [categoryId], references: [id])
 
@@ -131,6 +132,8 @@ model Blog {
 enum BlogStatus {
   DRAFT
   PUBLISHED
+  ARCHIEVED
+  SCHEDULED
 }
 
 model Category {
