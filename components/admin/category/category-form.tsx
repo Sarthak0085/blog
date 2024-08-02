@@ -72,6 +72,7 @@ export const CategoryForm = ({
             }
             if (data?.success) {
               setSuccess(data?.success);
+              setOpen(false);
               window.location.reload();
             }
           })

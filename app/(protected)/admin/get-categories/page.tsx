@@ -72,7 +72,7 @@ export default function GetBlogsPage() {
               className="bg-blue-500 text-white font-semibold"
               onClick={() => setOpen(true)}
             >
-              Add Blog
+              Add Category
             </Button>
           </CategoryModal>
         </div>

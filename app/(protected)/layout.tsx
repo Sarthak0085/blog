@@ -10,7 +10,7 @@ export default function ProtectedLayout({
       <div className="fixed hidden lg:block w-[200px] max-w-[400px] top-5 left-3 overflow-y-auto">
         <Navbar />
       </div>
-      <main className="w-full pl-[200px] flex items-center my-5 justify-center">
+      <main className="w-full lg:pl-[200px] flex items-center my-5 justify-center">
         {children}
       </main>
     </div>
