@@ -43,6 +43,7 @@ model User {
   dislikes              Dislike[]
   favourites            Favourite[]
   createdAt             DateTime               @default(now())
+  CommentLike           CommentLike[]
 }
 
 model Account {
@@ -191,8 +192,19 @@ model Comment {
 
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  blog Blog @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  user  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  blog  Blog          @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  likes CommentLike[]
+}
+
+model CommentLike {
+  id        String  @id @default(cuid())
+  userId    String
+  commentId String
+  user      User    @relation(fields: [userId], references: [id])
+  comment   Comment @relation(fields: [commentId], references: [id])
+
+  @@unique([userId, commentId])
 }
 
 model SavedPost {

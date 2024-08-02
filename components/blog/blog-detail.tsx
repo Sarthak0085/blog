@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { AuthorAndDateDisplay } from "./author-date-display";
 import { ExtendBlog } from "@/utils/types";
 import { incrementViewCount } from "@/actions/blog-actions";
@@ -22,6 +22,15 @@ import { BlogComments } from "./blog-comments";
 export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
   const user = useCurrentUser();
   const [isPending, startTransition] = useTransition();
+  const [displayComment, setDisplayComment] = useState(false);
+
+  const commentSectionRef = useRef<HTMLDivElement>(null);
+  const handleCommentButtonClick = () => {
+    setDisplayComment(true);
+    if (commentSectionRef.current) {
+      commentSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const [like, setLike] = useState({
     isLiked: !!data?.likes.find((item) => item.userId === user?.id),
@@ -195,6 +204,7 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
           toggleFavourite={toggleFavourite}
           handleSavedPost={handleSavedPost}
           isPending={isPending}
+          handleCommentButtonClick={handleCommentButtonClick}
           data={data}
         />
         <div className="text-muted-foreground bold">{data?.shortSummary}</div>
@@ -209,9 +219,9 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
         <div className="text-black">
           <MarkdownContent content={data?.content} />
         </div>
-        <div>
-          <BlogComments comments={data?.comments} />
-        </div>
+        {displayComment && <div className="text-black">
+          <BlogComments ref={commentSectionRef} comments={data?.comments} blogId={data?.id} />
+        </div>}
       </div>
     </div>
   );

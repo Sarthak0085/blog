@@ -159,6 +159,10 @@ export const PinnedCommentSchema = z.object({
     commentId: z.string().min(1, "CommentId is required"),
 });
 
+export const LikeCommentSchema = z.object({
+    commentId: z.string().min(1, "CommentId is required"),
+});
+
 export const PinnedDislikeSchema = z.object({
     dislikeId: z.string().min(1, "DislikeId is required"),
 });

@@ -30,6 +30,7 @@ interface FeaturesProps {
   toggleFavourite: (values: z.infer<typeof FavouriteSchema>) => void;
   data: ExtendBlog | null;
   isPending: boolean;
+  handleCommentButtonClick: () => void;
   savedPost: { isSaved: boolean; count: number | undefined };
   handleSavedPost: (values: z.infer<typeof SavedPostSchema>) => void;
 }
@@ -45,6 +46,7 @@ export function Features({
   savedPost,
   handleSavedPost,
   data,
+  handleCommentButtonClick
 }: FeaturesProps) {
   const count = (value: number | undefined) => {
     if (value) {
@@ -76,44 +78,44 @@ export function Features({
       </div>
       {((like.isLiked && !dislike.isDisliked) ||
         (!like.isLiked && !dislike.isDisliked)) && (
-        <div className="flex items-center">
-          <Button
-            title="Like"
-            aria-label="Like"
-            variant={"icon"}
-            className="text-left"
-            disabled={isPending}
-            onClick={() => handleLike({ blogId: data?.id as string })}
-          >
-            {like.isLiked ? (
-              <FaThumbsUp color="blue" size={16} />
-            ) : (
-              <FaRegThumbsUp color="blue" size={16} />
-            )}
-          </Button>
-          <span>{count(like.count)}</span>
-        </div>
-      )}
+          <div className="flex items-center">
+            <Button
+              title="Like"
+              aria-label="Like"
+              variant={"icon"}
+              className="text-left"
+              disabled={isPending}
+              onClick={() => handleLike({ blogId: data?.id as string })}
+            >
+              {like.isLiked ? (
+                <FaThumbsUp color="blue" size={16} />
+              ) : (
+                <FaRegThumbsUp color="blue" size={16} />
+              )}
+            </Button>
+            <span>{count(like.count)}</span>
+          </div>
+        )}
       {((!like.isLiked && dislike.isDisliked) ||
         (!like.isLiked && !dislike.isDisliked)) && (
-        <div className="flex items-center">
-          <Button
-            title="Dislike"
-            aria-label="Dislike"
-            variant={"icon"}
-            className="text-left"
-            disabled={isPending}
-            onClick={() => handleDislike({ blogId: data?.id as string })}
-          >
-            {dislike.isDisliked ? (
-              <FaThumbsDown color="blue" size={16} />
-            ) : (
-              <FaRegThumbsDown color="blue" size={16} />
-            )}
-          </Button>
-          <span>{count(dislike.count)}</span>
-        </div>
-      )}
+          <div className="flex items-center">
+            <Button
+              title="Dislike"
+              aria-label="Dislike"
+              variant={"icon"}
+              className="text-left"
+              disabled={isPending}
+              onClick={() => handleDislike({ blogId: data?.id as string })}
+            >
+              {dislike.isDisliked ? (
+                <FaThumbsDown color="blue" size={16} />
+              ) : (
+                <FaRegThumbsDown color="blue" size={16} />
+              )}
+            </Button>
+            <span>{count(dislike.count)}</span>
+          </div>
+        )}
       <div className="flex items-center">
         <Button
           title="Favourite"
@@ -149,7 +151,11 @@ export function Features({
         <span>{count(savedPost.count)}</span>
       </div>
       <div className="flex items-center">
-        <Button variant={"icon"} className="text-left">
+        <Button
+          variant={"icon"}
+          className="text-left"
+          onClick={() => handleCommentButtonClick()}
+        >
           <ChatBubbleIcon />
         </Button>
         <span>{count(data?.comments?.length)}</span>
