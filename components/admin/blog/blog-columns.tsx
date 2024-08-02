@@ -5,7 +5,7 @@ import { DataTableColumnHeader } from "@/components/table/data-table-column-head
 import { Checkbox } from "@/components/ui/checkbox";
 import { ExtendBlog } from "@/utils/types";
 import { BlogStatus, Category, Comment, Like, User } from "@prisma/client";
-import { CheckIcon, QuestionMarkCircledIcon } from "@radix-ui/react-icons";
+import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 import { BlogTableRowActions } from "./blog-table-row-actions";
 import {
   Tooltip,
@@ -13,15 +13,19 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { TbPinnedFilled } from "react-icons/tb";
 
 export const statuses = [
   {
     label: "DRAFT",
     value: BlogStatus.DRAFT,
+    icon: QuestionMarkCircledIcon
   },
   {
     label: "PUBLISHED",
     value: BlogStatus.PUBLISHED,
+    icon: IoMdCheckmarkCircleOutline
   },
 ];
 
@@ -58,11 +62,15 @@ export const blogColumns: ColumnDef<ExtendBlog>[] = [
     cell: ({ row }) => {
       const id: string = row.getValue("id");
       const blogId = id.slice(0, 10);
+      const isPinned = row.original.isPinned;
       return (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="w-[80px] cursor-text">{blogId}</div>
+              <div className="w-[90px] cursor-text justify-end flex items-center space-x-1">
+                <span>{isPinned && <TbPinnedFilled size={16} className="-rotate-45" />}</span>
+                <span>{blogId}</span>
+              </div>
             </TooltipTrigger>
             <TooltipContent>{id}</TooltipContent>
           </Tooltip>
@@ -187,7 +195,7 @@ export const blogColumns: ColumnDef<ExtendBlog>[] = [
       if (status === "PUBLISHED") {
         statusLabel = "Published";
         statusColor = "text-green-500";
-        statusIcon = <CheckIcon className="mr-2 h-4 w-4" />;
+        statusIcon = <IoMdCheckmarkCircleOutline size={16} className="mr-2" />;
       } else if (status === "DRAFT") {
         statusLabel = "Draft";
         statusColor = "text-yellow-500";

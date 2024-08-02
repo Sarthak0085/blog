@@ -6,6 +6,8 @@ import { ExtendBlog } from "@/utils/types";
 import { useEffect, useState } from "react";
 import { PulseLoader } from "react-spinners";
 import { getAllBlogs } from "@/actions/blog/get-blogs";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function GetBlogsPage() {
   const [loading, setLoading] = useState(true);
@@ -58,7 +60,16 @@ export default function GetBlogsPage() {
             Here&apos;s a list of all the blogs!
           </p>
         </div>
-        <div className="flex items-center space-x-2">{/* <UserNav /> */}</div>
+        <div className="flex items-center space-x-2">
+          <Link href={`/admin/add-blog`}>
+            <Button
+              variant={"default"}
+              className="bg-blue-600 text-white hover:text-blue-600 hover:bg-white font-semibold"
+            >
+              Add Blog
+            </Button>
+          </Link>
+        </div>
       </div>
       <AllBlogsTable data={data} columns={blogColumns} />
     </div>

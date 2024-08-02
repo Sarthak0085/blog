@@ -1,13 +1,13 @@
 "use server";
 
-import { getBlogById, getBlogBySlug, getBlogByTitle } from "@/data/blog";
+import { getBlogById } from "@/data/blog";
 import { getCategoryByName } from "@/data/category";
 import { currentUser } from "@/lib/auth";
 import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
-import { AddBlogSchema, UpdateBlogSchema } from "@/schemas";
+import { UpdateBlogSchema } from "@/schemas";
 import { deleteImageFromCloudinary, uploadFilesToCloudinary } from "@/utils/helpers";
-import { validateCreateBlog, validateUpdateBlog } from "@/validations";
+import { validateUpdateBlog } from "@/validations";
 import * as z from "zod";
 
 const extractImageUrls = (content: string): string[] => {
@@ -33,7 +33,7 @@ const replaceImageUrlsInContent = async (content: string): Promise<string> => {
     return updatedContent;
 };
 
-function extractPublicId(url: string) {
+const extractPublicId = (url: string) => {
     // Parse the URL to get its pathname
     const urlObj = new URL(url);
     const pathname = urlObj.pathname;
@@ -85,7 +85,6 @@ export const EditBlog = async (values: z.infer<typeof UpdateBlogSchema>) => {
 
         const transformedTags = tags?.split(",").map(tag => tag.trim()).filter(tag => tag);
 
-        // Extract existing image URLs and new images url
         const existingImageUrls = extractImageUrls(existedBlog.content);
         const updatedImageUrls = extractImageUrls(content);
 

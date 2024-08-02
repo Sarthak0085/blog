@@ -79,7 +79,11 @@ export const UpdateBlogSchema = z.object({
 
 export const DeleteBlogSchema = z.object({
     blogId: z.string().min(1, { message: "Blog Id is required" }),
-})
+});
+
+export const PinnedBlogSchema = z.object({
+    blogId: z.string().min(1, { message: "Blog Id is required" }),
+});
 
 export const CreateCategorySchema = z.object({
     name: z.string().min(2, "Category name is required.")

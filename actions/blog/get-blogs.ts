@@ -18,8 +18,8 @@ export const getAllBlogs = async () => {
                 savedPosts: true,
             },
             orderBy: [
+                { isPinned: "desc" },
                 { createdAt: "desc" },
-                { isPinned: "desc" }
             ]
         });
 
