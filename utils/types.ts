@@ -5,13 +5,7 @@ export type ExtendBlog = Blog & {
         id: string;
         name: string;
     };
-    comments: {
-        id: string;
-        content: string;
-        userId: string;
-        blogId: string;
-        createdAt: Date;
-    }[];
+    comments: ExtendComment[];
     likes: {
         id: string;
         userId: string;

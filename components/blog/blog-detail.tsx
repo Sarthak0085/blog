@@ -17,6 +17,7 @@ import { DislikeSchema, FavouriteSchema, LikeSchema } from "@/schemas";
 import { dislikeBlog } from "@/actions/dislikes/dislike-blog";
 import { addOrRemoveToFavourite } from "@/actions/favourites/add-to-favourite";
 import { savedBlogPost } from "@/actions/savedpost/saved-blog-post";
+import { BlogComments } from "./blog-comments";
 
 export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
   const user = useCurrentUser();
@@ -207,6 +208,9 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
 
         <div className="text-black">
           <MarkdownContent content={data?.content} />
+        </div>
+        <div>
+          <BlogComments comments={data?.comments} />
         </div>
       </div>
     </div>

@@ -291,7 +291,11 @@ export const getBlogDetailsBySlug = async (slug: string) => {
                 user: true,
                 category: true,
                 likes: true,
-                comments: true,
+                comments: {
+                    include: {
+                        user: true,
+                    },
+                },
                 dislikes: true,
                 favourites: true,
                 savedPosts: true,
