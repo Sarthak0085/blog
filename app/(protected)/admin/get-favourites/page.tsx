@@ -7,8 +7,8 @@ import { ExtendFavourites } from "@/utils/types";
 import { useEffect, useState } from "react";
 import { PulseLoader } from "react-spinners";
 
-export default function GetFavouritessPage() {
-  const [loading, setLoading] = useState(true);
+export default function AllFavouritesPage() {
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>("");
   const [data, setData] = useState<ExtendFavourites[]>([]);
 
@@ -17,23 +17,23 @@ export default function GetFavouritessPage() {
       try {
         const data = await getAllFavourites();
         if (data?.error) {
-          console.error("Error while fetching Dislikes.");
+          console.error("Error while fetching Favourites.");
           setError(data?.error);
         }
         if (data?.data) {
           setData(data?.data as ExtendFavourites[]);
         }
       } catch (error) {
-        setError("Error while fetching Dislikes.");
+        setError("Error while fetching Favourites.");
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
     fetchData();
   }, []);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="w-full h-[100vh] flex items-center justify-center">
         <PulseLoader margin={3} size={20} />

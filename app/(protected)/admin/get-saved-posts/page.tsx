@@ -7,8 +7,8 @@ import { AllSavedPostsTables } from "@/components/admin/saved-post/saved-post-ta
 import { ExtendSavedPost } from "@/utils/types";
 import { getAllSavedPosts } from "@/actions/savedpost/get-saved-posts";
 
-export default function GetLikesPage() {
-  const [loading, setLoading] = useState(true);
+export default function AllSavedPostsPage() {
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>("");
   const [data, setData] = useState<ExtendSavedPost[]>([]);
 
@@ -17,7 +17,7 @@ export default function GetLikesPage() {
       try {
         const data = await getAllSavedPosts();
         if (data?.error) {
-          console.error("Error while fetching Likes.");
+          console.error("Error while fetching saved posts.");
           setError(data?.error);
         }
         if (data?.data) {
@@ -26,14 +26,14 @@ export default function GetLikesPage() {
       } catch (error) {
         setError("Error while fetching saved posts.");
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
     fetchData();
   }, []);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="w-full h-[100vh] flex items-center justify-center">
         <PulseLoader margin={3} size={20} />
