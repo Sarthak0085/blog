@@ -77,6 +77,10 @@ export const UpdateBlogSchema = z.object({
     status: z.enum([BlogStatus.DRAFT, BlogStatus.PUBLISHED]),
 });
 
+export const PublishBlogSchema = z.object({
+    id: z.string().min(1, { message: "Blog Id is required" }),
+})
+
 export const DeleteBlogSchema = z.object({
     blogId: z.string().min(1, { message: "Blog Id is required" }),
 });

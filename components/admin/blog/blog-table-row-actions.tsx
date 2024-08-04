@@ -21,7 +21,12 @@ import { pinnedBlog } from "@/actions/blog/pinned-blog";
 import { deleteBlog } from "@/actions/blog/delete-blog";
 import { MdDeleteOutline } from "react-icons/md";
 import { TbPinned, TbPinnedFilled } from "react-icons/tb";
+import { BsSend } from "react-icons/bs";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useParams } from "next/navigation";
+import { publishBlog } from "@/actions/blog/publish-blog";
+import * as z from "zod";
+import { PublishBlogSchema } from "@/schemas";
 
 interface BlogsTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -30,6 +35,7 @@ interface BlogsTableRowActionsProps<TData> {
 export function BlogTableRowActions<TData>({
   row,
 }: BlogsTableRowActionsProps<TData>) {
+  const { userId } = useParams();
   const blog = row.original as Blog;
   const user = useCurrentUser();
   const [open, setOpen] = useState(false);
@@ -39,6 +45,24 @@ export function BlogTableRowActions<TData>({
   const handlePinned = () => {
     startTransition(() => {
       pinnedBlog({ blogId: blog?.id })
+        .then((data) => {
+          if (data?.success) {
+            toast.success(data?.success);
+            window.location.reload();
+          }
+          if (data?.error) {
+            toast.error(data?.error);
+          }
+        })
+        .catch(() => {
+          toast.error("Something went wrong!");
+        });
+    });
+  };
+
+  const handleBlogPublsih = (values: z.infer<typeof PublishBlogSchema>) => {
+    startTransition(() => {
+      publishBlog(values)
         .then((data) => {
           if (data?.success) {
             toast.success(data?.success);
@@ -96,7 +120,7 @@ export function BlogTableRowActions<TData>({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
-          {blog.status === "PUBLISHED" &&
+          {(blog.status === "PUBLISHED" || blog.status === "ARCHIEVED") &&
             <>
               <DropdownMenuItem className="p-0">
                 <Link href={`/blog/${blog?.slug}`}>
@@ -108,6 +132,22 @@ export function BlogTableRowActions<TData>({
                     <span> View </span>
                   </Button>
                 </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          }
+          {(user?.id === userId && (blog.status === "DRAFT" || blog.status === "SCHEDULED")) &&
+            <>
+              <DropdownMenuItem className="p-0">
+                <Button
+                  className="w-full !justify-start px-2 py-2 space-x-2 h-auto  font-medium text-[blue] hover:text-[blue]"
+                  variant="ghost"
+                  disabled={isPending}
+                  onClick={() => handleBlogPublsih({ id: blog?.id })}
+                >
+                  <BsSend color="blue" size={20} />
+                  <span> Published </span>
+                </Button>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
             </>

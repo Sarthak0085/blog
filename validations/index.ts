@@ -26,6 +26,7 @@ import {
     PinnedBlogSchema,
     DeleteUserSchema,
     EditUserSchema,
+    PublishBlogSchema,
 } from "@/schemas";
 import CustomError from "@/lib/customError";
 import * as z from "zod";
@@ -283,6 +284,16 @@ export const validateDeleteUser = (values: z.infer<typeof DeleteUserSchema>) => 
 
 export const validatePinnedBlog = (values: z.infer<typeof PinnedBlogSchema>) => {
     const validatedFields = PinnedBlogSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+        throw new CustomError("Invalid Fields", 400);
+    }
+
+    return validatedFields.data;
+};
+
+export const validatePublishBlog = (values: z.infer<typeof PublishBlogSchema>) => {
+    const validatedFields = PublishBlogSchema.safeParse(values);
 
     if (!validatedFields.success) {
         throw new CustomError("Invalid Fields", 400);

@@ -1,5 +1,6 @@
 "use server";
 
+import { getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
 import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
@@ -191,12 +192,23 @@ export const getAllPublishedBlogsByUserId = async () => {
     }
 }
 
-export const getAllBlogsByUserId = async () => {
+export const getAllBlogsByUserId = async (userId: string) => {
     try {
         const user = await currentUser();
+        const existedUser = await getUserById(userId);
+
+        if (!existedUser) {
+            throw new CustomError("User not found", 404);
+        }
+
         if (!user) {
             throw new CustomError("UnAuthorized. Please login to access this.", 401);
         }
+
+        if (user?.id !== existedUser?.id) {
+            throw new CustomError("Forbidden. You are not allowed for this", 403);
+        }
+
         const blogs = await db.blog.findMany({
             where: {
                 userId: user.id,
@@ -210,6 +222,14 @@ export const getAllBlogsByUserId = async () => {
                 favourites: true,
                 savedPosts: true,
             },
+            orderBy: [
+                {
+                    isPinned: "desc"
+                },
+                {
+                    createdAt: "desc"
+                }
+            ]
         });
 
         if (!blogs) {
