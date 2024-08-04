@@ -4,16 +4,16 @@ import { getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
 import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
-import { DeleteUserSchema } from "@/schemas";
-import { validateDeleteUser } from "@/validations";
-import { UserRole } from "@prisma/client";
+import { EditUserSchema } from "@/schemas";
+import { validateEditUser } from "@/validations";
 import * as z from "zod";
 
-export const deleteUser = async (values: z.infer<typeof DeleteUserSchema>) => {
-    try {
-        const validateData = validateDeleteUser(values);
 
-        const { userId } = validateData;
+export const editUser = async (values: z.infer<typeof EditUserSchema>) => {
+    try {
+        const validatedData = validateEditUser(values);
+
+        const { isBlocked, role, userId } = validatedData;
 
         const existedUser = await getUserById(userId);
 
@@ -24,22 +24,27 @@ export const deleteUser = async (values: z.infer<typeof DeleteUserSchema>) => {
         const user = await currentUser();
 
         if (!user || !user?.id) {
-            throw new CustomError("UnAuthorized. Please login to access this", 401);
+            throw new CustomError("Unauthorized. Please login to access this", 401);
         }
 
-        if (userId === user?.id || user?.role !== UserRole.ADMIN || existedUser?.role === UserRole.ADMIN) {
-            throw new CustomError("Forbidden. You are not allowed to do this.", 403);
+        if (user?.id === existedUser?.id || user?.role !== "ADMIN") {
+            throw new CustomError("Forbidden. You are not allowed to do this", 403);
         }
 
-        await db.user.delete({
+        await db.user.update({
             where: {
-                id: userId
+                id: userId,
+            },
+            data: {
+                role: role,
+                isBlocked: isBlocked,
             }
         });
 
         return {
-            success: "User deleted successfully."
+            success: "user updated successfully"
         }
+
     } catch (error) {
         if (error instanceof CustomError) {
             return {

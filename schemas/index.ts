@@ -95,8 +95,6 @@ export const UpdateCategorySchema = z.object({
     userId: z.string().min(1, "UserId is required")
 });
 
-export type UpdateCategory = z.infer<typeof UpdateCategorySchema>
-
 export const DeleteCategorySchema = z.object({
     categoryId: z.string().min(1, "Category id is required."),
 });
@@ -152,6 +150,7 @@ export const DeleteFavouriteSchema = z.object({
 });
 
 export const EditUserSchema = z.object({
+    userId: z.string().min(1, { message: "UserId is required" }),
     role: z.enum([UserRole.ADMIN, UserRole.USER]),
     isBlocked: z.enum([UserBlock.BLOCK, UserBlock.UNBLOCK]),
 });

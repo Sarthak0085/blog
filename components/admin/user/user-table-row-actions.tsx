@@ -17,6 +17,9 @@ import { useState, useTransition } from "react";
 import { deleteUser } from "@/actions/user/delete-user";
 import { toast } from "sonner";
 import { DeleteConfirmModal } from "../delete-confirmation-modal";
+import { MdDeleteOutline } from "react-icons/md";
+import { CiEdit } from "react-icons/ci";
+import { UserModal } from "./user-modal";
 
 interface BlogsTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -27,6 +30,8 @@ export function BlogTableRowActions<TData>({
 }: BlogsTableRowActionsProps<TData>) {
   const user = row.original as User;
   const [open, setOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const handleDeleteUser = () => {
@@ -47,8 +52,17 @@ export function BlogTableRowActions<TData>({
         });
     });
   };
+
+  const handleClick = (value: string) => {
+    setOpen(false);
+    setTimeout(() => {
+      if (value === "edit") setOpenModal(true);
+      else setOpenDeleteModal(true);
+    }, 50);
+  };
+
   return (
-    user?.role !== "ADMIN" && (
+    <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -60,26 +74,45 @@ export function BlogTableRowActions<TData>({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
-          <Link href={`/admin/edit/${user?.id}`} className="w-full">
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-          </Link>
-          <DropdownMenuItem>Make a copy</DropdownMenuItem>
-          <DropdownMenuItem>Favorite</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuSeparator />
-          <DeleteConfirmModal
-            open={open}
-            setOpen={setOpen}
-            handleDelete={handleDeleteUser}
-            isPending={isPending}
-          >
-            <DropdownMenuItem>
-              Delete
-              <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
+          <DropdownMenuItem className="p-0">
+            <Button
+              className="w-full !justify-start p-1 space-x-2 font-medium"
+              variant={"edit"}
+              onClick={() => handleClick("edit")}
+            >
+              <CiEdit color="#FFC107" size={20} />
+              <span> Edit </span>
+            </Button>
+          </DropdownMenuItem>
+          {
+            user?.role !== "ADMIN" &&
+            <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="p-0">
+              <Button
+                variant="ghost"
+                className="w-full !justify-start space-x-2 font-medium p-1 bg-transparent text-[red] hover:text-[red]"
+                onClick={() => handleClick("delete")}
+              >
+                <MdDeleteOutline size={20} />
+                <span>Delete</span>
+              </Button>
             </DropdownMenuItem>
-          </DeleteConfirmModal>
+            </>
+          }
         </DropdownMenuContent>
-      </DropdownMenu>
-    )
+      </DropdownMenu >
+      <UserModal
+        open={openModal}
+        setOpen={setOpenModal}
+        data={user}
+      />
+      <DeleteConfirmModal
+        open={openDeleteModal}
+        setOpen={setOpenDeleteModal}
+        handleDelete={handleDeleteUser}
+        isPending={isPending}
+      />
+    </>
   );
 }

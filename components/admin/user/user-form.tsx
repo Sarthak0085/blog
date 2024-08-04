@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
+  Form,
   FormControl,
   FormField,
   FormItem,
@@ -16,45 +17,51 @@ import {
 import { EditUserSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { UserBlock, UserRole } from "@prisma/client";
-import { Form, useForm } from "react-hook-form";
-import { ExtendUser } from "@/nextauth";
+import { User, UserBlock, UserRole } from "@prisma/client";
+import { useForm } from "react-hook-form";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { CheckCircledIcon, LockClosedIcon } from "@radix-ui/react-icons";
+import { editUser } from "@/actions/user/edit-user";
 
-export function UserForm({ data }: { data: ExtendUser }) {
+interface UserFormProps {
+  data: User;
+  setOpen: (open: boolean) => void;
+}
+
+export const UserForm = ({ data, setOpen }: UserFormProps) => {
   const [isPending, startTransition] = useTransition();
   const form = useForm<z.infer<typeof EditUserSchema>>({
     resolver: zodResolver(EditUserSchema),
     defaultValues: {
-      role: data?.role || "",
-      isBlocked: data?.isBlocked || "",
+      userId: data?.id ?? "",
+      role: data?.role ?? UserRole.USER,
+      isBlocked: data?.isBlocked ?? UserBlock.UNBLOCK,
     },
   });
 
   const onSubmit = (values: z.infer<typeof EditUserSchema>) => {
     console.log("values :", values);
     startTransition(() => {
-      // editUser(values)
-      //   .then((data) => {
-      //     if (data?.success) {
-      //       toast.success(data.success);
-      //       router.push("/admin/get-users");
-      //     }
-      //     if (data?.error) {
-      //       toast.error(
-      //         data?.error || "An error occurred while creating the blog."
-      //       );
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     console.error("Error creating blog:", error);
-      //     toast.error(
-      //       "Something went wrong. Please try again after sometime."
-      //     );
-      //   });
+      editUser(values)
+        .then((data) => {
+          if (data?.success) {
+            toast.success(data.success);
+            setOpen(false);
+            window.location.reload();
+          }
+          if (data?.error) {
+            toast.error(
+              data?.error || "An error occurred while updating the user."
+            );
+          }
+        })
+        .catch((error) => {
+          toast.error(
+            "Something went wrong. Please try again after sometime."
+          );
+        });
     });
   };
 
@@ -66,7 +73,7 @@ export function UserForm({ data }: { data: ExtendUser }) {
       <CardContent className="space-y-4">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="space-y-4">
+            <div className="space-y-4 min-w-[400px]">
               <FormField
                 control={form.control}
                 name="role"
@@ -77,6 +84,7 @@ export function UserForm({ data }: { data: ExtendUser }) {
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
+                        disabled={isPending}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select role" />
@@ -104,7 +112,7 @@ export function UserForm({ data }: { data: ExtendUser }) {
                 )}
               />
             </div>
-            <div className="space-y-4">
+            <div className="space-y-4 min-w-[400px]">
               <FormField
                 control={form.control}
                 name="isBlocked"
@@ -115,22 +123,27 @@ export function UserForm({ data }: { data: ExtendUser }) {
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
+                        disabled={isPending}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select role" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value={UserBlock.UNBLOCK}>
-                            <CheckCircledIcon className="h-5 w-5 text-green-600 mr-2" />{" "}
-                            <span className="text-green-600 font-bold">
-                              Active
-                            </span>
+                            <div className="flex">
+                              <CheckCircledIcon className="h-5 w-5 text-green-600 mr-2" />{" "}
+                              <span className="text-green-600 font-bold">
+                                Active
+                              </span>
+                            </div>
                           </SelectItem>
                           <SelectItem value={UserBlock.BLOCK}>
-                            <LockClosedIcon className="h-5 w-5 text-red-600 mr-2" />
-                            <span className="text-red-600 font-bold">
-                              Blocked
-                            </span>
+                            <div className="flex">
+                              <LockClosedIcon className="h-5 w-5 text-red-600 mr-2" />
+                              <span className="text-red-600 font-bold">
+                                Blocked
+                              </span>
+                            </div>
                           </SelectItem>
                         </SelectContent>
                       </Select>
