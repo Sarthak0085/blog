@@ -7,8 +7,8 @@ import { getAllLikes } from "@/actions/likes/get-likes";
 import { AllLikesTable } from "@/components/admin/like/like-table";
 import { likeColumns } from "@/components/admin/like/like-columns";
 
-export default function GetLikesPage() {
-  const [loading, setLoading] = useState(true);
+export default function AllLikesPage() {
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>("");
   const [data, setData] = useState<ExtendLike[]>([]);
 
@@ -26,14 +26,14 @@ export default function GetLikesPage() {
       } catch (error) {
         setError("Error while fetching Likes.");
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
     fetchData();
   }, []);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="w-full h-[100vh] flex items-center justify-center">
         <PulseLoader margin={3} size={20} />

@@ -144,7 +144,7 @@ export function LikeTableRowActions<TData>({
         setOpen={setOpenDeleteModal}
         handleDelete={handleDeleteLike}
         isPending={isPending}
-        text={"Like will be deleted from blog"}
+        text={"Like will be removed from blog"}
       />
     </>
   );

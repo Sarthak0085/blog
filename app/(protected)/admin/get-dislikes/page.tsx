@@ -7,8 +7,8 @@ import { ExtendDislike } from "@/utils/types";
 import { useEffect, useState } from "react";
 import { PulseLoader } from "react-spinners";
 
-export default function GetDislikesPage() {
-  const [loading, setLoading] = useState(true);
+export default function AllDislikesPage() {
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>("");
   const [data, setData] = useState<ExtendDislike[]>([]);
 
@@ -26,14 +26,14 @@ export default function GetDislikesPage() {
       } catch (error) {
         setError("Error while fetching Dislikes.");
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
     fetchData();
   }, []);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="w-full h-[100vh] flex items-center justify-center">
         <PulseLoader margin={3} size={20} />

@@ -201,7 +201,7 @@ export const getAllBlogsByUserId = async (userId: string) => {
             throw new CustomError("User not found", 404);
         }
 
-        if (!user) {
+        if (!user || user.isBlocked === "BLOCK") {
             throw new CustomError("UnAuthorized. Please login to access this.", 401);
         }
 
