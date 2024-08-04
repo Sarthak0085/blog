@@ -3,7 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter"
 import authConfig from "@/auth.config"
 import { db } from "@/lib/db"
 import { getUserById } from "@/data/user"
-import { UserRole } from "@prisma/client"
+import { UserBlock, UserRole } from "@prisma/client"
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation"
 import { getAccountByUserId } from "@/data/account"
 
@@ -56,6 +56,8 @@ export const {
             return true;
         },
         async session({ token, session }) {
+            console.log("session", session);
+
             if (token.sub && session.user) {
                 session.user.id = token.sub;
             }
@@ -72,7 +74,7 @@ export const {
                 session.user.name = token.name;
                 session.user.email = token.email as string;
                 session.user.OAuth = token.OAuth as boolean;
-                session.user.isBlocked = token.isBlocked as boolean;
+                session.user.isBlocked = token.isBlocked as UserBlock;
             }
 
             return session

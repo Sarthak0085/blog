@@ -23,6 +23,24 @@ export const authRoutes = [
 ];
 
 /**
+ *  An array of routes that only be used by admin 
+ * These routes will send users to home if role is not admin
+ * @type {string[]}
+*/
+export const adminRoutes = [
+    "/admin/get-blogs",
+    "/admin/get-users",
+    "/admin/get-categories",
+    "/admin/get-comments",
+    "/admin/get-likes",
+    "admin/get-dislikes",
+    "/admin/get-favourites",
+    "/admin/get-saved-posts",
+    "/admin/add-blog",
+    "/admin/edit-blog/[id]",
+];
+
+/**
  * The prefix for API authentication routes
  * Routes that starts with this prefix are used for API authentication purpose
  * @type {string[]}
