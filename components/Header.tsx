@@ -5,13 +5,20 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { FaUser } from "react-icons/fa"
 import { currentUser } from "@/lib/auth"
 import { FaArrowRightLong } from "react-icons/fa6";
+import { Lato } from "next/font/google"
+import { cn } from "@/lib/utils"
+
+const font = Lato({
+    subsets: ["latin"],
+    weight: ["400", "700", "900"],
+})
 
 export const Header = async () => {
     const user = await currentUser();
     return (
-        <div className="w-full h-[80px] flex items-center justify-between border-b mb-10 px-10 bg-transparent shadow-md">
+        <div className="w-full fixed top-0 left-0 h-[80px] flex items-center justify-between border-b mb-10 px-10 bg-transparent shadow-md">
             <div className="flex space-x-2 ">
-                <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-700">VortexVista</h2>
+                <h2 className={cn("text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-700", font.className)}>VortexVista</h2>
             </div>
             <div className="w-[300px]">
                 <Input
