@@ -7,8 +7,8 @@ import { AllCommentsTable } from "@/components/admin/comment/comment-table";
 import { commentColumns } from "@/components/admin/comment/comment-columns";
 import { getAllComments } from "@/actions/comments/get-comments";
 
-export default function GetLikesPage() {
-  const [loading, setLoading] = useState(true);
+export default function AllCommentsPage() {
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>("");
   const [data, setData] = useState<ExtendComment[]>([]);
 
@@ -26,14 +26,14 @@ export default function GetLikesPage() {
       } catch (error) {
         setError("Error while fetching Comments.");
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
     fetchData();
   }, []);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="w-full h-[100vh] flex items-center justify-center">
         <PulseLoader margin={3} size={20} />

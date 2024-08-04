@@ -1,32 +1,32 @@
 "use client";
 
+import { ExtendComment } from "@/utils/types";
 import { useEffect, useState } from "react";
 import { PulseLoader } from "react-spinners";
-import { savedPostColumns } from "@/components/admin/saved-post/saved-post-columns";
-import { AllSavedPostsTables } from "@/components/admin/saved-post/saved-post-table";
-import { ExtendSavedPost } from "@/utils/types";
-import { getAllSavedPosts, getAllSavedPostsByUserId } from "@/actions/savedpost/get-saved-posts";
+import { AllCommentsTable } from "@/components/admin/comment/comment-table";
+import { commentColumns } from "@/components/admin/comment/comment-columns";
+import { getAllCommentsByUserId } from "@/actions/comments/get-comments";
 import { useParams } from "next/navigation";
 
-export default function SavedPostsPage() {
+export default function CommentsPage() {
     const { userId } = useParams();
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string>("");
-    const [data, setData] = useState<ExtendSavedPost[]>([]);
+    const [data, setData] = useState<ExtendComment[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await getAllSavedPostsByUserId(userId as string);
+                const data = await getAllCommentsByUserId(userId as string);
                 if (data?.error) {
-                    console.error("Error while fetching Likes.");
+                    console.error("Error while fetching Comments.");
                     setError(data?.error);
                 }
                 if (data?.data) {
-                    setData(data?.data as ExtendSavedPost[]);
+                    setData(data?.data as ExtendComment[]);
                 }
             } catch (error) {
-                setError("Error while fetching saved posts.");
+                setError("Error while fetching Comments.");
             } finally {
                 setIsLoading(false);
             }
@@ -56,11 +56,11 @@ export default function SavedPostsPage() {
                 <div>
                     <h2 className="text-2xl font-bold tracking-tight">Welcome back!!</h2>
                     <p className="text-muted-foreground">
-                        Here&apos;s a list of all the saved posts!
+                        Here&apos;s a list of all the comments!
                     </p>
                 </div>
             </div>
-            <AllSavedPostsTables data={data} columns={savedPostColumns} />
+            <AllCommentsTable data={data} columns={commentColumns} />
         </div>
     );
 }

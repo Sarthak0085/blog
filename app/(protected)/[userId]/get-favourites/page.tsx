@@ -1,13 +1,15 @@
 "use client";
 
-import { getAllFavourites } from "@/actions/favourites/get-favourites";
+import { getAllFavouritesByUserId } from "@/actions/favourites/get-favourites";
 import { favouriteColumns } from "@/components/admin/favourite/favourite-columns";
 import { AllFavouritesTable } from "@/components/admin/favourite/favourite-table";
 import { ExtendFavourites } from "@/utils/types";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PulseLoader } from "react-spinners";
 
 export default function GetFavouritessPage() {
+    const { userId } = useParams();
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string>("");
     const [data, setData] = useState<ExtendFavourites[]>([]);
@@ -15,7 +17,7 @@ export default function GetFavouritessPage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await getAllFavourites();
+                const data = await getAllFavouritesByUserId(userId as string);
                 if (data?.error) {
                     console.error("Error while fetching Dislikes.");
                     setError(data?.error);
@@ -31,7 +33,7 @@ export default function GetFavouritessPage() {
         };
 
         fetchData();
-    }, []);
+    }, [userId]);
 
     if (isLoading) {
         return (
