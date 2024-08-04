@@ -153,6 +153,12 @@ export const dislikeColumns: ColumnDef<Dislike>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <DislikeTableRowActions row={row} />,
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center justify-center">
+          <DislikeTableRowActions row={row} />
+        </div>
+      )
+    },
   },
 ];

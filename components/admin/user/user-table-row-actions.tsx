@@ -21,13 +21,13 @@ import { MdDeleteOutline } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 import { UserModal } from "./user-modal";
 
-interface BlogsTableRowActionsProps<TData> {
+interface UsersTableRowActionsProps<TData> {
   row: Row<TData>;
 }
 
-export function BlogTableRowActions<TData>({
+export function UserTableRowActions<TData>({
   row,
-}: BlogsTableRowActionsProps<TData>) {
+}: UsersTableRowActionsProps<TData>) {
   const user = row.original as User;
   const [open, setOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -87,17 +87,17 @@ export function BlogTableRowActions<TData>({
           {
             user?.role !== "ADMIN" &&
             <>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="p-0">
-              <Button
-                variant="ghost"
-                className="w-full !justify-start space-x-2 font-medium p-1 bg-transparent text-[red] hover:text-[red]"
-                onClick={() => handleClick("delete")}
-              >
-                <MdDeleteOutline size={20} />
-                <span>Delete</span>
-              </Button>
-            </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="p-0">
+                <Button
+                  variant="ghost"
+                  className="w-full !justify-start space-x-2 font-medium p-1 bg-transparent text-[red] hover:text-[red]"
+                  onClick={() => handleClick("delete")}
+                >
+                  <MdDeleteOutline size={20} />
+                  <span>Delete</span>
+                </Button>
+              </DropdownMenuItem>
             </>
           }
         </DropdownMenuContent>

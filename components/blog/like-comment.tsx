@@ -8,7 +8,7 @@ import { likeComment } from "@/actions/comments/like-comment";
 import { toast } from "sonner";
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 
-export const LikeComment = ({ comment }: { comment: ExtendComment | undefined }) => {
+export const LikeComment = ({ comment, setRefetch }: { comment: ExtendComment | undefined; setRefetch: (refetch: boolean) => void; }) => {
     const user = useCurrentUser();
     const [isPending, startTransition] = useTransition();
     const [like, setLike] = useState({
@@ -24,7 +24,8 @@ export const LikeComment = ({ comment }: { comment: ExtendComment | undefined })
             likeComment(values)
                 .then((data) => {
                     if (data?.success) {
-                        toast.success(data?.success)
+                        toast.success(data?.success);
+                        setRefetch(true ? false : true);
                     }
                     if (data?.error) {
                         setLike(prevLike);

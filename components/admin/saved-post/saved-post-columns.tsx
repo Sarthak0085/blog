@@ -154,6 +154,12 @@ export const savedPostColumns: ColumnDef<Favourite>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <SavedPostTableRowActions row={row} />,
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center justify-center">
+          <SavedPostTableRowActions row={row} />
+        </div>
+      )
+    },
   },
 ];

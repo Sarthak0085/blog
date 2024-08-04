@@ -155,6 +155,12 @@ export const favouriteColumns: ColumnDef<Favourite>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <FavouriteTableRowActions row={row} />,
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center justify-center">
+          <FavouriteTableRowActions row={row} />
+        </div>
+      )
+    },
   },
 ];

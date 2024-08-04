@@ -5,7 +5,7 @@ import { DataTableColumnHeader } from "@/components/table/data-table-column-head
 import { Checkbox } from "@/components/ui/checkbox";
 import { UserBlock, UserRole } from "@prisma/client";
 import { CheckCircledIcon, LockClosedIcon } from "@radix-ui/react-icons";
-import { BlogTableRowActions } from "./user-table-row-actions";
+import { UserTableRowActions } from "./user-table-row-actions";
 import {
   Tooltip,
   TooltipContent,
@@ -13,7 +13,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { ExtendUser } from "@/nextauth";
-import { TbPinnedFilled } from "react-icons/tb";
 
 export const userColumns: ColumnDef<ExtendUser>[] = [
   {
@@ -162,6 +161,12 @@ export const userColumns: ColumnDef<ExtendUser>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <BlogTableRowActions row={row} />,
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center justify-center">
+          <UserTableRowActions row={row} />
+        </div>
+      )
+    },
   },
 ];

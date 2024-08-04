@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Blog, User } from "@prisma/client";
+import { Blog, CommentLike, User } from "@prisma/client";
 import {
   Tooltip,
   TooltipContent,
@@ -155,6 +155,34 @@ export const commentColumns: ColumnDef<ExtendComment>[] = [
     },
   },
   {
+    accessorKey: "likes",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Likes" />
+    ),
+    cell: ({ row }) => {
+      const likes: CommentLike[] = row.getValue("likes");
+      return (
+        <div className="flex space-x-2 items-center">
+          {likes?.length ?? 0}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "parentId",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Is Reply" />
+    ),
+    cell: ({ row }) => {
+      const parentId: string | null = row.getValue("parentId");
+      return (
+        <div className="flex space-x-2 items-center">
+          {!parentId === true ? "YES" : "NO"}
+        </div>
+      );
+    },
+  },
+  {
     accessorKey: "createdAt",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Created At" />
@@ -174,6 +202,12 @@ export const commentColumns: ColumnDef<ExtendComment>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <CommentTableRowActions row={row} />,
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center justify-center">
+          <CommentTableRowActions row={row} />
+        </div>
+      )
+    },
   },
 ];

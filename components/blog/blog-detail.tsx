@@ -220,7 +220,7 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
           <MarkdownContent content={data?.content} />
         </div>
         {displayComment && <div className="text-black">
-          <BlogComments ref={commentSectionRef} comments={data?.comments} blogId={data?.id} />
+          <BlogComments ref={commentSectionRef} blogId={data?.id} />
         </div>}
       </div>
     </div>

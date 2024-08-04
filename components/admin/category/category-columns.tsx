@@ -129,6 +129,12 @@ export const categoryColumns: ColumnDef<ExtendCategory>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <CategoriesTableRowActions row={row} />,
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center justify-center">
+          <CategoriesTableRowActions row={row} />
+        </div>
+      )
+    },
   },
 ];

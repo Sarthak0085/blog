@@ -153,6 +153,12 @@ export const likeColumns: ColumnDef<Like>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <LikeTableRowActions row={row} />,
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center justify-center">
+          <LikeTableRowActions row={row} />
+        </div>
+      )
+    },
   },
 ];

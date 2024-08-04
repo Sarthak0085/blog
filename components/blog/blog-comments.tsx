@@ -1,22 +1,29 @@
 import { cn } from "@/lib/utils";
 import { ExtendComment } from "@/utils/types";
-import { forwardRef, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { FaUser } from "react-icons/fa";
 import { CommentForm } from "./comment-form";
 import { LikeComment } from "./like-comment";
 import { Separator } from "../ui/separator";
+import { getAllCommentsByBlogId } from "@/actions/comments/get-comments";
+import { PulseLoader } from "react-spinners";
 
 interface BlogCommentsProps {
-  comments: ExtendComment[] | undefined;
   blogId?: string;
 }
 
 export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props, ref) => {
-  const { comments, blogId } = props;
+  const { blogId } = props;
+  const [isLoading, setIsLoading] = useState(true);
+  const [refetch, setRefetch] = useState(true);
+  const [error, setError] = useState<string>("");
+  const [comments, setComments] = useState<ExtendComment[]>([]);
   const [showReplies, setShowReplies] = useState<Record<string, boolean>>({});
   const [openReplyInput, setOpenReplyInputs] = useState<Record<string, boolean>>({});
+
+  console.log(comments);
 
   const repliesComments = (commentId: string) => {
     return comments?.filter((comment) => comment.parentId === commentId);
@@ -45,6 +52,43 @@ export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props
     }
   }
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getAllCommentsByBlogId(blogId as string);
+        if (data?.error) {
+          console.error("Error while fetching Comments.");
+          setError(data?.error);
+        }
+        if (data?.data) {
+          setComments(data?.data as ExtendComment[]);
+        }
+      } catch (error) {
+        setError("Error while fetching Comments.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [blogId, refetch]);
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-[100vh] flex items-center justify-center">
+        <PulseLoader margin={3} size={20} />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full h-[100vh] flex items-center justify-center text-[red] font-bold text-3xl">
+        {error}
+      </div>
+    );
+  }
+
   return (
     <div ref={ref} className="w-full mt-6">
       <h2 className="uppercase text-xl font-medium my-2">Post a comment</h2>
@@ -54,7 +98,7 @@ export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props
       </h2>
       <Separator color="black" className="mb-2 !h-[2px] !text-black" />
       {comments?.map((item: ExtendComment, index: number) => (
-        <div className={cn("w-full pb-2 flex items-center justify-between")} key={index}>
+        <div className={cn("w-full pb-2")} key={index}>
           {!item.parentId &&
             <div className="w-full flex justify-between">
               <div className="flex mb-4">
@@ -83,7 +127,7 @@ export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props
                       {formatRelativeTime(item?.createdAt)} •
                     </small>
                     <small className="text-muted-foreground text-[15px] font-medium">
-                      likes •
+                      {item?.likes?.length ?? 0} likes •
                     </small>
                     <Button
                       variant={"ghost"}
@@ -116,7 +160,7 @@ export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props
                 </div>
 
               </div>
-              <LikeComment comment={item} />
+              <LikeComment comment={item} setRefetch={setRefetch} />
             </div>
           }
           {showReplies[item?.id] && repliesComments(item?.id)?.map((comment: ExtendComment) => {
@@ -148,7 +192,7 @@ export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props
                         {formatRelativeTime(comment?.createdAt)} •
                       </small>
                       <small className="text-muted-foreground text-[15px] font-medium">
-                        likes •
+                        {comment?.likes?.length} likes •
                       </small>
                       <Button
                         variant={"ghost"}
@@ -163,7 +207,7 @@ export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props
                     </div>
                   </div>
                 </div>
-                <LikeComment comment={comment} />
+                <LikeComment comment={comment} setRefetch={setRefetch} />
               </div>
             )
           })}

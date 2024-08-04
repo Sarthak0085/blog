@@ -229,6 +229,12 @@ export const blogColumns: ColumnDef<ExtendBlog>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <BlogTableRowActions row={row} />,
+    cell: ({ row }) => {
+      return (
+        <div className="flex items-center justify-center">
+          <BlogTableRowActions row={row} />
+        </div>
+      )
+    },
   },
 ];
