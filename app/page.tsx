@@ -1,7 +1,5 @@
-import LoginButton from "@/components/auth/login-button";
 import { Blogs } from "@/components/blog/blogs";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Header } from "@/components/Header";
 import { Poppins } from "next/font/google";
 
 const font = Poppins({
@@ -10,29 +8,22 @@ const font = Poppins({
 });
 
 export default function Home() {
+  const backgroundImageUrl =
+    "https://tailwindcss.com/_next/static/media/docs@30.8b9a76a2.avif";
+
   return (
+    // <div
+    //   className="flex flex-col w-full h-full items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))]
+    //  from-sky-400 to-blue-800"
+    // >
     <div
-      className="flex w-full h-full items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))]
-     from-sky-400 to-blue-800"
+      style={{
+        backgroundImage: `url(${backgroundImageUrl})`,
+      }}
+      className="relative bg-cover bg-center  w-full bg-fixed flex flex-col justify-center items-center"
     >
-      <div className="space-y-6 text-center">
-        <h1
-          className={cn(
-            "text-6xl font-semibold text-white drop-shadow-md",
-            font.className
-          )}
-        >
-          🔐Auth
-        </h1>
-        <div>
-          <LoginButton>
-            <Button variant={"secondary"} size={"lg"}>
-              Sign In
-            </Button>
-          </LoginButton>
-        </div>
-        <Blogs />
-      </div>
+      <Header />
+      <Blogs />
     </div>
   );
 }

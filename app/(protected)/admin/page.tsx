@@ -33,6 +33,7 @@ export default function AdminPage() {
         toast.error("Something went wrong");
       });
   };
+
   return (
     <Card className="w-[600px]">
       <CardHeader>

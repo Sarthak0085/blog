@@ -42,7 +42,7 @@ export const BlogCard = ({
           <Image
             src={image}
             alt={slug}
-            className="w-full h-[300px] object-fill"
+            className="w-full max-h-[300px] object-fill"
             height={200}
             width={200}
           />
@@ -56,13 +56,12 @@ export const BlogCard = ({
           <span className="flex justify-items-start text-sm text-gray-500">
             {formatDateToUS(createdAt)}
           </span>
-          <h2 className="bold text-2xl text-start">{title}</h2>
+          <h2 title={title} className="bold text-2xl text-start">{title.length > 25 ? `${title.slice(0, 24)}...` : title}</h2>
           <div className="flex items-center justify-between w-full text-sm text-gray-600 text-nowrap">
             <div className="flex items-center justify-center">
               <GoTag className="me-1 mt-[2px]" />
               {tags}
             </div>
-            •
             <div className="flex justify-items-end">
               {ReadTime(content)} min Read
             </div>
