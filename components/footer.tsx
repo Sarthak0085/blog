@@ -1,6 +1,8 @@
+import Link from "next/link"
+
 export const Footer = () => {
     return (
-        <footer className="bg-white dark:bg-gray-900">
+        <footer className="bg-white dark:bg-gray-900 border border-t shadow-md">
             <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
                 <div className="md:flex md:justify-between">
                     <div className="mb-6 md:mb-0">
@@ -18,10 +20,10 @@ export const Footer = () => {
                             <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Company</h2>
                             <ul className="text-gray-500 dark:text-gray-400 font-medium">
                                 <li className="mb-4">
-                                    <a href="/about" className="hover:underline">About Us</a>
+                                    <Link href="/about" className="hover:underline">About Us</Link>
                                 </li>
                                 <li>
-                                    <a href="/contact" className="hover:underline">Contact Us</a>
+                                    <Link href="/contact" className="hover:underline">Contact Us</Link>
                                 </li>
                             </ul>
                         </div>
@@ -40,10 +42,10 @@ export const Footer = () => {
                             <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Legal</h2>
                             <ul className="text-gray-500 dark:text-gray-400 font-medium">
                                 <li className="mb-4">
-                                    <a href="/privacy" className="hover:underline">Privacy Policy</a>
+                                    <Link href="/privacy-policy" className="hover:underline">Privacy Policy</Link>
                                 </li>
                                 <li>
-                                    <a href="/terms&conditions" className="hover:underline">Terms &amp; Conditions</a>
+                                    <Link href="/terms&conditions" className="hover:underline">Terms &amp; Conditions</Link>
                                 </li>
                             </ul>
                         </div>

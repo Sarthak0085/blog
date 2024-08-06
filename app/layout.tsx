@@ -5,6 +5,7 @@ import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import { Toaster } from "@/components/ui/sonner";
 import { Footer } from "@/components/footer";
+import { Header } from "@/components/Header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,12 +20,22 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
+  const backgroundImageUrl =
+    "https://tailwindcss.com/_next/static/media/docs@30.8b9a76a2.avif";
   return (
     <html lang="en">
       <SessionProvider session={session}>
         <body className={inter.className}>
-          <Toaster />
-          {children}
+          <Header />
+          <main
+            style={{
+              backgroundImage: `url(${backgroundImageUrl})`,
+            }}
+            className="bg-cover bg-center pt-[5rem]  w-full bg-fixed flex flex-col justify-center items-center"
+          >
+            <Toaster position="top-right" />
+            {children}
+          </main>
           <Footer />
         </body>
       </SessionProvider>

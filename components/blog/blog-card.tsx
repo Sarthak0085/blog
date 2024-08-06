@@ -16,6 +16,7 @@ import { savedBlogPost } from "@/actions/savedpost/saved-blog-post";
 import { BookmarkFilledIcon, BookmarkIcon } from "@radix-ui/react-icons";
 import { CommentForm } from "./comment-form";
 import { ShareModal } from "./share-modal";
+import { domain } from "@/lib/domain";
 
 interface BlogCardProps {
   data: ExtendBlog;
@@ -170,7 +171,7 @@ export const BlogCard = ({
             <ShareModal
               open={openShareModal}
               setOpen={setOpenShareModal}
-              blogUrl={`http://localhost:3000/blog/${data?.slug}`}
+              blogUrl={`${domain}}/blog/${data?.slug}`}
             >
               <Button variant={"ghost"} className="!bg-transparent flex gap-2 items-center">
                 <svg fill="none" className="text-gray-500" viewBox="0 0 20 20" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
