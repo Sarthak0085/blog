@@ -15,19 +15,9 @@ import { toast } from "sonner";
 import { savedBlogPost } from "@/actions/savedpost/saved-blog-post";
 import { BookmarkFilledIcon, BookmarkIcon } from "@radix-ui/react-icons";
 import { CommentForm } from "./comment-form";
+import { ShareModal } from "./share-modal";
 
 interface BlogCardProps {
-  title: string;
-  image: string;
-  createdAt: Date | string;
-  slug: string;
-  content: string;
-  user: User;
-  category: {
-    id: string;
-    name: string;
-  };
-  shortSummary: string;
   data: ExtendBlog;
 }
 
@@ -42,27 +32,17 @@ const oxygen = Oxygen({
 })
 
 export const BlogCard = ({
-  title,
-  image,
-  createdAt,
-  category,
-  content,
-  slug,
-  user,
-  shortSummary,
   data
 }: BlogCardProps) => {
   const [open, setOpen] = useState(false);
+  const [openShareModal, setOpenShareModal] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [favourites, setFavourites] = useState({
-    isFavourite: !!data?.favourites?.find((item) => item.userId === user?.id),
+    isFavourite: !!data?.favourites?.find((item) => item.userId === data.user?.id),
     count: data?.favourites?.length,
   });
-
-  console.log(data)
-
   const [savedPost, setSavedPost] = useState({
-    isSaved: !!data?.savedPosts?.find((item) => item.userId === user?.id),
+    isSaved: !!data?.savedPosts?.find((item) => item.userId === data.user?.id),
     count: data?.savedPosts?.length,
   });
   function formatDateToUS(date: Date | string) {
@@ -133,49 +113,49 @@ export const BlogCard = ({
   return (
     <Card className="w-full min-h-[250px] max-w-[720px] border-[2px] shadow-md shadow-[#00000000d]">
       <CardContent >
-        <Link href={`/blog/${slug}`}>
+        <Link href={`/blog/${data?.slug}`}>
           <div className="flex min-h-[200px]">
             <div className="flex items-center justify-between gap-6">
               <div className="min-h-[100px] space-y-2 flex-1">
                 <div className="flex flex-col">
-                  <h2 className="break-words text-xl">{title}</h2>
+                  <h2 className="break-words text-xl">{data?.title}</h2>
                   <div className="flex text-[14px]">
                     <div className={cn("flex items-start space-x-1", roboto.className)}>
-                      <Link href={`/author/${user?.id}`}>
+                      <Link href={`/author/${data?.user?.id}`}>
                         <span className="text-muted-foreground hover:text-[#0675c4]  capitalize cursor-pointer text-[13px]">
-                          {user?.name}
+                          {data?.user?.name}
                         </span>
                       </Link>
                       <span>·</span>
-                      <Link href={`/blogs?category=${category?.name}`}>
+                      <Link href={`/blogs?category=${data?.category?.name}`}>
                         <span className="text-muted-foreground hover:text-[#0675c4]  cursor-pointer text-[13px]">
-                          {category?.name}
+                          {data?.category?.name}
                         </span>
                       </Link>
                       <span>·</span>
-                      <Link href={`/blogs?date=${createdAt}`}>
+                      <Link href={`/blogs?date=${data?.createdAt}`}>
                         <span className="text-muted-foreground hover:text-[#0675c4]  cursor-pointer text-[13px]">
-                          {formatDateToUS(createdAt)}
+                          {formatDateToUS(data?.createdAt)}
                         </span>
                       </Link>
                       <span>·</span>
-                      <Link href={`/blogs?time=${ReadTime(content)}`}>
+                      <Link href={`/blogs?time=${ReadTime(data?.content)}`}>
                         <span className="text-muted-foreground hover:text-[#0675c4]  cursor-pointer text-[13px]">
-                          {ReadTime(content) > 1 ? `${ReadTime(content)} mins` : `${ReadTime(content)} min`}
+                          {ReadTime(data?.content) > 1 ? `${ReadTime(data?.content)} mins` : `${ReadTime(data?.content)} min`}
                         </span>
                       </Link>
                     </div>
                   </div>
                 </div>
                 <p className={cn("mb-[10px] text-wrap", oxygen.className)}>
-                  {shortSummary.length > 180 ? `${shortSummary.slice(0, 180)}...` : shortSummary}
+                  {data?.shortSummary.length > 180 ? `${data?.shortSummary.slice(0, 180)}...` : data?.shortSummary}
                 </p>
               </div>
               <div className="items-end">
                 <div className="flex items-center justify-center border-[2px] rounded-lg">
                   <Image
-                    src={image}
-                    alt={slug}
+                    src={data?.imageUrl ?? ""}
+                    alt={data?.slug}
                     className="w-[180px] h-[150px] object-fill"
                     height={180}
                     width={180}
@@ -187,13 +167,19 @@ export const BlogCard = ({
         </Link>
         <ul className="flex items-start mb-5">
           <li>
-            <Button variant={"ghost"} className="!bg-transparent flex gap-2 items-center">
-              <svg fill="none" className="text-gray-500" viewBox="0 0 20 20" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
-                <path d="m11.8666 6.79996v-3.79996l6.8 6.64993-6.8 6.64997v-3.8s-10.19997-.8844-10.19997 4.5001c0-10.77003 10.19997-10.20004 10.19997-10.20004z" stroke="#646970" strokeLinecap="round" strokeWidth="1.5">
-                </path>
-              </svg>
-              <span className="text-muted-foreground">Share</span>
-            </Button>
+            <ShareModal
+              open={openShareModal}
+              setOpen={setOpenShareModal}
+              blogUrl={`http://localhost:3000/blog/${data?.slug}`}
+            >
+              <Button variant={"ghost"} className="!bg-transparent flex gap-2 items-center">
+                <svg fill="none" className="text-gray-500" viewBox="0 0 20 20" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+                  <path d="m11.8666 6.79996v-3.79996l6.8 6.64993-6.8 6.64997v-3.8s-10.19997-.8844-10.19997 4.5001c0-10.77003 10.19997-10.20004 10.19997-10.20004z" stroke="#646970" strokeLinecap="round" strokeWidth="1.5">
+                  </path>
+                </svg>
+                <span className="text-muted-foreground">Share</span>
+              </Button>
+            </ShareModal>
           </li>
           <li>
             <Button

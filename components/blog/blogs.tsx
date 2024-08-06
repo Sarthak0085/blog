@@ -53,14 +53,6 @@ export const Blogs = () => {
       {blogs.map((blog) => (
         <BlogCard
           key={blog?.id}
-          title={blog.title}
-          slug={blog?.slug}
-          content={blog?.content}
-          image={blog?.imageUrl ?? ""}
-          shortSummary={blog?.shortSummary}
-          createdAt={blog?.createdAt}
-          category={blog?.category}
-          user={blog?.user as User}
           data={blog}
         />
       ))}

@@ -5,7 +5,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { CategoryForm } from "./category-form";
-import { useState } from "react";
 
 interface CategoryModalProps {
   children?: React.ReactNode;
