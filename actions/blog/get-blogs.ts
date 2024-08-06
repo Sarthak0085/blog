@@ -84,6 +84,8 @@ export const getAllPublishedBlogs = async () => {
             },
             include: {
                 category: true,
+                favourites: true,
+                savedPosts: true,
                 likes: true,
                 comments: true,
                 user: true,

@@ -12,7 +12,7 @@ import { Features } from "./features";
 import * as z from "zod";
 import { likeBlog } from "@/actions/likes/like-blog";
 import { toast } from "sonner";
-import { DislikeSchema, FavouriteSchema, LikeSchema } from "@/schemas";
+import { DislikeSchema, FavouriteSchema, LikeSchema, SavedPostSchema } from "@/schemas";
 import { dislikeBlog } from "@/actions/dislikes/dislike-blog";
 import { addOrRemoveToFavourite } from "@/actions/favourites/add-to-favourite";
 import { savedBlogPost } from "@/actions/savedpost/saved-blog-post";
@@ -124,8 +124,8 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
     });
   };
 
-  const handleSavedPost = (values: z.infer<typeof LikeSchema>) => {
-    const prevLike = like;
+  const handleSavedPost = (values: z.infer<typeof SavedPostSchema>) => {
+    const prevSavedPost = savedPost;
     setSavedPost((prev) => ({
       isSaved: !prev.isSaved,
       count: prev.isSaved ? (prev.count || 1) - 1 : (prev.count || 0) + 1,
@@ -138,12 +138,12 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
             toast.success(data?.success);
           }
           if (data?.error) {
-            setLike(prevLike);
+            setSavedPost(prevSavedPost);
             toast.error(data?.error);
           }
         })
         .catch((error) => {
-          setLike(prevLike);
+          setSavedPost(prevSavedPost);
           toast.error(error);
         });
     });

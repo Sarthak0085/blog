@@ -5,6 +5,7 @@ import { BlogCard } from "./blog-card";
 import { ExtendBlog } from "@/utils/types";
 import { getAllPublishedBlogs } from "@/actions/blog/get-blogs";
 import { PulseLoader } from "react-spinners";
+import { User } from "@prisma/client";
 
 export const Blogs = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -48,7 +49,7 @@ export const Blogs = () => {
   }
 
   return (
-    <div className="flex flex-wrap items-center md:justify-normal justify-center px-auto w-full gap-x-4 gap-y-5">
+    <div className="w-full">
       {blogs.map((blog) => (
         <BlogCard
           key={blog?.id}
@@ -56,12 +57,15 @@ export const Blogs = () => {
           slug={blog?.slug}
           content={blog?.content}
           image={blog?.imageUrl ?? ""}
-          tags={blog?.tags.slice(0, 2).join(", ")}
+          shortSummary={blog?.shortSummary}
           createdAt={blog?.createdAt}
+          category={blog?.category}
+          user={blog?.user as User}
+          data={blog}
         />
       ))}
 
-      <BlogCard
+      {/* <BlogCard
         title="How to create nextjs project"
         slug="how-to-create-nextjs-project"
         content="This is the just for the test purpose so i have not read much content in this."
@@ -76,7 +80,7 @@ export const Blogs = () => {
         image={"https://picsum.photos/id/237/200/300"}
         tags="NextJs React Javacsript"
         createdAt={"2023-03-23T10:30:00.000Z"}
-      />
+      /> */}
     </div>
   );
 };

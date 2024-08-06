@@ -11,6 +11,7 @@ import { toast } from "sonner";
 
 interface CommentFormProps {
     isReply?: boolean;
+    isBlogCard?: boolean;
     commentId?: string | null;
     blogId?: string;
     setOpen?: (updater: (prev: Record<string, boolean>) => Record<string, boolean>) => void;
@@ -18,6 +19,7 @@ interface CommentFormProps {
 
 export const CommentForm = ({
     isReply = false,
+    isBlogCard = false,
     commentId,
     blogId,
     setOpen
@@ -66,7 +68,7 @@ export const CommentForm = ({
                                         {...field}
                                         disabled={isPending}
                                         placeholder="Add your Comment here!"
-                                        rows={isReply ? 4 : 8}
+                                        rows={isReply ? 4 : isBlogCard ? 2 : 8}
                                     />
                                 </FormControl>
                                 <FormMessage />
