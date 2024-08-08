@@ -9,7 +9,6 @@ import { ExtendBlog } from "@/utils/types";
 import {
   BookmarkFilledIcon,
   BookmarkIcon,
-  ChatBubbleIcon,
   EyeOpenIcon,
 } from "@radix-ui/react-icons";
 import {

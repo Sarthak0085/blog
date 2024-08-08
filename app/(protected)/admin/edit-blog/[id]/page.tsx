@@ -32,7 +32,7 @@ export default function EditBlog() {
         };
 
         fetchData();
-    }, [])
+    }, [id])
 
     if (loading) {
         return (

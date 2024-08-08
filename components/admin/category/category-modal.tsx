@@ -13,6 +13,7 @@ interface CategoryModalProps {
   initialValues?: { id: string; name: string; userId: string };
   open: boolean;
   setOpen: (open: boolean) => void;
+  refetch: () => void;
 }
 
 export const CategoryModal = ({
@@ -22,6 +23,7 @@ export const CategoryModal = ({
   asChild,
   open,
   setOpen,
+  refetch,
 }: CategoryModalProps) => {
   return (
     <Dialog open={open} onOpenChange={() => setOpen(!open)}>
@@ -36,6 +38,7 @@ export const CategoryModal = ({
           initialValues={initialValues}
           isUpdate={isUpdate}
           setOpen={setOpen}
+          refetch={refetch}
         />
       </DialogContent>
     </Dialog>

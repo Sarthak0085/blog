@@ -25,16 +25,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { CategoryDataTableToolbar } from "./category-data-table-toolbar";
+import { categoryColumns } from "./category-columns";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+interface DataTableProps<TData> {
   data: TData[];
+  refetch: () => void;
 }
 
 export function CategoriesTable<TData, TValue>({
-  columns,
   data,
-}: DataTableProps<TData, TValue>) {
+  refetch
+}: DataTableProps<TData>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -42,6 +43,8 @@ export function CategoriesTable<TData, TValue>({
     []
   );
   const [sorting, setSorting] = React.useState<SortingState>([]);
+
+  const columns = React.useMemo(() => categoryColumns<TData>(refetch), [refetch]);
 
   const table = useReactTable({
     data,
@@ -66,6 +69,60 @@ export function CategoriesTable<TData, TValue>({
   });
 
   return (
+    // <div className="space-y-4">
+    //   <CategoryDataTableToolbar table={table} />
+    //   <div className="rounded-md border">
+    //     <Table>
+    //       <TableHeader>
+    //         {table.getHeaderGroups().map((headerGroup) => (
+    //           <TableRow key={headerGroup.id}>
+    //             {headerGroup.headers.map((header) => {
+    //               return (
+    //                 <TableHead key={header.id} colSpan={header.colSpan}>
+    //                   {header.isPlaceholder
+    //                     ? null
+    //                     : flexRender(
+    //                       header.column.columnDef.header,
+    //                       header.getContext()
+    //                     )}
+    //                 </TableHead>
+    //               );
+    //             })}
+    //           </TableRow>
+    //         ))}
+    //       </TableHeader>
+    //       <TableBody>
+    //         {table.getRowModel().rows?.length ? (
+    //           table.getRowModel().rows.map((row) => (
+    //             <TableRow
+    //               key={row.id}
+    //               data-state={row.getIsSelected() && "selected"}
+    //             >
+    //               {row.getVisibleCells().map((cell) => (
+    //                 <TableCell key={cell.id}>
+    //                   {flexRender(
+    //                     cell.column.columnDef.cell,
+    //                     cell.getContext()
+    //                   )}
+    //                 </TableCell>
+    //               ))}
+    //             </TableRow>
+    //           ))
+    //         ) : (
+    //           <TableRow>
+    //             <TableCell
+    //               colSpan={columns.length}
+    //               className="h-24 text-center"
+    //             >
+    //               No results.
+    //             </TableCell>
+    //           </TableRow>
+    //         )}
+    //       </TableBody>
+    //     </Table>
+    //   </div>
+    //   <DataTablePagination table={table} />
+    // </div>
     <div className="space-y-4">
       <CategoryDataTableToolbar table={table} />
       <div className="rounded-md border">
@@ -73,44 +130,33 @@ export function CategoriesTable<TData, TValue>({
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id} colSpan={header.colSpan}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
+                <TableRow key={row.id} data-state={row.getIsSelected() ? "selected" : undefined}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>

@@ -28,7 +28,7 @@ export const pinnedLike = async (values: z.infer<typeof PinnedLikeSchema>) => {
         const isPinned = like.isPinned;
 
         if (like.userId === user?.id) {
-            await db.dislike.update({
+            await db.like.update({
                 where: {
                     id: likeId
                 },

@@ -7,7 +7,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@//components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
@@ -25,10 +24,12 @@ import { pinnedCategory } from "@/actions/category/pinned-category";
 
 interface CategoriesTableRowActionsProps<TData> {
   row: Row<TData>;
+  refetch: () => void;
 }
 
 export function CategoriesTableRowActions<TData>({
   row,
+  refetch
 }: CategoriesTableRowActionsProps<TData>) {
   const user = useCurrentUser();
   const category = row.original as Category;
@@ -44,7 +45,7 @@ export function CategoriesTableRowActions<TData>({
           if (data?.success) {
             toast.success(data?.success);
             setOpenDeleteModal(false);
-            window.location.reload();
+            refetch();
           }
           if (data?.error) {
             toast.error(data?.error);
@@ -62,7 +63,7 @@ export function CategoriesTableRowActions<TData>({
         .then((data) => {
           if (data?.success) {
             toast.success(data?.success);
-            window.location.reload();
+            refetch();
           }
           if (data?.error) {
             toast.error(data?.error);
@@ -147,6 +148,7 @@ export function CategoriesTableRowActions<TData>({
         isUpdate={true}
         initialValues={row.original as any}
         open={open}
+        refetch={refetch}
         setOpen={setOpen}
       />
       <DeleteConfirmModal

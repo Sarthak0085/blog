@@ -16,7 +16,7 @@ const font = Lato({
 export const Header = async () => {
     const user = await currentUser();
     return (
-        <div className="w-full fixed top-0 left-0 h-[80px] flex items-center justify-between border-b mb-10 px-10 bg-transparent shadow-md">
+        <div className="w-full z-20 fixed top-0 left-0 h-[80px] flex items-center justify-between border-b mb-10 px-10 bg-transparent shadow-md">
             <div className="flex space-x-2 ">
                 <h2 className={cn("text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-700", font.className)}>VortexVista</h2>
             </div>

@@ -112,7 +112,7 @@ export const BlogCard = ({
   };
 
   return (
-    <Card className="w-full min-h-[250px] max-w-[720px] border-[2px] shadow-md shadow-[#00000000d]">
+    <Card className="w-full bg-gradient-to-br from-purple-300 to-emerald-200 min-h-[250px] min-w-[400px] max-w-[600px] border-[2px] shadow-md shadow-[#00000000d]">
       <CardContent >
         <Link href={`/blog/${data?.slug}`}>
           <div className="flex min-h-[200px]">
@@ -193,7 +193,7 @@ export const BlogCard = ({
                   d="m12.5278 14.5556v-.75h-.75-8.00002c-.56801 0-1.02778-.4598-1.02778-1.0278v-8.00002c0-.56801.45977-1.02778
                    1.02778-1.02778h12.44442c.568 0 1.0278.45977 1.0278 1.02778v7.94842c0 .9051-.4384 1.7561-1.1748
                    2.2822l-3.5474 2.5341z"
-                  fill="#fff"
+                  fill="transparent"
                   stroke="#646970"
                   strokeWidth="1.5"
                 >

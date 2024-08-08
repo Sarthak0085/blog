@@ -6,6 +6,8 @@ import { auth } from "@/auth";
 import { Toaster } from "@/components/ui/sonner";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/Header";
+import { publicRoutes } from "@/routes";
+import { useRouter } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +24,7 @@ export default async function RootLayout({
   const session = await auth();
   const backgroundImageUrl =
     "https://tailwindcss.com/_next/static/media/docs@30.8b9a76a2.avif";
+
   return (
     <html lang="en">
       <SessionProvider session={session}>

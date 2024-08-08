@@ -37,6 +37,10 @@ export default function GetBlogsPage() {
     fetchData();
   }, []);
 
+  const handleRefetch = () => {
+    fetchData();
+  }
+
   if (loading) {
     return (
       <div className="w-full h-[100vh] flex items-center justify-center">
@@ -62,7 +66,7 @@ export default function GetBlogsPage() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <CategoryModal open={open} setOpen={setOpen} asChild={true}>
+          <CategoryModal open={open} setOpen={setOpen} refetch={handleRefetch} asChild={true}>
             <Button
               variant={"outline"}
               className="bg-blue-500 text-white font-semibold"
@@ -73,7 +77,7 @@ export default function GetBlogsPage() {
           </CategoryModal>
         </div>
       </div>
-      <CategoriesTable data={data} columns={categoryColumns} />
+      <CategoriesTable data={data} refetch={handleRefetch} />
     </div>
   );
 }

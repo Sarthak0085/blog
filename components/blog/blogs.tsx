@@ -49,7 +49,7 @@ export const Blogs = () => {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full bg-transparent">
       {blogs.map((blog) => (
         <BlogCard
           key={blog?.id}

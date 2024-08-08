@@ -25,6 +25,7 @@ const buttonVariants = cva(
         delete:
           "border border-[red] text-white bg-[red] hover:text-[red] hover:bg-white p-1",
         edit: "text-[#FFC107] hover:text-[#FFC107]",
+        primary: "text-white ont-bold bg-gradient-to-r from-blue-400 to-purple-400 hover:from-blue-500 hover:to-purple-500"
       },
       size: {
         default: "h-9 px-4 py-2",
@@ -42,7 +43,7 @@ const buttonVariants = cva(
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  VariantProps<typeof buttonVariants> {
   asChild?: boolean;
 }
 
