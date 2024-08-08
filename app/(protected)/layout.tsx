@@ -10,10 +10,16 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-
   return (
     <div className="flex w-full min-h-screen space-x-10 py-5">
-      {pathname.startsWith("/admin") ? <AdminNavbar /> : <Navbar />}
+      {pathname.startsWith("/admin") ?
+        <div className="lg:block hidden">
+          <AdminNavbar />
+        </div> :
+        <div className="lg:block hidden">
+          <Navbar />
+        </div>
+      }
       <main className="w-full lg:pl-[200px] flex items-center my-5 justify-center">
         {children}
       </main>
