@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { AuthorAndDateDisplay } from "./author-date-display";
-import { ExtendBlog } from "@/utils/types";
+import { ExtendBlog, ExtendUserWithoutOAuth } from "@/utils/types";
 import Link from "next/link";
 import { MarkdownContent } from "@/components/blog/markdown-content";
 import { BlogBreadCrumb } from "@/components/blog/blog-bread-crumb";
@@ -18,6 +18,9 @@ import { addOrRemoveToFavourite } from "@/actions/favourites/add-to-favourite";
 import { savedBlogPost } from "@/actions/savedpost/saved-blog-post";
 import { BlogComments } from "./blog-comments";
 import { incrementViewCount } from "@/actions/blog/get-blogs";
+import { AboutAuthor } from "./about-author";
+import { ExtendUser } from "@/nextauth";
+import { User } from "@prisma/client";
 
 export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
   const user = useCurrentUser();
@@ -222,6 +225,9 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
         {displayComment && <div className="text-black">
           <BlogComments ref={commentSectionRef} blogId={data?.id} />
         </div>}
+        <div className="pt-[70px]">
+          <AboutAuthor user={data?.user as User} />
+        </div>
       </div>
     </div>
   );
