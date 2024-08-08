@@ -87,7 +87,7 @@ export const ProfileForm = ({ user, refetch }: ProfileFormProps) => {
 
 
     return (
-        <Card className="w-[450px]">
+        <Card className="w-full mx-4 500px:w-[450px]">
             <CardHeader>
                 <h2 className="text-2xl font-semibold text-center">Profile</h2>
             </CardHeader>

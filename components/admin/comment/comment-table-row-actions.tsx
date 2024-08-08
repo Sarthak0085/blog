@@ -20,7 +20,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
@@ -101,15 +100,15 @@ export function CommentTableRowActions<TData>({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[100px]">
           <DropdownMenuItem className="p-0">
-            <Link href={`/blog/${comment?.blog?.slug}`}>
-              <Button
-                className="w-full !justify-start px-2 py-2 space-x-2 h-auto  font-medium text-[blue] hover:text-[blue]"
-                variant="ghost"
-              >
+            <Button
+              className="w-full !justify-start px-2 py-2 space-x-2 h-auto font-medium text-[blue] hover:text-[blue]"
+              variant="ghost"
+            >
+              <Link href={`/blog/${comment?.blog?.slug}`}>
                 <IoEyeOutline color="blue" size={20} />
                 <span> View </span>
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           {user?.id === comment.userId && (

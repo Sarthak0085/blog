@@ -105,6 +105,8 @@ export const Header = () => {
                 </div>
                 <div className="justify-end">
                     <Button
+                        title="Open Header"
+                        aria-label="Open Header"
                         variant={"icon"}
                         onClick={() => setOpen((prev) => !prev)}
                     >
@@ -117,6 +119,8 @@ export const Header = () => {
                 <div className="min-w-[400px] min-h-[100vh] z-[10000] fixed right-0 top-0 flex flex-col items-center justify-start py-20 bg-white">
                     <div className="fixed right-5 top-5">
                         <Button
+                            title="Close Header"
+                            aria-label="Close Header"
                             variant={"icon"}
                             onClick={() => setOpen(false)}
                         >
