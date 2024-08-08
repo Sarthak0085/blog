@@ -1,20 +1,22 @@
+"use client";
+
 import Link from "next/link"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { FaUser } from "react-icons/fa"
-import { currentUser } from "@/lib/auth"
 import { FaArrowRightLong } from "react-icons/fa6";
 import { Lato } from "next/font/google"
 import { cn } from "@/lib/utils"
+import { useCurrentUser } from "@/hooks/useCurrentUser"
 
 const font = Lato({
     subsets: ["latin"],
     weight: ["400", "700", "900"],
 })
 
-export const Header = async () => {
-    const user = await currentUser();
+export const Header = () => {
+    const user = useCurrentUser();
     return (
         <div className="w-full z-20 fixed top-0 left-0 h-[80px] flex items-center justify-between border-b mb-10 px-10 bg-transparent shadow-md">
             <div className="flex space-x-2 ">
@@ -75,9 +77,7 @@ export const Header = async () => {
                     <Link href={`/${user?.id}`}>
                         <Avatar>
                             <AvatarImage
-                                height={20}
-                                width={20}
-                                src={user?.image || ""}
+                                src={user?.image ?? ""}
                                 alt="Avatar"
                             />
                             <AvatarFallback className="bg-sky-500">

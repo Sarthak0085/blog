@@ -50,6 +50,14 @@ export const SettingsSchema = z.object({
     path: ["newPassword"]
 });
 
+export const ProfileSchema = z.object({
+    userId: z.string().min(3, { message: "UserId is required" }),
+    name: z.string().min(3, { message: "Name is required" }),
+    email: z.string().min(3, { message: "Email is Required" }),
+    bio: z.optional(z.string().min(3, { message: "Bio is required" })),
+    image: z.optional(z.string().min(3, { message: "Image is Required" })),
+})
+
 export const AddBlogSchema = z.object({
     title: z.string().min(3, { message: "Title must be bigger than 3 letters" }),
     slug: z.string().min(3, { message: "Slug must be bigger than 3 letters" }),

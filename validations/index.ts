@@ -27,6 +27,7 @@ import {
     DeleteUserSchema,
     EditUserSchema,
     PublishBlogSchema,
+    ProfileSchema,
 } from "@/schemas";
 import CustomError from "@/lib/customError";
 import * as z from "zod";
@@ -53,6 +54,16 @@ export const validateUpdateCategoryInput = (values: z.infer<typeof UpdateCategor
 
 export const validateDeleteCategoryInput = (values: z.infer<typeof DeleteCategorySchema>) => {
     const validatedFields = DeleteCategorySchema.safeParse(values);
+
+    if (!validatedFields.success) {
+        throw new CustomError("Invalid Fields", 400);
+    }
+
+    return validatedFields.data;
+};
+
+export const validateUserProfile = (values: z.infer<typeof ProfileSchema>) => {
+    const validatedFields = ProfileSchema.safeParse(values);
 
     if (!validatedFields.success) {
         throw new CustomError("Invalid Fields", 400);

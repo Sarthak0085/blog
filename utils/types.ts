@@ -1,3 +1,4 @@
+import { ExtendUser } from "@/nextauth";
 import { Blog, Category, Comment, CommentLike, Dislike, Favourite, Like, SavedPost, User, UserRole } from "@prisma/client";
 
 export type ExtendBlog = Blog & {
@@ -43,6 +44,8 @@ export type ExtendBlog = Blog & {
         isTwoFactorEnabled: boolean;
     }
 }
+
+export type ExtendUserWithoutOAuth = Omit<ExtendUser, 'OAuth'>
 
 export type ExtendCategory = Category & {
     blogs: Blog[]

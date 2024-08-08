@@ -8,7 +8,7 @@ import { BookmarkIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaRegThumbsDown, FaRegThumbsUp } from "react-icons/fa";
-import { FaBlog } from "react-icons/fa6";
+import { LuUser2 } from "react-icons/lu";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { IoAddCircleOutline, IoSettingsOutline } from "react-icons/io5";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
@@ -20,6 +20,18 @@ export const Navbar = () => {
   return (
     <aside className="bg-transparent fixed top-[78px] pt-[30px] shadow-lg w-[220px] max-w-[250px] h-[calc(100vh-68px)] flex flex-col justify-between items-center rounded-xl border border-r">
       <div className="flex w-full flex-col gap-y-5">
+        <Button
+          className="mx-[20px] !justify-start"
+          asChild
+          variant={pathname === `/${user?.id}` ? "primary" : "outline"}
+        >
+          <Link
+            href={`/${user?.id}`}
+            className="gap-2"
+          >
+            <LuUser2 size={20} /> Profile
+          </Link>
+        </Button>
         <Button
           className="mx-[20px] !justify-start"
           asChild
@@ -115,7 +127,7 @@ export const Navbar = () => {
               2.2822l-3.5474 2.5341z"
                 fill="#fff"
                 stroke="#646970"
-                stroke-width="1.5"
+                strokeWidth="1.5"
               >
               </path>
             </svg>
@@ -137,18 +149,6 @@ export const Navbar = () => {
             </Link>
           </Button>
         }
-        <Button
-          className="mx-[20px] !justify-start"
-          asChild
-          variant={pathname === "/settings" ? "primary" : "outline"}
-        >
-          <Link
-            href={"/settings"}
-            className="gap-2"
-          >
-            <IoSettingsOutline size={20} /> Settings
-          </Link>
-        </Button>
       </div>
       <div className="py-5">
         <UserButton />

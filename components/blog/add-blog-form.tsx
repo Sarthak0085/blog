@@ -27,7 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Blog, BlogStatus, Category } from "@prisma/client";
+import { BlogStatus, Category } from "@prisma/client";
 import { toast } from "sonner";
 import Image from "next/image";
 import { useRouter } from "next/navigation";

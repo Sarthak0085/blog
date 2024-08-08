@@ -1,7 +1,8 @@
 "use client";
+
 import { usePathname } from "next/navigation";
 import { Navbar } from "./_components/Navbar";
-import { AdminNavbar } from "./admin/_components/Navbar";
+import { AdminNavbar } from "./admin/_components/admin-navbar";
 
 export default function ProtectedLayout({
   children,
