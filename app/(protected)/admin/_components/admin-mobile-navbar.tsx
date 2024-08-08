@@ -12,45 +12,46 @@ import { usePathname } from "next/navigation";
 import { useCurrentRole } from "@/hooks/useCurrentRole";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { LuUser2 } from "react-icons/lu";
-import { IoAddCircleOutline } from "react-icons/io5";
+import { IoAddCircleOutline, IoSettingsOutline } from "react-icons/io5";
 import { FaRegThumbsDown, FaRegThumbsUp } from "react-icons/fa";
 import { IoMdHeartEmpty } from "react-icons/io";
-import { MdOutlineAdminPanelSettings } from "react-icons/md";
+import { HiOutlineUserGroup } from "react-icons/hi2";
+import { BiCategory } from "react-icons/bi";
 
-interface MobileNavbarProps {
+interface AdminMobileNavbarProps {
     open: boolean;
     setOpen: (open: boolean) => void;
 }
 
-export const MobileNavbar = ({ open, setOpen }: MobileNavbarProps) => {
+export const AdminMobileNavbar = ({ open, setOpen }: AdminMobileNavbarProps) => {
     const pathname = usePathname();
     const role = useCurrentRole();
     const user = useCurrentUser();
-    return (
+    return (role === "ADMIN" &&
         <DropdownMenu defaultOpen={open}>
             <DropdownMenuTrigger asChild>
                 <Button
                     variant="ghost"
-                    className="flex h-8 w-8 p-0"
+                    className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
                     onClick={() => setOpen(!open)}
                 >
                     <DotsHorizontalIcon className="h-4 w-4" />
                     <span className="sr-only">Open menu</span>
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="left-2">
+            <DropdownMenuContent>
                 <div className="flex w-full my-8 flex-col space-y-2">
                     <DropdownMenuItem className="p-0 mx-[20px]">
                         <Button
                             className="w-full !justify-start"
                             asChild
-                            variant={pathname === `/${user?.id}` ? "primary" : "outline"}
+                            variant={pathname === `/admin/get-users` ? "primary" : "outline"}
                         >
                             <Link
-                                href={`/${user?.id}`}
+                                href={`/admin/get-users`}
                                 className="gap-2"
                             >
-                                <LuUser2 size={20} /> Profile
+                                <HiOutlineUserGroup size={20} /> All Users
                             </Link>
                         </Button>
                     </DropdownMenuItem>
@@ -59,10 +60,10 @@ export const MobileNavbar = ({ open, setOpen }: MobileNavbarProps) => {
                         <Button
                             className="w-full !justify-start"
                             asChild
-                            variant={pathname === `/${user?.id}/get-blogs` ? "primary" : "outline"}
+                            variant={pathname === `/admin/get-blogs` ? "primary" : "outline"}
                         >
                             <Link
-                                href={`/${user?.id}/get-blogs`}
+                                href={`/admin/get-blogs`}
                                 className="gap-2"
                             >
                                 <svg
@@ -81,10 +82,10 @@ export const MobileNavbar = ({ open, setOpen }: MobileNavbarProps) => {
                         <Button
                             className="w-full !justify-start"
                             asChild
-                            variant={pathname === `/${user?.id}/add-blog` ? "primary" : "outline"}
+                            variant={pathname === `/admin/add-blog` ? "primary" : "outline"}
                         >
                             <Link
-                                href={`/${user?.id}/add-blog`}
+                                href={`/admin/add-blog`}
                                 className="gap-2"
                             >
                                 <IoAddCircleOutline size={20} /> Add Blog
@@ -96,10 +97,25 @@ export const MobileNavbar = ({ open, setOpen }: MobileNavbarProps) => {
                         <Button
                             className="w-full !justify-start"
                             asChild
-                            variant={pathname === `/${user?.id}/get-likes` ? "primary" : "outline"}
+                            variant={pathname === `/admin/get-categories` ? "primary" : "outline"}
                         >
                             <Link
-                                href={`/${user?.id}/get-likes`}
+                                href={`/admin/get-categories`}
+                                className="gap-2"
+                            >
+                                <BiCategory size={20} /> All Categories
+                            </Link>
+                        </Button>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="p-0 mx-[20px]">
+                        <Button
+                            className="w-full !justify-start"
+                            asChild
+                            variant={pathname === `/admin/get-likes` ? "primary" : "outline"}
+                        >
+                            <Link
+                                href={`/admin/get-likes`}
                                 className="gap-2"
                             >
                                 <FaRegThumbsUp size={16} /> All Likes
@@ -111,10 +127,10 @@ export const MobileNavbar = ({ open, setOpen }: MobileNavbarProps) => {
                         <Button
                             className="w-full !justify-start"
                             asChild
-                            variant={pathname === `/${user?.id}/get-dislikes` ? "primary" : "outline"}
+                            variant={pathname === `/admin/get-dislikes` ? "primary" : "outline"}
                         >
                             <Link
-                                href={`/${user?.id}/get-dislikes`}
+                                href={`/admin/get-dislikes`}
                                 className="gap-2"
                             >
                                 <FaRegThumbsDown size={16} /> All Dislikes
@@ -126,10 +142,10 @@ export const MobileNavbar = ({ open, setOpen }: MobileNavbarProps) => {
                         <Button
                             className="w-full !justify-start"
                             asChild
-                            variant={pathname === `/${user?.id}/get-favourites` ? "primary" : "outline"}
+                            variant={pathname === `/admin/get-favourites` ? "primary" : "outline"}
                         >
                             <Link
-                                href={`/${user?.id}/get-favourites`}
+                                href={`/admin/get-favourites`}
                                 className="gap-2"
                             >
                                 <IoMdHeartEmpty size={20} /> All Favourites
@@ -139,12 +155,12 @@ export const MobileNavbar = ({ open, setOpen }: MobileNavbarProps) => {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem className="p-0 mx-[20px]">
                         <Button
-                            className="w-full!justify-start"
+                            className="w-full !justify-start"
                             asChild
-                            variant={pathname === `/${user?.id}/get-saved-posts` ? "primary" : "outline"}
+                            variant={pathname === `/admin/get-saved-posts` ? "primary" : "outline"}
                         >
                             <Link
-                                href={`/${user?.id}/get-saved-posts`}
+                                href={`/admin/get-saved-posts`}
                                 className="gap-2"
                             >
                                 <BookmarkIcon height={18} width={18} /> All Saved Posts
@@ -178,24 +194,20 @@ export const MobileNavbar = ({ open, setOpen }: MobileNavbarProps) => {
                         </Button>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    {
-                        role === "ADMIN" &&
-                        <DropdownMenuItem className="p-0 mx-[20px]">
-                            <Button
-                                className="w-full !justify-start"
-                                asChild
-                                variant={pathname === "/admin" ? "secondary" : "outline"}
+                    <DropdownMenuItem className="p-0 mx-[20px]">
+                        <Button
+                            className="w-full !justify-start"
+                            asChild
+                            variant={pathname === "/admin/settings" ? "primary" : "outline"}
+                        >
+                            <Link
+                                href={"/admin/settings"}
+                                className="gap-2"
                             >
-                                <Link
-                                    href={"/admin"}
-                                    className="gap-2"
-                                >
-                                    <MdOutlineAdminPanelSettings size={20} /> Admin
-                                </Link>
-                            </Button>
-                        </DropdownMenuItem>
-
-                    }
+                                <IoSettingsOutline size={20} /> Settings
+                            </Link>
+                        </Button>
+                    </DropdownMenuItem>
                 </div>
             </DropdownMenuContent>
         </DropdownMenu>
