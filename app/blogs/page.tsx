@@ -1,3 +1,4 @@
+import { AuthorLists } from "@/components/blog/author-lists";
 import { Blogs } from "@/components/blog/blogs";
 import { CategoriesList } from "@/components/blog/categories-list";
 import { TagsLists } from "@/components/blog/tags-list";
@@ -33,6 +34,7 @@ export default function BlogsPage() {
 
                     <div className="hidden lg:block lg:w-[25%] mt-8">
                         <TagsLists />
+                        <AuthorLists />
                         {/* <div>
                             <h2 className="text-2xl font-bold mb-4">Author</h2>
                             <AuthorInfo /> 

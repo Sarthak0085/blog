@@ -20,6 +20,29 @@ export const getAllUsers = async () => {
     }
 }
 
+export const getAllAuthors = async () => {
+    try {
+        const users = await db.user.findMany({
+            where: {
+                blogs: {
+                    some: {}
+                }
+            }
+        });
+
+        if (!users) {
+            return {
+                error: "Error while fetching users."
+            }
+        }
+
+        return { data: users };
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        return { success: false, error: "Could not fetch users." };
+    }
+}
+
 export const getUserById = async (id: string) => {
     try {
         const user = await db.user.findUnique({

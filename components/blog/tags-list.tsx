@@ -3,7 +3,7 @@
 import { getAllTags } from "@/actions/tags/get-tags";
 import { Tag } from "@prisma/client";
 import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export const TagsLists = () => {
@@ -15,20 +15,6 @@ export const TagsLists = () => {
     const [error, setError] = useState("");
     const [tags, setTags] = useState<Tag[]>([]);
     const [selectedTags, setSelectedTags] = useState<string[]>(queryTags?.split(",") ?? []);
-
-    // const handleClick = (name: string) => {
-    //     if (categoryName === name && tags !== null) {
-    //         router.push(`/blogs?tags=${tags}`);
-    //     } else if (categoryName === name) {
-    //         router.push(`/blogs?`);
-    //     }
-    //     else if (tags !== null) {
-    //         router.push(`/blogs?category=${name}&tags=${tags}`);
-    //     }
-    //     else {
-    //         router.push(`/blogs?category=${name}`);
-    //     }
-    // }
 
     const handleClick = (tag: string) => {
         setSelectedTags((prevTags) => {

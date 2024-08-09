@@ -14,14 +14,13 @@ export const Blogs = () => {
 
   const searchParams = useSearchParams();
   const category: string = searchParams.get("category") as string;
-  console.log("category", category);
   const tags: string = searchParams.get("tags") as string;
-  console.log("tags :", tags);
+  const authorId: string = searchParams.get("authorId") as string;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getAllPublishedBlogs({ category: category, tags: tags });
+        const data = await getAllPublishedBlogs({ category: category, tags: tags, authorId: authorId });
         if (data?.error) {
           setError(data?.error);
         }
@@ -36,7 +35,7 @@ export const Blogs = () => {
     }
 
     fetchData()
-  }, [category, tags])
+  }, [category, tags, authorId])
 
   if (isLoading) {
     return (

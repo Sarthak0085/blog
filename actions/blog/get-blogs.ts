@@ -77,7 +77,7 @@ export const getBlogById = async (id: string) => {
 }
 
 
-export const getAllPublishedBlogs = async ({ category = "", tags = "" }) => {
+export const getAllPublishedBlogs = async ({ category = "", tags = "", authorId = "" }) => {
     try {
         const whereConditions: any = {
             status: BlogStatus.PUBLISHED,
@@ -90,13 +90,15 @@ export const getAllPublishedBlogs = async ({ category = "", tags = "" }) => {
             }
 
             whereConditions.categoryId = existedCategory?.id;
-            console.log(whereConditions)
         }
 
         if (tags && tags !== "") {
             const updatedTags = tags.split(",");
-            console.log(updatedTags);
             whereConditions.tags = { hasSome: updatedTags };
+        }
+
+        if (authorId && authorId !== "") {
+            whereConditions.userId = authorId;
         }
 
         const blogs = await db.blog.findMany({
