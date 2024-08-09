@@ -62,8 +62,7 @@ export const AddBlogSchema = z.object({
     title: z.string().min(3, { message: "Title must be bigger than 3 letters" }),
     slug: z.string().min(3, { message: "Slug must be bigger than 3 letters" }),
     shortSummary: z.string()
-        .min(100, { message: "Short Summary must be between 100 to 300 characters" })
-        .max(300, { message: "Short Summary must be between 100 to 300 characters" }),
+        .min(100, { message: "Short Summary must be between 100 to 300 characters" }),
     content: z.string(),
     category: z.string().min(1, "Category is required"),
     tags: z.optional(z.string()),
@@ -76,8 +75,7 @@ export const UpdateBlogSchema = z.object({
     title: z.string().min(3, { message: "Title must be bigger than 3 letters" }),
     slug: z.string().min(3, { message: "Slug must be bigger than 3 letters" }),
     shortSummary: z.string()
-        .min(100, { message: "Short Summary must be between 100 to 300 characters" })
-        .max(300, { message: "Short Summary must be between 100 to 300 characters" }),
+        .min(100, { message: "Short Summary must be between 100 to 300 characters" }),
     content: z.string(),
     category: z.string().min(1, "Category is required"),
     tags: z.optional(z.string()),

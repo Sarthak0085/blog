@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { AuthorAndDateDisplay } from "./author-date-display";
-import { ExtendBlog, ExtendUserWithoutOAuth } from "@/utils/types";
+import { ExtendBlog } from "@/utils/types";
 import Link from "next/link";
 import { MarkdownContent } from "@/components/blog/markdown-content";
 import { BlogBreadCrumb } from "@/components/blog/blog-bread-crumb";
@@ -19,8 +19,9 @@ import { savedBlogPost } from "@/actions/savedpost/saved-blog-post";
 import { BlogComments } from "./blog-comments";
 import { incrementViewCount } from "@/actions/blog/get-blogs";
 import { AboutAuthor } from "./about-author";
-import { ExtendUser } from "@/nextauth";
 import { User } from "@prisma/client";
+import { Separator } from "../ui/separator";
+import { AiOutlineTag } from "react-icons/ai";
 
 export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
   const user = useCurrentUser();
@@ -177,17 +178,6 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
         <div>
           <BlogBreadCrumb category={data?.category?.name} slug={data?.slug} />
         </div>
-        <div className="flex space-x-4">
-          {data?.tags.map((item, index) => (
-            <Link
-              key={index}
-              href={`/blogs?tag=${item}`}
-              className="border p-1 border-collapse text-sm text-muted-foreground border-[purple] rounded-md cursor-pointer hover:bg-[purple] hover:text-white"
-            >
-              #{item}
-            </Link>
-          ))}
-        </div>
         <div>
           <h1 className="text-3xl font-bold">{data?.title}</h1>
         </div>
@@ -222,12 +212,24 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
         <div className="text-black">
           <MarkdownContent content={data?.content} />
         </div>
-        {displayComment && <div className="text-black">
-          <BlogComments ref={commentSectionRef} blogId={data?.id} />
-        </div>}
+        <Separator />
+        <div className="flex space-x-4">
+          {data?.tags.map((item, index) => (
+            <Link
+              key={index}
+              href={`/blogs?tag=${item}`}
+              className="border p-1 border-collapse text-primary flex gap-1 text-sm border-[purple] rounded-md cursor-pointer hover:bg-[purple] hover:text-white"
+            >
+              <AiOutlineTag size={20} /> {item}
+            </Link>
+          ))}
+        </div>
         <div className="pt-[70px]">
           <AboutAuthor user={data?.user as User} />
         </div>
+        {displayComment && <div className="text-black">
+          <BlogComments ref={commentSectionRef} blogId={data?.id} />
+        </div>}
       </div>
     </div>
   );

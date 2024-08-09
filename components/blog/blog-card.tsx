@@ -149,15 +149,15 @@ export const BlogCard = ({
                   </div>
                 </div>
                 <p className={cn("mb-[10px] text-wrap", oxygen.className)}>
-                  {data?.shortSummary.length > 180 ? `${data?.shortSummary.slice(0, 180)}...` : data?.shortSummary}
+                  {data?.shortSummary.length > 170 ? `${data?.shortSummary.slice(0, 170)}...` : data?.shortSummary}
                 </p>
               </div>
               <div className="items-end">
-                <div className="flex items-center justify-center border-[2px] rounded-lg">
+                <div className="flex items-center justify-center">
                   <Image
                     src={data?.imageUrl ?? ""}
                     alt={data?.slug}
-                    className="w-[180px] h-[150px] object-fill"
+                    className="w-[180px] h-[150px] object-fill rounded-md"
                     height={180}
                     width={180}
                   />

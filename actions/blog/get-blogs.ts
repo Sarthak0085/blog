@@ -1,5 +1,6 @@
 "use server";
 
+import { getCategoryByName } from "@/data/category";
 import { getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
 import CustomError from "@/lib/customError";
@@ -76,12 +77,31 @@ export const getBlogById = async (id: string) => {
 }
 
 
-export const getAllPublishedBlogs = async () => {
+export const getAllPublishedBlogs = async ({ category = "", tags = "" }) => {
     try {
+        const whereConditions: any = {
+            status: BlogStatus.PUBLISHED,
+        };
+
+        if (category && category !== "") {
+            console.log(category)
+            const existedCategory = await getCategoryByName(category)
+            console.log(existedCategory);
+
+            if (!existedCategory) {
+                throw new CustomError("Category Not Found", 404);
+            }
+
+            whereConditions.categoryId = existedCategory?.id;
+            console.log(whereConditions)
+        }
+
+        if (tags) {
+            whereConditions.tags = { some: { name: { in: tags.split(",") } } };
+        }
+
         const blogs = await db.blog.findMany({
-            where: {
-                status: BlogStatus.PUBLISHED,
-            },
+            where: whereConditions,
             include: {
                 category: true,
                 favourites: true,

@@ -5,17 +5,21 @@ import { BlogCard } from "./blog-card";
 import { ExtendBlog } from "@/utils/types";
 import { getAllPublishedBlogs } from "@/actions/blog/get-blogs";
 import { PulseLoader } from "react-spinners";
-import { User } from "@prisma/client";
+import { useSearchParams } from "next/navigation";
 
 export const Blogs = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-  const [blogs, setBlogs] = useState<ExtendBlog[]>([])
+  const [blogs, setBlogs] = useState<ExtendBlog[]>([]);
+
+  const searchParams = useSearchParams();
+  const category: string = searchParams.get("category") as string;
+  console.log("category", category);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getAllPublishedBlogs();
+        const data = await getAllPublishedBlogs({ category: category, });
         if (data?.error) {
           setError(data?.error);
         }
@@ -30,7 +34,7 @@ export const Blogs = () => {
     }
 
     fetchData()
-  }, [])
+  }, [category])
 
   if (isLoading) {
     return (
@@ -48,31 +52,19 @@ export const Blogs = () => {
     );
   }
 
-  return (
-    <div className="w-full bg-transparent">
+  return (blogs.length > 0 ?
+    <div className="w-full bg-transparent space-y-5">
       {blogs.map((blog) => (
-        <BlogCard
-          key={blog?.id}
-          data={blog}
-        />
+        <div key={blog?.id} >
+          <BlogCard
+            data={blog}
+          />
+        </div>
       ))}
-
-      {/* <BlogCard
-        title="How to create nextjs project"
-        slug="how-to-create-nextjs-project"
-        content="This is the just for the test purpose so i have not read much content in this."
-        image={"https://picsum.photos/id/237/200/300"}
-        tags="NextJs React Javacsript"
-        createdAt={"2023-03-23T10:30:00.000Z"}
-      />
-      <BlogCard
-        title="How to create nextjs project"
-        slug="how-to-create-nextjs-project"
-        content="This is the just for the test purpose so i have not read much content in this."
-        image={"https://picsum.photos/id/237/200/300"}
-        tags="NextJs React Javacsript"
-        createdAt={"2023-03-23T10:30:00.000Z"}
-      /> */}
+    </div>
+    :
+    <div className="flex items-center justify-center text-5xl text-[red]">
+      No Blogs Found
     </div>
   );
 };
