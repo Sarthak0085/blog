@@ -133,7 +133,14 @@ enum BlogStatus {
   DRAFT
   PUBLISHED
   ARCHIEVED
-  SCHEDULED
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  count     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Category {

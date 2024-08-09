@@ -111,12 +111,14 @@ export const BlogCard = ({
     });
   };
 
+  console.log(data?.tags)
+
   return (
     <Card className="w-full bg-gradient-to-br from-purple-300 to-emerald-200 min-h-[250px] min-w-[400px] max-w-[600px] border-[2px] shadow-md shadow-[#00000000d]">
       <CardContent >
         <Link href={`/blog/${data?.slug}`}>
           <div className="flex min-h-[200px]">
-            <div className="flex items-center justify-between gap-6">
+            <div className="flex flex-col-reverse py-2 sm:flex-row items-center justify-between gap-6">
               <div className="min-h-[100px] space-y-2 flex-1">
                 <div className="flex flex-col">
                   <h2 className="break-words text-xl">{data?.title}</h2>
@@ -157,7 +159,7 @@ export const BlogCard = ({
                   <Image
                     src={data?.imageUrl ?? ""}
                     alt={data?.slug}
-                    className="w-[180px] h-[150px] object-fill rounded-md"
+                    className="w-full sm:w-[180px] sm:h-[150px] object-fill rounded-md"
                     height={180}
                     width={180}
                   />

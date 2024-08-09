@@ -33,6 +33,16 @@ const replaceImageUrlsInContent = async (content: string): Promise<string> => {
     return updatedContent;
 };
 
+const updateTagCounts = async (tags: string[]) => {
+    for (const tagName of tags) {
+        await db.tag.upsert({
+            where: { name: tagName.toUpperCase() },
+            update: { count: { increment: 1 } },
+            create: { name: tagName.toUpperCase(), count: 1 }
+        });
+    }
+};
+
 
 export const createBlog = async (values: z.infer<typeof AddBlogSchema>) => {
 
@@ -94,6 +104,9 @@ export const createBlog = async (values: z.infer<typeof AddBlogSchema>) => {
                 userId: user?.id as string
             }
         });
+
+
+        await updateTagCounts(transformedTags as string[]);
 
         if (!blog) {
             return {

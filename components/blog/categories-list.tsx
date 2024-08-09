@@ -5,24 +5,25 @@ import { Category } from "@prisma/client";
 import { useEffect, useState } from "react"
 import { PulseLoader } from "react-spinners";
 import { Button } from "../ui/button";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { BiLeftArrow, BiRightArrow } from "react-icons/bi";
 import { cn } from "@/lib/utils";
+import { useWindowSize } from "@/hooks/useWindowSize";
 
 export const CategoriesList = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
     const [categories, setCategories] = useState<Category[]>([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [itemsToShow, setItemsToShow] = useState(6);
+
+    const { width } = useWindowSize();
+
     const searchParams = useSearchParams();
     const categoryName = searchParams.get("category");
     const tags = searchParams.get("tags");
-    console.log(categoryName);
-    const [currentIndex, setCurrentIndex] = useState(0);
 
     const router = useRouter();
-
-    const itemsToShow = 6;
 
     const handleNext = () => {
         setCurrentIndex((prevIndex) =>
@@ -40,7 +41,6 @@ export const CategoriesList = () => {
 
 
     const handleClick = (name: string) => {
-        console.log(name, categoryName)
         if (categoryName === name && tags !== null) {
             router.push(`/blogs?tags=${tags}`);
         } else if (categoryName === name) {
@@ -74,6 +74,26 @@ export const CategoriesList = () => {
         fetchData();
     }, []);
 
+
+    useEffect(() => {
+        if (width && width > 640) {
+            setItemsToShow(6);
+        }
+        else if (width && width > 540) {
+            setItemsToShow(5);
+        }
+        else if (width && width > 468) {
+            setItemsToShow(4);
+        }
+        else if (width && width > 300) {
+            setItemsToShow(3);
+        }
+        else {
+            setItemsToShow(2);
+        }
+
+    }, [width])
+
     if (isLoading) {
         return (
             <div className="w-full h-[100vh] flex items-center justify-center">
@@ -100,7 +120,7 @@ export const CategoriesList = () => {
                     onClick={handlePrev}
                     hidden={currentIndex === 0}
                     disabled={currentIndex === 0}
-                    className={cn("absolute left-0 rounded-full !p-3 flex items-center justify-center bg-gray-100 hover:bg-sky-500", currentIndex === 0 && "sr-only")}
+                    className={cn("absolute left-0 rounded-full !p-3 flex items-center justify-center bg-gray-200 hover:bg-sky-500", currentIndex === 0 && "sr-only")}
                 >
                     <BiLeftArrow size={15} />
                     <span className="sr-only">Previous Category Button</span>
@@ -126,7 +146,7 @@ export const CategoriesList = () => {
                     onClick={handleNext}
                     hidden={currentIndex + itemsToShow >= categories.length}
                     disabled={currentIndex + itemsToShow >= categories.length}
-                    className={cn("absolute right-0 rounded-full !p-3 flex items-center justify-center bg-gray-100 hover:bg-sky-500", currentIndex + itemsToShow >= categories.length && "sr-only")}
+                    className={cn("absolute right-0 rounded-full !p-3 flex items-center justify-center bg-gray-200 hover:bg-sky-500", currentIndex + itemsToShow >= categories.length && "sr-only")}
                 >
                     <BiRightArrow size={15} />
                     <span className="sr-only">Next Category Button</span>
