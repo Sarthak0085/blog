@@ -84,10 +84,7 @@ export const getAllPublishedBlogs = async ({ category = "", tags = "" }) => {
         };
 
         if (category && category !== "") {
-            console.log(category)
             const existedCategory = await getCategoryByName(category)
-            console.log(existedCategory);
-
             if (!existedCategory) {
                 throw new CustomError("Category Not Found", 404);
             }
@@ -96,8 +93,10 @@ export const getAllPublishedBlogs = async ({ category = "", tags = "" }) => {
             console.log(whereConditions)
         }
 
-        if (tags) {
-            whereConditions.tags = { some: { name: { in: tags.split(",") } } };
+        if (tags && tags !== "") {
+            const updatedTags = tags.split(",");
+            console.log(updatedTags);
+            whereConditions.tags = { hasSome: updatedTags };
         }
 
         const blogs = await db.blog.findMany({

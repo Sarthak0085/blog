@@ -15,11 +15,13 @@ export const Blogs = () => {
   const searchParams = useSearchParams();
   const category: string = searchParams.get("category") as string;
   console.log("category", category);
+  const tags: string = searchParams.get("tags") as string;
+  console.log("tags :", tags);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getAllPublishedBlogs({ category: category, });
+        const data = await getAllPublishedBlogs({ category: category, tags: tags });
         if (data?.error) {
           setError(data?.error);
         }
@@ -34,7 +36,7 @@ export const Blogs = () => {
     }
 
     fetchData()
-  }, [category])
+  }, [category, tags])
 
   if (isLoading) {
     return (
@@ -53,7 +55,7 @@ export const Blogs = () => {
   }
 
   return (blogs.length > 0 ?
-    <div className="w-full bg-transparent space-y-5">
+    <div className="flex flex-col items-center justify-center w-full bg-transparent space-y-5">
       {blogs.map((blog) => (
         <div key={blog?.id} >
           <BlogCard

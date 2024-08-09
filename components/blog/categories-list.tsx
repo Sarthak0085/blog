@@ -41,17 +41,14 @@ export const CategoriesList = () => {
 
 
     const handleClick = (name: string) => {
-        if (categoryName === name && tags !== null) {
-            router.push(`/blogs?tags=${tags}`);
-        } else if (categoryName === name) {
-            router.push(`/blogs?`);
-        }
-        else if (tags !== null) {
-            router.push(`/blogs?category=${name}&tags=${tags}`);
-        }
-        else {
-            router.push(`/blogs?category=${name}`);
-        }
+        const tagQuery = tags ? `tags=${encodeURIComponent(tags)}` : '';
+        const categoryQuery = categoryName !== name ? `category=${encodeURIComponent(name)}` : '';
+
+        const queryString = [tagQuery, categoryQuery].filter(Boolean).join('&');
+
+        const url = `/blogs${queryString ? `?${queryString}` : ''}`;
+
+        router.push(url);
     }
 
     useEffect(() => {
@@ -111,7 +108,7 @@ export const CategoriesList = () => {
     }
 
     return (
-        <div className="relative my-8 w-full overflow-hidden">
+        <div className="relative max-w-[600px] my-8 overflow-hidden">
             <div className="flex justify-center items-center">
                 <Button
                     variant={"icon"}
