@@ -15,19 +15,18 @@ export default function BlogsPage() {
                 </div>
                 <Separator />
                 <div className="flex flex-col lg:flex-row justify-between">
-                    <div className="lg:w-[75%] flex flex-col items-center justify-center">
-                        <FilterList />
+                    <div className="lg:w-[75%] flex flex-col items-center justify-start">
                         <CategoriesList />
                         <Blogs />
                     </div>
 
                     <div className="hidden lg:block lg:w-[25%] mt-8">
+                        <FilterList />
                         <TagsLists />
                         <AuthorLists />
                     </div>
                 </div>
             </div>
         </section>
-
     )
 }

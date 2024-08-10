@@ -45,7 +45,9 @@ export type ExtendBlog = Blog & {
     }
 }
 
-export type ExtendUserWithoutOAuth = Omit<ExtendUser, 'OAuth'>
+export type ExtendUserWithoutOAuth = Omit<ExtendUser, 'OAuth'> & {
+    'blogs': ExtendBlog[],
+};
 
 export type ExtendCategory = Category & {
     blogs: Blog[]

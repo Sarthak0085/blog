@@ -104,9 +104,10 @@ export const getAllPublishedBlogs = async ({ category = "", tags = "", authorId 
         if (time && time !== null) {
             const updatedTime = time.split(",");
             console.log(updatedTime);
+            const [gte, lte] = updatedTime.map(v => parseInt(v));
             whereConditions.read_time = {
-                gte: parseInt(updatedTime[0]),
-                lte: parseInt(updatedTime[1]) ?? parseInt(updatedTime[0]),
+                gte: gte,
+                lte: isNaN(lte) ? gte : lte,
             };
         }
 

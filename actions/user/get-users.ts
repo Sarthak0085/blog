@@ -70,3 +70,42 @@ export const getUserById = async (id: string) => {
     }
 }
 
+export const getAuthorById = async (id: string) => {
+    try {
+        const user = await db.user.findUnique({
+            where: {
+                id: id
+            },
+            include: {
+                blogs: {
+                    include: {
+                        likes: true,
+                        comments: true,
+                        savedPosts: true,
+                        dislikes: true,
+                        favourites: true,
+                    }
+                }
+            }
+        });
+
+        if (!user) {
+            throw new CustomError("User not found", 404);
+        }
+
+        return { data: user };
+    } catch (error) {
+        if (error instanceof CustomError) {
+            return {
+                error: error.message,
+                code: error.code,
+            };
+        }
+        return {
+            error: "An unexpected error occurred.",
+            code: 500,
+        };
+    }
+}
+
+

@@ -76,3 +76,14 @@ input[type=range]::-webkit-slider-thumb {
 
   /* @apply w-6 h-6 appearance-none pointer-events-auto; */
 }
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  /* Internet Explorer and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}

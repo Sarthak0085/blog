@@ -54,7 +54,7 @@ export const FilterList = () => {
     }
 
     return (
-        <div className="max-w-[600px] w-full flex flex-col items-center justify-center">
+        <div className="max-w-[600px] px-4 w-full flex flex-col items-center justify-center">
             <div className="relative max-w-xl w-full">
                 <div>
                     <Input
