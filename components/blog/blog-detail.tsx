@@ -182,9 +182,9 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
           <h1 className="text-3xl font-bold">{data?.title}</h1>
         </div>
         <AuthorAndDateDisplay
-          author={data?.user?.name}
+          author={data?.user as User}
           date={data?.createdAt}
-          content={data?.content}
+          time={data?.read_time}
           category={data?.category?.name}
         />
         <Features
@@ -205,6 +205,7 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
           src={data?.imageUrl || ""}
           alt={`image of :- ${data?.slug}`}
           className="w-full h-auto object-cover rounded-md"
+          layout="responsive"
           width={500}
           height={500}
         />

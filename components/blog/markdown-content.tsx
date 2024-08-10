@@ -18,7 +18,7 @@ export const MarkdownContent = ({
   // markdown code highlighter
   const Code = ({ node, inline, className, children, ...props }: any) => {
     const match = /language-(\w+)/.exec(className || "");
-
+    console.log("code", { node, inline, className, children, ...props }, match)
     const handleCopy = () => {
       navigator.clipboard.writeText(children);
       setCopied(true);
@@ -28,7 +28,7 @@ export const MarkdownContent = ({
     };
 
     if (inline) {
-      return <code>{inline}</code>;
+      return <code className="bg-[#b6b6b6]">{inline}</code>;
     } else if (match) {
       return (
         <div className="relative my-2">
@@ -43,13 +43,14 @@ export const MarkdownContent = ({
                 borderRadius: "5px",
                 overflowX: "auto",
                 whiteSpace: "pre-wrap",
+                width: "100%"
               },
             }}
           >
             {String(children).replace(/\n$/, "")}
           </SyntaxHighlighter>
           <button
-            className="absolute top-0 right-0 z-1 bg-[#3d3d3d] text-white p-3"
+            className="absolute top-0 right-0 z-1 text-white p-3"
             onClick={handleCopy}
             aria-label={"Copy Button"}
             title={"Copy Button"}
@@ -59,10 +60,21 @@ export const MarkdownContent = ({
         </div>
       );
     } else {
+      console.log("hello");
       return (
-        <code className="bg-[#3d3e3e] text-white px-2 py-1" {...props}>
-          {children}
-        </code>
+        <div className="!min-w-full bg-[#2b2b2b] text-[#f8f8f2] relative my-2 px-2 py-2">
+          <code {...props}>
+            {children}
+          </code>
+          <button
+            className="absolute top-0 right-0 z-1 text-white p-3"
+            onClick={handleCopy}
+            aria-label={"Copy Button"}
+            title={"Copy Button"}
+          >
+            {copied ? <TbCopyCheck /> : <TbCopy />}
+          </button>
+        </div>
       );
     }
   };
@@ -112,19 +124,28 @@ export const MarkdownContent = ({
           </a>
         ),
         img: ({ src, alt }) => (
-          <Image
-            src={
-              src ??
-              "https://imgs.search.brave.com/bEdhPwVY999DtrOvmIRnmmMKJrDrxNNcMabCyDXr8Ss/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/cHVibGljZG9tYWlu/cGljdHVyZXMubmV0/L3BpY3R1cmVzLzI4/MDAwMC92ZWxrYS9u/b3QtZm91bmQtaW1h/Z2UtMTUzODM4NjQ3/ODdsdS5qcGc"
-            }
-            alt={alt || "image"}
-            width={"100"}
-            height={"100"}
-            className="w-full h-auto py-2 rounded-md"
-          />
+          <div className="flex flex-col items-center justify-center my-2">
+            <Image
+              src={
+                src ??
+                "https://imgs.search.brave.com/bEdhPwVY999DtrOvmIRnmmMKJrDrxNNcMabCyDXr8Ss/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/cHVibGljZG9tYWlu/cGljdHVyZXMubmV0/L3BpY3R1cmVzLzI4/MDAwMC92ZWxrYS9u/b3QtZm91bmQtaW1h/Z2UtMTUzODM4NjQ3/ODdsdS5qcGc"
+              }
+              alt={alt || "image"}
+              layout="responsive"
+              width={"100"}
+              height={"100"}
+              className="w-full h-auto py-2 !rounded"
+            />
+            {alt && <span className="text-muted-foreground text-sm">{alt}</span>}
+          </div>
         ),
         div: ({ children }) => (
           <div style={{ margin: "1em 0" }}>{children}</div>
+        ),
+        hr: () => (
+          <div className="my-3 flex items-center justify-center">
+            <hr className="h-[1px] bg-black border-none w-[90%]" />
+          </div>
         ),
         code: Code,
       }}

@@ -1,7 +1,49 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-     images: {
-    domains: ['picsum.photos', 'example.com', 'res.cloudinary.com', 'via.placeholder.com', 'www.freecodecamp.org', 'miro.medium.com', 'unsplash.com', 'imgs.search.brave.com'], // Add the hostname here
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'example.com',
+        port: '',
+        pathname: '/account123/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.freecodecamp.org',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'miro.medium.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'unsplash.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'imgs.search.brave.com',
+        port: '',
+      },
+    ],
   },
 };
 

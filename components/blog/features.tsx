@@ -12,6 +12,7 @@ import {
   EyeOpenIcon,
 } from "@radix-ui/react-icons";
 import {
+  FaRegEye,
   FaRegThumbsDown,
   FaRegThumbsUp,
   FaThumbsDown,
@@ -68,10 +69,10 @@ export function Features({
           title="Views"
           aria-label="Views"
           variant={"icon"}
-          className="text-left cursor-default"
+          className="text-left !cursor-auto !p-3"
           aria-readonly
         >
-          <EyeOpenIcon color="blue" />
+          <FaRegEye color="blue" size={20} />
         </Button>
         <span>{count(data?.views)}</span>
       </div>
@@ -82,7 +83,7 @@ export function Features({
               title="Like"
               aria-label="Like"
               variant={"icon"}
-              className="text-left"
+              className="text-left !p-3"
               disabled={isPending}
               onClick={() => handleLike({ blogId: data?.id as string })}
             >
@@ -102,7 +103,7 @@ export function Features({
               title="Dislike"
               aria-label="Dislike"
               variant={"icon"}
-              className="text-left"
+              className="text-left !p-3"
               disabled={isPending}
               onClick={() => handleDislike({ blogId: data?.id as string })}
             >
@@ -120,7 +121,7 @@ export function Features({
           title="Favourite"
           aria-label="Favourite"
           variant={"icon"}
-          className="text-left"
+          className="text-left !p-3"
           disabled={isPending}
           onClick={() => toggleFavourite({ blogId: data?.id as string })}
         >
@@ -137,7 +138,7 @@ export function Features({
           title="Saved Post"
           aria-label="Saved Post"
           variant={"icon"}
-          className="text-left"
+          className="text-left !p-3"
           disabled={isPending}
           onClick={() => handleSavedPost({ blogId: data?.id as string })}
         >
@@ -152,7 +153,7 @@ export function Features({
       <div className="flex items-center">
         <Button
           variant={"icon"}
-          className="text-left"
+          className="text-left !p-3"
           onClick={() => handleCommentButtonClick()}
         >
           <svg fill="none" viewBox="0 0 20 20" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
@@ -160,9 +161,9 @@ export function Features({
               d="m12.5278 14.5556v-.75h-.75-8.00002c-.56801 0-1.02778-.4598-1.02778-1.0278v-8.00002c0-.56801.45977-1.02778
               1.02778-1.02778h12.44442c.568 0 1.0278.45977 1.0278 1.02778v7.94842c0 .9051-.4384 1.7561-1.1748
               2.2822l-3.5474 2.5341z"
-              fill="#fff"
+              fill="transparent"
               stroke="#646970"
-              stroke-width="1.5"
+              strokeWidth="1.5"
             >
             </path>
           </svg>
