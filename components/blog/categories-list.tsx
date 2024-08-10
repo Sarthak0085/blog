@@ -22,6 +22,8 @@ export const CategoriesList = () => {
     const searchParams = useSearchParams();
     const categoryName = searchParams.get("category");
     const tags = searchParams.get("tags");
+    const time = searchParams.get("time");
+    const date = searchParams.get("date");
 
     const router = useRouter();
 
@@ -43,8 +45,10 @@ export const CategoriesList = () => {
     const handleClick = (name: string) => {
         const tagQuery = tags ? `tags=${encodeURIComponent(tags)}` : '';
         const categoryQuery = categoryName !== name ? `category=${encodeURIComponent(name)}` : '';
+        const timeQuery = time && `time=${encodeURIComponent(time)}`
+        const dateQuery = date && `time=${encodeURIComponent(date)}`
 
-        const queryString = [tagQuery, categoryQuery].filter(Boolean).join('&');
+        const queryString = [tagQuery, timeQuery, dateQuery, categoryQuery].filter(Boolean).join('&');
 
         const url = `/blogs${queryString ? `?${queryString}` : ''}`;
 
