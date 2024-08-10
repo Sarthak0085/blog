@@ -10,7 +10,7 @@ import * as z from "zod";
 export const contact = async (values: z.infer<typeof ContactSchema>) => {
     try {
         const validateData = validateContact(values);
-        const { name, email, subject, message, authorId } = validateData;
+        const { name, email, subject, message, authorId, authorName, blogTitle } = validateData;
 
         let recipientEmail = "s74078961@gmail.com";
 
@@ -25,12 +25,16 @@ export const contact = async (values: z.infer<typeof ContactSchema>) => {
         await sendEmail({
             email: recipientEmail,
             subject: subject,
-            template: "contact.ejs",
+            template: authorId ? "author-contact.ejs" : "contact.ejs",
             data: {
                 name: name,
                 email: email,
                 subject: subject,
                 message: message,
+                ...(authorId && {
+                    authorName: authorName,
+                    blogSlug: blogTitle,
+                })
             }
         });
 
@@ -43,6 +47,13 @@ export const contact = async (values: z.infer<typeof ContactSchema>) => {
                 email: email,
                 subject: subject,
                 message: message,
+                ...(authorId && {
+                    authorName: authorName,
+                    authorEmail: recipientEmail,
+                }),
+                ...(blogTitle && {
+                    blogSlug: blogTitle,
+                })
             }
         });
 

@@ -208,4 +208,6 @@ export const ContactSchema = z.object({
     message: z.string().min(1, 'Message is required'),
     subject: z.string().min(1, 'Subject is required'),
     authorId: z.optional(z.string().min(1, 'Author is required')),
+    authorName: z.optional(z.string().min(1, 'Author Name is required')),
+    blogTitle: z.optional(z.string()),
 });

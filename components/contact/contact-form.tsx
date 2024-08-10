@@ -18,15 +18,9 @@ import { useTransition } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Image from "next/image";
-import { Separator } from "../ui/separator";
 import { contact } from "@/actions/contact";
 import { toast } from "sonner";
-
-interface ContactFormProps {
-    authorId?: string;
-    authorName?: string;
-}
-
+import { useParams, useSearchParams } from "next/navigation";
 
 const subjects = [
     'General Inquiry',
@@ -50,7 +44,10 @@ const authorSubjects = [
     'Other',
 ];
 
-export const ContactForm = ({ authorId, authorName }: ContactFormProps) => {
+export const ContactForm = () => {
+    const { authorId } = useParams();
+    const searchParams = useSearchParams();
+    const authorName = searchParams.get("name") as string;
     const [isPending, startTransition] = useTransition();
     const form = useForm<z.infer<typeof ContactSchema>>({
         resolver: zodResolver(ContactSchema),
@@ -58,19 +55,21 @@ export const ContactForm = ({ authorId, authorName }: ContactFormProps) => {
             name: "",
             email: "",
             message: "",
+            authorName: authorName ?? "",
+            blogTitle: "",
             ...(authorId && {
-                authorId: authorId
+                authorId: authorId as string
             }),
         }
     });
 
     const onSubmit = (values: z.infer<typeof ContactSchema>) => {
-        console.log(values);
         startTransition(() => {
             contact(values)
                 .then((data) => {
                     if (data?.success) {
                         toast.success(data?.success);
+                        form.reset();
                     }
                     if (data?.error) {
                         toast.error(data?.error);
@@ -80,8 +79,8 @@ export const ContactForm = ({ authorId, authorName }: ContactFormProps) => {
     }
 
     return (
-        <div className="max-w-[90%] mx-auto p-4 bg-transparent shadow-md rounded-lg gap-4 flex flex-col md:flex-row">
-            <div className="md:w-[60%] flex justify-center items-center md:pr-4 mb-4 md:mb-0">
+        <div className="lg:max-w-[90%] w-full sm:max-w-[70%] mx-auto p-4 bg-white/25 shadow-md rounded-lg gap-4 flex flex-col lg:flex-row">
+            <div className="lg:w-[60%] w-full flex justify-center items-center lg:pr-4 mb-4 lg:mb-0">
                 <Image
                     src={"/contact-us.jpg"}
                     alt="Contact"
@@ -91,13 +90,36 @@ export const ContactForm = ({ authorId, authorName }: ContactFormProps) => {
                     height={800}
                 />
             </div>
-            {/* <Separator /> */}
-            <div className="md:w-[40%]">
+            <div className="lg:w-[40%] w-full">
                 <h2 className="text-3xl font-semibold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-blue-500 to-purple-700">
                     Contact {authorName ? authorName : "Us"}
                 </h2>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        {authorName && <div className="space-y-4">
+                            <FormField
+                                control={form.control}
+                                name="authorName"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Author Name</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                id="authorName"
+                                                {...field}
+                                                disabled={isPending}
+                                                placeholder="Kevin Peter"
+                                                type="text"
+                                                className="border border-gray-400"
+                                                readOnly
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                        }
                         <div className="space-y-4">
                             <FormField
                                 control={form.control}
@@ -189,6 +211,27 @@ export const ContactForm = ({ authorId, authorName }: ContactFormProps) => {
                                 )}
                             />
                         </div>
+                        {(authorId || authorName) && <div className="space-y-4">
+                            <FormField
+                                control={form.control}
+                                name="blogTitle"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Blog Slug (Optional)</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                id="blogTitle"
+                                                {...field}
+                                                disabled={isPending}
+                                                placeholder="get_started_with_nextjs"
+                                                type="text"
+                                                className="border border-gray-400"
+                                            />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                        </div>}
                         <div className="space-y-4">
                             <FormField
                                 control={form.control}
