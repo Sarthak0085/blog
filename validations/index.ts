@@ -28,6 +28,7 @@ import {
     EditUserSchema,
     PublishBlogSchema,
     ProfileSchema,
+    ContactSchema,
 } from "@/schemas";
 import CustomError from "@/lib/customError";
 import * as z from "zod";
@@ -315,6 +316,16 @@ export const validatePublishBlog = (values: z.infer<typeof PublishBlogSchema>) =
 
 export const validateEditUser = (values: z.infer<typeof EditUserSchema>) => {
     const validatedFields = EditUserSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+        throw new CustomError("Invalid Fields", 400);
+    }
+
+    return validatedFields.data;
+};
+
+export const validateContact = (values: z.infer<typeof ContactSchema>) => {
+    const validatedFields = ContactSchema.safeParse(values);
 
     if (!validatedFields.success) {
         throw new CustomError("Invalid Fields", 400);

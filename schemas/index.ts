@@ -201,3 +201,11 @@ export const PinnedDislikeSchema = z.object({
 export const PinnedLikeSchema = z.object({
     likeId: z.string().min(1, "LikeId is required"),
 });
+
+export const ContactSchema = z.object({
+    name: z.string().min(1, 'Name is required'),
+    email: z.string().email('Invalid email address'),
+    message: z.string().min(1, 'Message is required'),
+    subject: z.string().min(1, 'Subject is required'),
+    authorId: z.optional(z.string().min(1, 'Author is required')),
+});

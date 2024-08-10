@@ -1,5 +1,5 @@
 import nodemailer, { Transporter } from "nodemailer";
-// import ejs from "ejs";
+import ejs from "ejs";
 import path from "path";
 
 interface EmailOptions {
@@ -23,28 +23,33 @@ const sendEmail = async (options: EmailOptions): Promise<void> => {
 
     const { email, subject, template, data, html } = options;
 
+    let emailHtml;
     if (template && data) {
         //get the path of email template file
-        const templatePath = path.join(__dirname, "../mails", template);
+        const templatePath = path.resolve(process.cwd(), 'mails', template);
+        console.log("template", templatePath);
 
-        //Render the email template with ejs
-        // const html: string = await ejs.renderFile(templatePath, data);
+        try {
+            emailHtml = await ejs.renderFile(templatePath, data);
+        } catch (error) {
+            console.error("Error rendering email template:", error);
+            throw new Error("Could not render email template");
+        }
+    } else if (html) {
+        emailHtml = html;
+    }
 
-        const mailOptions = {
-            from: process.env.SMTP_MAIL,
-            to: email,
-            subject,
-            // html,
-        }
+    const mailOptions = {
+        from: process.env.SMTP_MAIL,
+        to: email,
+        subject,
+        html: emailHtml,
+    }
+
+    try {
         await transporter.sendMail(mailOptions);
-    } else {
-        const mailOptions = {
-            from: process.env.SMTP_MAIL,
-            to: email,
-            subject,
-            html: html
-        }
-        await transporter.sendMail(mailOptions);
+    } catch (error) {
+        throw new Error("Could not send email");
     }
 }
 

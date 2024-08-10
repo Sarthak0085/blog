@@ -312,7 +312,7 @@ export const BlogForm = ({ blogData, isUpdate = false }: { blogData?: ExtendBlog
                         defaultValue={field.value}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a Role" />
+                          <SelectValue placeholder="Select a Category" />
                         </SelectTrigger>
                         <SelectContent>
                           {categories?.map((category) => (
