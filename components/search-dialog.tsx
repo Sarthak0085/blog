@@ -84,7 +84,7 @@ export function SearchDialog({ blogs, isLoading, error }: SearchDialogProps) {
         <Dialog open={dialogOpen} onOpenChange={handleClose}>
             <DialogTitle hidden>Search</DialogTitle>
             <Button variant="outline" className="pr-2 !bg-transparent border border-black shadow" onClick={() => setDialogOpen(true)}>
-                <div className="items-center  hidden gap-2 md:flex">
+                <div className="items-center gap-2 flex">
                     <MagnifyingGlassIcon className="h-[1.2rem] w-[1.2rem]" />
                     Search title, slug...
                     <kbd className="bg-white/15 p-1.5 rounded-sm text-xs leading-3">{shortcut}</kbd>
@@ -93,7 +93,7 @@ export function SearchDialog({ blogs, isLoading, error }: SearchDialogProps) {
                     <MagnifyingGlassIcon className="h-[1.2rem] w-[1.2rem]" />
                 </div>
             </Button>
-            <DialogContent className="max-w-2xl gap-0 p-0 ">
+            <DialogContent className="max-w-2xl z-[200] gap-0 p-0 ">
                 <div className="flex items-center px-4 py-2 border-b">
                     <MagnifyingGlassIcon className="h-[1.5rem] w-[1.5rem]" />
                     <Input

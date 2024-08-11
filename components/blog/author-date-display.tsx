@@ -30,7 +30,7 @@ export const AuthorAndDateDisplay = ({
   }
 
   return (
-    <div className="w-full text-sm text-muted-foreground space-x-1 text-nowrap">
+    <div className="w-full text-sm text-muted-foreground space-x-1 text-wrap">
       <span>By</span>
       <Link
         href={`/author/${author?.id}`}

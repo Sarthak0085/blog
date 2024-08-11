@@ -135,12 +135,13 @@ export const Header = () => {
                         onClick={() => setOpen((prev) => !prev)}
                     >
                         <HiBars3 size={25} />
+                        <span className="sr-only">Open Header</span>
                     </Button>
                 </div>
             </div>
             {
                 open &&
-                <div className="min-w-[400px] min-h-[100vh] z-[10000] fixed right-0 top-0 flex flex-col items-center justify-start py-20 bg-white">
+                <div className="min-w-[400px] 400px:w-full min-h-[100vh] z-[100] fixed right-0 top-0 flex flex-col items-center justify-start py-20 bg-white">
                     <div className="fixed right-5 top-5">
                         <Button
                             title="Close Header"
@@ -149,6 +150,7 @@ export const Header = () => {
                             onClick={() => setOpen(false)}
                         >
                             <RxCross2 size={25} />
+                            <span className="sr-only">Close Header</span>
                         </Button>
                     </div>
                     <div className="max-w-[300px] px-4 pt-5 pb-20">

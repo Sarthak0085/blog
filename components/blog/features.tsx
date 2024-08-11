@@ -63,7 +63,7 @@ export function Features({
   };
 
   return (
-    <div className="flex text-muted-forground space-x-4 w-full justify-start">
+    <div className="flex flex-wrap text-muted-forground gap-4 w-full justify-start">
       <div className="flex items-center">
         <Button
           title="Views"
