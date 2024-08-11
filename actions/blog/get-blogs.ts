@@ -101,9 +101,8 @@ export const getAllPublishedBlogs = async ({ category = "", tags = "", authorId 
             whereConditions.userId = authorId;
         }
 
-        if (time && time !== null) {
+        if (time && time !== "") {
             const updatedTime = time.split(",");
-            console.log(updatedTime);
             const [gte, lte] = updatedTime.map(v => parseInt(v));
             whereConditions.read_time = {
                 gte: gte,
@@ -111,7 +110,7 @@ export const getAllPublishedBlogs = async ({ category = "", tags = "", authorId 
             };
         }
 
-        if (date && date !== null) {
+        if (date && date !== "") {
             const startOfDay = new Date(date);
             startOfDay.setHours(0, 0, 0, 0);
 

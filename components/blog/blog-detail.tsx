@@ -214,7 +214,7 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
           <MarkdownContent content={data?.content} />
         </div>
         <Separator />
-        <div className="flex space-x-4">
+        <div className="flex gap-4 flex-wrap">
           {data?.tags.map((item, index) => (
             <Link
               key={index}

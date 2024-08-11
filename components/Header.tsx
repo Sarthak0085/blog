@@ -11,8 +11,11 @@ import { cn } from "@/lib/utils"
 import { useCurrentUser } from "@/hooks/useCurrentUser"
 import { HiBars3 } from "react-icons/hi2";
 import { RxCross2 } from "react-icons/rx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { SearchDialog } from "./search-dialog";
+import { getAllPublishedBlogs } from "@/actions/blog/get-blogs";
+import { Blog } from "@prisma/client";
 
 const font = Lato({
     subsets: ["latin"],
@@ -21,8 +24,32 @@ const font = Lato({
 
 export const Header = () => {
     const pathname = usePathname();
-    const [open, setOpen] = useState(false);
     const user = useCurrentUser();
+    const [open, setOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState("");
+    const [blogs, setBlogs] = useState<Blog[]>([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await getAllPublishedBlogs({});
+                if (data?.error) {
+                    setError(data?.error);
+                }
+                if (data?.blogs) {
+                    setBlogs(data?.blogs);
+                }
+            } catch (error) {
+                setError("Error while fetching blogs");
+            } finally {
+                setIsLoading(false);
+            }
+        }
+
+        fetchData();
+    }, []);
+
     return (
         <>
             <div className="hidden md:flex w-full z-20 fixed top-0 left-0 h-[80px] items-center justify-between border-b mb-10 px-10 bg-transparent shadow-md">
@@ -32,10 +59,7 @@ export const Header = () => {
                     </Link>
                 </div>
                 <div className="w-[300px]">
-                    <Input
-                        placeholder="Search posts by title, slug..."
-                        className="placeholder:text-muted-foreground text-sm outline-none outline-1 outline-black focus:!outline-none focus:!ring-2 focus:!ring-blue-500"
-                    />
+                    <SearchDialog blogs={blogs} isLoading={isLoading} error={error} />
                 </div>
                 <div className="flex items-center space-x-4">
                     <Button
@@ -128,10 +152,7 @@ export const Header = () => {
                         </Button>
                     </div>
                     <div className="max-w-[300px] px-4 pt-5 pb-20">
-                        <Input
-                            placeholder="Search posts by title, slug..."
-                            className="placeholder:text-muted-foreground text-sm outline-none outline-1 outline-black focus:!outline-none focus:!ring-2 focus:!ring-blue-500"
-                        />
+                        <SearchDialog blogs={blogs} isLoading={isLoading} error={error} />
                     </div>
                     <div className="flex flex-col items-center space-y-6 px-4">
                         <Button
