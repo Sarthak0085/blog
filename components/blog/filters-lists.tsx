@@ -104,7 +104,7 @@ export const FilterList = () => {
                 <div className="flex justify-between items-center py-5">
                     <div>
                         <Input
-                            type="text"
+                            type="number"
                             maxLength={2}
                             value={minTime}
                             onChange={handleMinChange}
@@ -113,7 +113,7 @@ export const FilterList = () => {
                     </div>
                     <div>
                         <Input
-                            type="text"
+                            type="number"
                             maxLength={2}
                             value={maxTime}
                             onChange={handleMaxChange}

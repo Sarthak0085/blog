@@ -23,6 +23,85 @@ import { User } from "@prisma/client";
 import { Separator } from "../ui/separator";
 import { AiOutlineTag } from "react-icons/ai";
 
+const markdown = `
+*emphasis*
+A paragraph with and **strong importance**.
+
+> A block quote with ~strikethrough~  ~~Hello~~ and a URL: [React](https://reactjs.org).
+
+* Lists
+* [ ] todo
+* [x] done
+
+\` Hello \`
+
+<h1 style="font-size: 20px; color: blue;">Hello</h1>
+<h2>Bye</h2>
+
+The lift coefficient ($C_L$) is a dimensionless coefficient
+
+<div style="color: red;">This is raw HTML in Markdown.</div>
+
+<b className="animate pulse text-blue-500 hover:text-blue-100">Hello Guys</b>
+<button onClick={()=>{const targetElement = document.getElementById('targetElement');
+    targetElement.scrollIntoView({ behavior: 'smooth' });}}>Hello</button>
+
+<button onClick="()=>console.log(\`hello\`)">Hello</button>    
+
+A table:
+
+| c | d |
+| --- | --- |
+| fs | gd |
+
+  <hr />
+
+\`\`\`js
+function add(a, b) {
+  return a + b;
+}
+\`\`\`
+
+\`\`\`java
+public class HelloWorld {
+    public static void main(String[] args) {
+        // Print "Hello, World!" to the console
+        System.out.println("Hello, World!");
+    }
+}
+\`\`\`
+\`\`\`jsx
+npm run dev
+\`\`\`
+
+\`\`\`
+npm run dev
+\`\`\`
+
+*emphasis*
+
+<div>
+_Hello_ <i>Bye</i>
+</div>
+
+*This text is italic using Markdown*
+
+<div class="custom-html">
+  <!-- Markdown content for HTML tags is not processed -->
+  <span class="inner-markdown">
+    **This text should be italic but won't be processed inside this HTML tag**
+  </span>
+</div>
+
+<div class="note">
+  Some  and <strong>strong</strong>!
+</div>
+
+<i id="targetElement">Why are </i>
+
+<h1>Hello</h1>
+`
+
 export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
   const user = useCurrentUser();
   const [isPending, startTransition] = useTransition();
@@ -203,7 +282,7 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
         <div className="text-muted-foreground bold">{data?.shortSummary}</div>
         <Image
           src={data?.imageUrl || ""}
-          alt={`image of :- ${data?.slug}`}
+          alt={`image of: - ${data?.slug} `}
           className="w-full h-auto object-cover rounded-md"
           layout="responsive"
           width={500}
@@ -211,14 +290,14 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
         />
 
         <div className="text-black">
-          <MarkdownContent content={data?.content} />
+          <MarkdownContent content={markdown} />
         </div>
         <Separator />
         <div className="flex gap-4 flex-wrap">
           {data?.tags.map((item, index) => (
             <Link
               key={index}
-              href={`/blogs?tag=${item}`}
+              href={`/ blogs ? tag = ${item} `}
               className="border p-1 border-collapse text-primary flex gap-1 text-sm border-[purple] rounded-md cursor-pointer hover:bg-[purple] hover:text-white"
             >
               <AiOutlineTag size={20} /> {item}

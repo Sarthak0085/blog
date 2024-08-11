@@ -136,7 +136,7 @@ export function BlogTableRowActions<TData>({
               <DropdownMenuSeparator />
             </>
           }
-          {(user?.id === userId && (blog.status === "DRAFT" || blog.status === "SCHEDULED")) &&
+          {(user?.id === userId && (blog.status === "DRAFT")) &&
             <>
               <DropdownMenuItem className="p-0">
                 <Button
@@ -152,18 +152,22 @@ export function BlogTableRowActions<TData>({
               <DropdownMenuSeparator />
             </>
           }
-          <DropdownMenuItem className="p-0">
-            <Link href={`/admin/edit-blog/${blog?.id}`}>
+          {user?.id === blog.userId &&
+            <>
+           <DropdownMenuItem className="p-0">
+            <Link href={`/${user?.id}/edit-blog/${blog?.id}`}>
               <Button
                 className="w-full !justify-start p-1 space-x-2 font-medium"
                 variant={"edit"}
-              >
+                >
                 <CiEdit color="#FFC107" size={20} />
                 <span> Edit </span>
               </Button>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
+                </>
+          }
           <DropdownMenuItem className="p-0">
             {user?.id === blog.userId &&
               (!blog?.isPinned ? (

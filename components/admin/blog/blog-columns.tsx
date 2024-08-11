@@ -34,11 +34,6 @@ export const statuses = [
     value: BlogStatus.ARCHIEVED,
     icon: MdOutlineArchive
   },
-  {
-    label: BlogStatus.SCHEDULED,
-    value: BlogStatus.SCHEDULED,
-    icon: FaRegCalendarCheck
-  },
 ];
 
 export const blogColumns: ColumnDef<ExtendBlog>[] = [

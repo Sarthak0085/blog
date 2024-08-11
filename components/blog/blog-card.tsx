@@ -17,6 +17,7 @@ import { BookmarkFilledIcon, BookmarkIcon } from "@radix-ui/react-icons";
 import { CommentForm } from "./comment-form";
 import { ShareModal } from "./share-modal";
 import { domain } from "@/lib/domain";
+import { formatDate } from "@/lib/date-format";
 
 interface BlogCardProps {
   data: ExtendBlog;
@@ -46,20 +47,6 @@ export const BlogCard = ({
     isSaved: !!data?.savedPosts?.find((item) => item.userId === data.user?.id),
     count: data?.savedPosts?.length,
   });
-  function formatDateToUS(date: Date | string) {
-    return new Date(date).toLocaleDateString("en-US", {
-      month: "short",
-      day: "2-digit",
-      year: "numeric",
-    });
-  }
-
-  function ReadTime(content: string) {
-    const wordsPerMinute = 200;
-    const words = content.trim().split(/\s+/).length;
-    const readTime = Math.ceil(words / wordsPerMinute);
-    return readTime;
-  }
 
   const toggleFavourite = (values: z.infer<typeof FavouriteSchema>) => {
     const prevFav = favourites;
@@ -111,14 +98,12 @@ export const BlogCard = ({
     });
   };
 
-  console.log(data?.tags)
-
   return (
     <Card className="w-full bg-gradient-to-br from-purple-300 to-emerald-200 min-h-[250px] min-w-[400px] max-w-[600px] border-[2px] shadow-md shadow-[#00000000d]">
       <CardContent >
         <Link href={`/blog/${data?.slug}`}>
           <div className="flex min-h-[200px]">
-            <div className="flex flex-col-reverse py-2 sm:flex-row items-center justify-between gap-6">
+            <div className="flex flex-col-reverse pt-8 sm:py-2 sm:flex-row items-center justify-between gap-6">
               <div className="min-h-[100px] space-y-2 flex-1">
                 <div className="flex flex-col">
                   <h2 className="break-words text-xl">{data?.title}</h2>
@@ -138,13 +123,13 @@ export const BlogCard = ({
                       <span>·</span>
                       <Link href={`/blogs?date=${data?.createdAt}`}>
                         <span className="text-muted-foreground hover:text-[#0675c4]  cursor-pointer text-[13px]">
-                          {formatDateToUS(data?.createdAt)}
+                          {formatDate(data?.createdAt)}
                         </span>
                       </Link>
                       <span>·</span>
-                      <Link href={`/blogs?time=${ReadTime(data?.content)}`}>
+                      <Link href={`/blogs?time=${data?.read_time}`}>
                         <span className="text-muted-foreground hover:text-[#0675c4]  cursor-pointer text-[13px]">
-                          {ReadTime(data?.content) > 1 ? `${ReadTime(data?.content)} mins` : `${ReadTime(data?.content)} min`}
+                          {data?.read_time !== 1 ? `${data?.read_time} mins` : `${data?.read_time} min`}
                         </span>
                       </Link>
                     </div>
