@@ -5,6 +5,7 @@ import { Tag } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
+import { TagsListSkeleton } from "../loader/tags-list-skeleton";
 
 export const TagsLists = () => {
     const router = useRouter();
@@ -69,7 +70,7 @@ export const TagsLists = () => {
     }
 
     return (
-        isLoading === false &&
+        isLoading && <TagsListSkeleton /> ||
         <div className="w-full">
             <h3 className="text-xl pl-2 text-muted-foreground font-semibold py-2">Popular Tags</h3>
             <div className="lg:grid-cols-3">

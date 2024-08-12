@@ -67,7 +67,7 @@ export const AddBlogSchema = z.object({
     category: z.string().min(1, "Category is required"),
     tags: z.optional(z.string()),
     image: z.string(),
-    status: z.enum([BlogStatus.DRAFT, BlogStatus.PUBLISHED]),
+    status: z.enum([BlogStatus.DRAFT, BlogStatus.PUBLISHED, BlogStatus.ARCHIEVED]),
 });
 
 export const UpdateBlogSchema = z.object({
@@ -80,7 +80,7 @@ export const UpdateBlogSchema = z.object({
     category: z.string().min(1, "Category is required"),
     tags: z.optional(z.string()),
     image: z.string(),
-    status: z.enum([BlogStatus.DRAFT, BlogStatus.PUBLISHED]),
+    status: z.enum([BlogStatus.DRAFT, BlogStatus.PUBLISHED, BlogStatus.ARCHIEVED]),
 });
 
 export const PublishBlogSchema = z.object({

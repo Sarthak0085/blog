@@ -4,8 +4,12 @@ import { useEffect, useState } from "react";
 import { BlogCard } from "./blog-card";
 import { ExtendBlog } from "@/utils/types";
 import { getAllPublishedBlogs } from "@/actions/blog/get-blogs";
-import { PulseLoader } from "react-spinners";
 import { useSearchParams } from "next/navigation";
+import { BlogCardSkeleton } from "../loader/blog-card-skeleton";
+import { CategoriesList } from "./categories-list";
+import { FilterList } from "./filters-lists";
+import { TagsLists } from "./tags-list";
+import { AuthorLists } from "./author-lists";
 
 export const Blogs = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -38,14 +42,6 @@ export const Blogs = () => {
     fetchData()
   }, [category, tags, authorId, time, date])
 
-  if (isLoading) {
-    return (
-      <div className="w-full h-[100vh] flex items-center justify-center">
-        <PulseLoader margin={3} size={20} />
-      </div>
-    );
-  }
-
   if (error) {
     return (
       <div className="w-full h-[100vh] flex items-center justify-center text-[red] font-bold text-3xl">
@@ -54,19 +50,38 @@ export const Blogs = () => {
     );
   }
 
-  return (blogs.length > 0 ?
-    <div className="flex flex-col items-center justify-center w-full bg-transparent space-y-5">
-      {blogs.map((blog) => (
-        <div key={blog?.id} >
-          <BlogCard
-            data={blog}
-          />
-        </div>
-      ))}
-    </div>
-    :
-    <div className="flex items-center justify-center text-5xl text-[red]">
-      No Blogs Found
-    </div>
-  );
+  return (
+    <>
+      <div className="lg:w-[75%] flex flex-col items-center justify-start">
+        <CategoriesList />
+        {
+          isLoading &&
+          [1, 2, 3].map((_, index) => (
+            <div key={index} className="my-2">
+              <BlogCardSkeleton />
+            </div>
+          ))
+        }
+        {!isLoading && blogs.length > 0 ?
+          <div className="flex flex-col items-center justify-center w-full bg-transparent space-y-5">
+            {blogs.map((blog) => (
+              <div key={blog?.id} >
+                <BlogCard
+                  data={blog}
+                />
+              </div>
+            ))}
+          </div>
+          :
+          <div className="flex items-center justify-center text-5xl text-[red]">
+            No Blogs Found
+          </div>}
+      </div>
+      <div className="hidden lg:block lg:w-[25%] mt-8">
+        {!isLoading && <FilterList />}
+        <TagsLists />
+        <AuthorLists />
+      </div>
+    </>
+  )
 };

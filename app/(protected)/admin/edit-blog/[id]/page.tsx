@@ -1,7 +1,7 @@
 "use client";
 
 import { getBlogById } from "@/actions/blog/get-blogs";
-import { BlogForm } from "@/components/blog/add-blog-form";
+import { BlogForm } from "@/components/blog/blog-form";
 import { ExtendBlog } from "@/utils/types";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";

@@ -3,7 +3,6 @@
 import { User } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { getAllAuthors } from "@/actions/user/get-users";
-import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FaUser } from "react-icons/fa";

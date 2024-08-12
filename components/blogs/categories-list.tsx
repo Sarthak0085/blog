@@ -9,6 +9,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { BiLeftArrow, BiRightArrow } from "react-icons/bi";
 import { cn } from "@/lib/utils";
 import { useWindowSize } from "@/hooks/useWindowSize";
+import { CategoryListSkeleton } from "../loader/category-list-skeleton";
 
 export const CategoriesList = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -97,8 +98,8 @@ export const CategoriesList = () => {
 
     if (isLoading) {
         return (
-            <div className="w-full h-[100vh] flex items-center justify-center">
-                <PulseLoader margin={3} size={20} />
+            <div className="my-4">
+                <CategoryListSkeleton />
             </div>
         );
     }

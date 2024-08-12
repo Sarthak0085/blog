@@ -36,7 +36,6 @@ import { EditBlog } from "@/actions/blog/update-blog";
 import { ExtendBlog } from "@/utils/types";
 import { getAllCategories } from "@/actions/category/get-categories";
 
-
 type BlogSchema =
   | z.infer<typeof UpdateBlogSchema>
   | z.infer<typeof AddBlogSchema>;
@@ -274,7 +273,7 @@ export const BlogForm = ({ blogData, isUpdate = false }: { blogData?: ExtendBlog
                                         className="absolute top-0 right-0 z-1"
                                         onClick={() =>
                                           navigator.clipboard.writeText(
-                                            children
+                                            String(children)
                                           )
                                         }
                                       >
@@ -363,11 +362,14 @@ export const BlogForm = ({ blogData, isUpdate = false }: { blogData?: ExtendBlog
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value={BlogStatus.DRAFT}>
-                            DRAFT
+                            {BlogStatus.DRAFT}
                           </SelectItem>
                           <SelectItem value={BlogStatus.PUBLISHED}>
-                            PUBLISHED
+                            {BlogStatus.PUBLISHED}
                           </SelectItem>
+                          {isUpdate && <SelectItem value={BlogStatus.ARCHIEVED}>
+                            {BlogStatus.ARCHIEVED}
+                          </SelectItem>}
                         </SelectContent>
                       </Select>
                     </FormControl>

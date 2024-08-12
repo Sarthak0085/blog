@@ -1,6 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { User } from "@prisma/client";
 import { Oxygen, Roboto } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,8 +13,8 @@ import { addOrRemoveToFavourite } from "@/actions/favourites/add-to-favourite";
 import { toast } from "sonner";
 import { savedBlogPost } from "@/actions/savedpost/saved-blog-post";
 import { BookmarkFilledIcon, BookmarkIcon } from "@radix-ui/react-icons";
-import { CommentForm } from "./comment-form";
-import { ShareModal } from "./share-modal";
+import { CommentForm } from "../blog/comment-form";
+import { ShareModal } from "../blog/share-modal";
 import { domain } from "@/lib/domain";
 import { formatDate } from "@/lib/date-format";
 
