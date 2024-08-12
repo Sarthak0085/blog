@@ -151,6 +151,34 @@ export const getAllPublishedBlogs = async ({ category = "", tags = "", authorId 
     }
 }
 
+export const getAllRelatedPublishedBlogs = async ({ categoryId = "" }) => {
+    try {
+        const blogs = await db.blog.findMany({
+            where: {
+                categoryId: categoryId,
+                status: BlogStatus.PUBLISHED,
+            },
+        });
+
+        if (!blogs) {
+            throw new CustomError("Error While fetching blogs", 400);
+        }
+
+        return { success: true, blogs };
+    } catch (error) {
+        if (error instanceof CustomError) {
+            return {
+                error: error.message,
+                code: error.code,
+            };
+        }
+        return {
+            error: "Error while fetching blogs",
+            code: 500,
+        };
+    }
+}
+
 export const getAllDraftBlogsByUserId = async () => {
     try {
         const user = await currentUser();

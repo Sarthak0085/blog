@@ -16,8 +16,8 @@ export const MarkdownContent = ({
 
   const customSanitizeSchema = {
     tagNames: [
-      'div', 'span', 'a', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-      'ul', 'ol', 'li', 'strong', 'em', 'br', 'button', 'code', 'pre'
+      'div', 'span', 'a', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'img', 'b', 'i', 'hr', 'table', 'thead',
+      'tbody', 'tr', 'th', 'td', 'ul', 'ol', 'li', 'strong', 'em', 'br', 'button', 'code', 'pre'
     ],
     attributes: {
       '*': ['style', 'href', 'target', 'class'],
@@ -85,23 +85,22 @@ export const MarkdownContent = ({
             href={href}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[blue] hover:underline  hover:underline-offset-2"
+            className="!text-[blue] hover:underline  hover:underline-offset-2"
           >
             {children}
           </a>
         ),
         img: ({ src, alt }) => (
-          <div className="flex flex-col items-center justify-center my-2">
+          <div className="flex flex-col items-center px-1 !rounded-md justify-center my-2">
             <Image
               src={
-                src ??
-                "https://imgs.search.brave.com/bEdhPwVY999DtrOvmIRnmmMKJrDrxNNcMabCyDXr8Ss/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/cHVibGljZG9tYWlu/cGljdHVyZXMubmV0/L3BpY3R1cmVzLzI4/MDAwMC92ZWxrYS9u/b3QtZm91bmQtaW1h/Z2UtMTUzODM4NjQ3/ODdsdS5qcGc"
+                src ?? ""
               }
               alt={alt || "image"}
               layout="responsive"
+              className="w-full h-auto py-2 !rounded"
               width={"100"}
               height={"100"}
-              className="w-full h-auto py-2 !rounded"
             />
             {alt && <span className="text-muted-foreground text-sm">{alt}</span>}
           </div>
