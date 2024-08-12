@@ -33,7 +33,13 @@ A paragraph with and **strong importance**.
 * [ ] todo
 * [x] done
 
-\` Hello \`
+A table:
+
+| c | d |
+| --- | --- |
+| fs | gd |
+
+\` Hello \` Bye this is fun
 
 <h1 style="font-size: 20px; color: blue;">Hello</h1>
 <h2>Bye</h2>
@@ -43,16 +49,12 @@ The lift coefficient ($C_L$) is a dimensionless coefficient
 <div style="color: red;">This is raw HTML in Markdown.</div>
 
 <b className="animate pulse text-blue-500 hover:text-blue-100">Hello Guys</b>
-<button onClick={()=>{const targetElement = document.getElementById('targetElement');
-    targetElement.scrollIntoView({ behavior: 'smooth' });}}>Hello</button>
+<button onClick="()=>{const targetElement = document.getElementById('targetElement');
+    targetElement.scrollIntoView({ behavior: 'smooth' });}">Hello</button>
 
-<button onClick="()=>console.log(\`hello\`)">Hello</button>    
+<button onClick="() => console.log('hello')">Hello</button>
 
-A table:
 
-| c | d |
-| --- | --- |
-| fs | gd |
 
   <hr />
 
@@ -70,6 +72,7 @@ public class HelloWorld {
     }
 }
 \`\`\`
+
 \`\`\`jsx
 npm run dev
 \`\`\`

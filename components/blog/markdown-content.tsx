@@ -1,16 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { TbCopy, TbCopyCheck } from "react-icons/tb";
 import ReactMarkdown from "react-markdown";
-import RemarkGfm from "remark-gfm";
-import RehypeRaw from "rehype-raw";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { v4 as uuid } from "uuid";
-import { useCallback, useMemo, useState } from "react";
-import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
+import rehypeRaw from "rehype-raw";
+import rehypeSanitize from "rehype-sanitize";
+import { Button } from "@/components/ui/button";
+import remarkGfm from "remark-gfm";
+import { Code } from "./code";
 
 export const MarkdownContent = ({
   content,
@@ -18,73 +14,32 @@ export const MarkdownContent = ({
   content: string | undefined;
 }) => {
 
-  // markdown code highlighter
-  const Code = ({ node, inline, className, children, ...props }: any) => {
-    const [copied, setCopied] = useState<{ [key: string]: boolean }>({});
-    const uniqueId = useMemo(() => uuid(), []);
-    const match = /language-(\w+)/.exec(className || "");
-    console.log({ node, inline }, typeof children, children)
-
-    const handleCopy = useCallback((id: string) => {
-      navigator.clipboard.writeText(children);
-      setCopied((prev) => ({ ...prev, [id]: true }));
-      setTimeout(() => {
-        setCopied((prev) => ({ ...prev, [id]: false }));
-      }, 2000);
-    }, [children]);
-
-    if (inline) {
-      return <code className="bg-[#b6b6b6]">{String(children).trim()}</code>;
-    } else {
-      return (
-        <div id={`code-block-${uniqueId}`} className={cn("relative my-2 border-l-4  border-[blueviolet]")}>
-          {match && (
-            <div className="flex items-center justify-between px-2 py-1 h-[44px] bg-black text-white rounded-tr-md">
-              <span className="font-semibold px-2">{match[1]}</span>
-            </div>
-          )}
-          <div className="overflow-x-auto">
-            <SyntaxHighlighter
-              language={match ? match[1] : ''}
-              style={dracula}
-              PreTag="pre"
-              codeTagProps={{
-                style: {
-                  paddingLeft: '4px',
-                  borderRadius: '0 0 10px 10px',
-                  whiteSpace: 'pre-wrap',
-                  width: '100%',
-                },
-              }}
-              customStyle={{
-                margin: "0 !important",
-                borderRadius: "0",
-                borderBottomRightRadius: "5px !important",
-              }}
-              {...props}
-            >
-              {String(children).replace(/\n$/, '')}
-            </SyntaxHighlighter>
-          </div>
-          <Button
-            variant={"icon"}
-            className="absolute top-2 right-1 z-1 text-white "
-            onClick={() => handleCopy(uniqueId)}
-            aria-label={"Copy Button"}
-          >
-            {copied[uniqueId] ? <TbCopyCheck size={20} /> : <TbCopy size={20} />}
-          </Button>
-        </div>
-      )
-    }
+  const customSanitizeSchema = {
+    tagNames: [
+      'div', 'span', 'a', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+      'ul', 'ol', 'li', 'strong', 'em', 'br', 'button', 'code', 'pre'
+    ],
+    attributes: {
+      '*': ['style', 'href', 'target', 'class'],
+      'a': ['href', 'target'],
+      'img': ['src', 'alt'],
+      'button': ['type', 'onclick', 'disabled', 'class'],
+      'pre': ['class', 'className'],
+      'code': ['class', 'className'],
+    },
+    protocols: {
+      href: ['http', 'https', 'mailto'],
+    },
+    allowComments: true,
   };
 
 
   return (
     <ReactMarkdown
-      remarkPlugins={[RemarkGfm]}
-      rehypePlugins={[RehypeRaw]}
+      remarkPlugins={[remarkGfm]}
+      rehypePlugins={[rehypeRaw as any, [rehypeSanitize, customSanitizeSchema]]}
       components={{
+        code: Code,
         h1: ({ node, ...rest }) => (
           <h1 className="text-[26px] font-bold py-1" {...rest} />
         ),
@@ -193,12 +148,11 @@ export const MarkdownContent = ({
           <blockquote className="border-l-4 border-gray-300 my-4 text-gray-600 bg-gray-100 rounded-lg p-4" {...rest} />
         ),
         button: ({ node, ...rest }) => (
-          <Button variant={"ghost"} className="bg-blue-400" {...rest} />
+          <Button variant={"outline"} className="bg-transparent my-2 shadow-md hover:bg-blue-500" {...rest} />
         ),
-        code: Code,
       }}
     >
-      {content}
+      {String(content)}
     </ReactMarkdown>
   );
 };
