@@ -9,16 +9,21 @@ import { LikeComment } from "./like-comment";
 import { Separator } from "@/components/ui/separator";
 import { getAllCommentsByBlogId } from "@/actions/comments/get-comments";
 import { PulseLoader } from "react-spinners";
+import { DeleteComment } from "./delete-comment";
+import { User } from "next-auth";
 
 interface BlogCommentsProps {
+  comments?: Omit<ExtendComment, "blog">[];
+  refetch: () => void;
   blogId?: string;
+  user: User
 }
 
 export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props, ref) => {
-  const { blogId } = props;
+  const { comments, refetch, blogId, user } = props;
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>("");
-  const [comments, setComments] = useState<ExtendComment[]>([]);
+  // const [comments, setComments] = useState<ExtendComment[]>([]);
   const [showReplies, setShowReplies] = useState<Record<string, boolean>>({});
   const [openReplyInput, setOpenReplyInputs] = useState<Record<string, boolean>>({});
 
@@ -49,56 +54,56 @@ export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props
     }
   }
 
-  const fetchData = async () => {
-    try {
-      const data = await getAllCommentsByBlogId(blogId as string);
-      if (data?.error) {
-        console.error("Error while fetching Comments.");
-        setError(data?.error);
-      }
-      if (data?.data) {
-        setComments(data?.data as ExtendComment[]);
-      }
-    } catch (error) {
-      setError("Error while fetching Comments.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // const fetchData = async () => {
+  //   try {
+  //     const data = await getAllCommentsByBlogId(blogId as string);
+  //     if (data?.error) {
+  //       console.error("Error while fetching Comments.");
+  //       setError(data?.error);
+  //     }
+  //     if (data?.data) {
+  //       setComments(data?.data as ExtendComment[]);
+  //     }
+  //   } catch (error) {
+  //     setError("Error while fetching Comments.");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
-  const handleRefetch = () => {
-    fetchData();
-  }
+  // const handleRefetch = () => {
+  //   fetchData();
+  // }
 
-  if (isLoading) {
-    return (
-      <div className="w-full h-[100vh] flex items-center justify-center">
-        <PulseLoader margin={3} size={20} />
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="w-full h-[100vh] flex items-center justify-center">
+  //       <PulseLoader margin={3} size={20} />
+  //     </div>
+  //   );
+  // }
 
-  if (error) {
-    return (
-      <div className="w-full h-[100vh] flex items-center justify-center text-[red] font-bold text-3xl">
-        {error}
-      </div>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <div className="w-full h-[100vh] flex items-center justify-center text-[red] font-bold text-3xl">
+  //       {error}
+  //     </div>
+  //   );
+  // }
 
   return (
     <div ref={ref} className="w-full mt-6">
       <h2 className="uppercase text-xl font-medium my-2">Post a comment</h2>
-      <CommentForm refetch={handleRefetch} blogId={blogId} />
+      <CommentForm refetch={refetch} blogId={blogId} />
       <h2 className="text-xl font-medium text-black mb-1">
         Comments
       </h2>
       <Separator color="black" className="mb-2 !h-[2px] !text-black" />
-      {comments?.map((item: ExtendComment, index: number) => (
+      {comments?.map((item: Omit<ExtendComment, "blog">, index: number) => (
         <div className={cn("w-full pb-2")} key={index}>
           {!item.parentId &&
             <div className="w-full flex justify-between">
@@ -143,7 +148,7 @@ export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props
                   </div>
                   {
                     openReplyInput[item?.id] &&
-                    <CommentForm isReply={true} refetch={handleRefetch} commentId={item?.id} blogId={blogId} setOpen={setOpenReplyInputs} />
+                    <CommentForm isReply={true} refetch={refetch} commentId={item?.id} blogId={blogId} setOpen={setOpenReplyInputs} />
                   }
 
                   {!item.parentId && Number(repliesComments(item?.id)?.length) > 0 && (
@@ -161,10 +166,13 @@ export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props
                 </div>
 
               </div>
-              <LikeComment comment={item} refetch={handleRefetch} />
+              <div>
+                <LikeComment comment={item} refetch={refetch} user={user} />
+                <DeleteComment comment={item} refetch={refetch} user={user} />
+              </div>
             </div>
           }
-          {showReplies[item?.id] && repliesComments(item?.id)?.map((comment: ExtendComment) => {
+          {showReplies[item?.id] && repliesComments(item?.id)?.map((comment: Omit<ExtendComment, "blog">) => {
             return (
               <div key={comment?.id} className="w-full flex justify-between">
                 <div className={cn("flex pb-5", "ml-[30px]")}>
@@ -208,7 +216,10 @@ export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props
                     </div>
                   </div>
                 </div>
-                <LikeComment comment={comment} refetch={handleRefetch} />
+                <div>
+                  <LikeComment comment={item} refetch={refetch} user={user} />
+                  <DeleteComment comment={item} refetch={refetch} user={user} />
+                </div>
               </div>
             )
           })}

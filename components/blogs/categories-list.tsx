@@ -3,15 +3,19 @@
 import { getAllCategories } from "@/actions/category/get-categories";
 import { Category } from "@prisma/client";
 import { useEffect, useState } from "react"
-import { PulseLoader } from "react-spinners";
 import { Button } from "../ui/button";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { BiLeftArrow, BiRightArrow } from "react-icons/bi";
 import { cn } from "@/lib/utils";
 import { useWindowSize } from "@/hooks/useWindowSize";
-import { CategoryListSkeleton } from "../loader/category-list-skeleton";
+import { CategoryListSkeleton } from "@/components/loader/category-list-skeleton";
 
-export const CategoriesList = () => {
+interface CategoriesListProps {
+    searchParamsState: { [key: string]: string };
+    onSearchParamsChange: (key: string, value?: string) => void;
+}
+
+export const CategoriesList = ({ searchParamsState, onSearchParamsChange }: CategoriesListProps) => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
     const [categories, setCategories] = useState<Category[]>([]);
@@ -19,12 +23,6 @@ export const CategoriesList = () => {
     const [itemsToShow, setItemsToShow] = useState(6);
 
     const { width } = useWindowSize();
-
-    const searchParams = useSearchParams();
-    const categoryName = searchParams.get("category");
-    const tags = searchParams.get("tags");
-    const time = searchParams.get("time");
-    const date = searchParams.get("date");
 
     const router = useRouter();
 
@@ -42,19 +40,23 @@ export const CategoriesList = () => {
 
     const currentCategories = categories.slice(currentIndex, currentIndex + itemsToShow);
 
-
     const handleClick = (name: string) => {
-        const tagQuery = tags ? `tags=${encodeURIComponent(tags)}` : '';
-        const categoryQuery = categoryName !== name ? `category=${encodeURIComponent(name)}` : '';
-        const timeQuery = time && `time=${encodeURIComponent(time)}`
-        const dateQuery = date && `time=${encodeURIComponent(date)}`
+        const updatedParams = { ...searchParamsState };
 
-        const queryString = [tagQuery, timeQuery, dateQuery, categoryQuery].filter(Boolean).join('&');
+        if (updatedParams.category === name) {
+            delete updatedParams.category;
+        } else {
+            updatedParams.category = name;
+        }
+        onSearchParamsChange('category', updatedParams?.category);
+
+        const queryString = Object.entries(updatedParams)
+            .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+            .join('&');
 
         const url = `/blogs${queryString ? `?${queryString}` : ''}`;
-
         router.push(url);
-    }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -132,8 +134,8 @@ export const CategoriesList = () => {
                         {currentCategories?.map((category) => (
                             <Button
                                 key={category?.id}
-                                variant={categoryName !== category?.name ? "outline" : "primary"}
-                                className={cn(categoryName !== category?.id && "!bg-transparent !border border-black")}
+                                variant={searchParamsState?.category !== category?.name ? "outline" : "primary"}
+                                className={cn(searchParamsState?.category !== category?.id && "!bg-transparent !border border-black")}
                                 onClick={() => handleClick(category?.name)}
                             >
                                 <span>{category?.name}</span>

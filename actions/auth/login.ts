@@ -20,7 +20,7 @@ const domain = process.env.NEXT_PUBLIC_APP_URL;
 
 export const login = async (
   values: z.infer<typeof LoginSchema>,
-  callbackUrl?: string | null
+  callbackUrl?: string | null,
 ) => {
   const validatedFields = LoginSchema.safeParse(values);
 
@@ -128,9 +128,13 @@ export const login = async (
     await signIn("credentials", {
       email,
       password,
-      redirect: true,
+      redirect: callbackUrl === null ? false : true,
       redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
     });
+
+    return {
+      success: "Logged In Successfully."
+    }
 
   } catch (error) {
     if (error instanceof AuthError) {

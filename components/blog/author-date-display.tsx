@@ -1,3 +1,4 @@
+import { formatDate } from "@/lib/date-format";
 import { User } from "@prisma/client";
 import Link from "next/link";
 
@@ -14,21 +15,6 @@ export const AuthorAndDateDisplay = ({
   time,
   category,
 }: Props) => {
-  // function ReadTime(content: string) {
-  //   const wordsPerMinute = 200;
-  //   const words = content?.trim().split(/\s+/).length;
-  //   const readTime = Math.ceil(words / wordsPerMinute);
-  //   return readTime;
-  // }
-
-  function formatDateToUS(date: Date | string) {
-    return new Date(date).toLocaleDateString("en-US", {
-      month: "short",
-      day: "2-digit",
-      year: "numeric",
-    });
-  }
-
   return (
     <div className="w-full text-sm text-muted-foreground space-x-1 text-wrap">
       <span>By</span>
@@ -53,7 +39,7 @@ export const AuthorAndDateDisplay = ({
         className="hover:text-blue-500 font-medium"
       >
         <span>
-          {formatDateToUS(date || new Date())}
+          {formatDate(date || new Date())}
         </span>
       </Link>
       <span>•</span>

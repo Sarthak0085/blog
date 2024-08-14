@@ -1,4 +1,4 @@
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { useForm } from "react-hook-form"
@@ -31,13 +31,14 @@ export const CommentForm = ({
 }: CommentFormProps) => {
     const user = useCurrentUser();
     const [isPending, startTransition] = useTransition();
-    const [openLoginMOdal, setOpenLoginModal] = useState(false);
+    const [openLoginModal, setOpenLoginModal] = useState(false);
 
     const form = useForm<z.infer<typeof CreateCommentSchema>>({
         resolver: zodResolver(CreateCommentSchema),
         defaultValues: {
             parentId: String(commentId) ?? null,
-            blogId: String(blogId)
+            blogId: String(blogId),
+            content: "",
         }
     });
 
@@ -50,7 +51,7 @@ export const CommentForm = ({
                             ...prev,
                             [commentId as string]: !prev[commentId as string],
                         }));
-
+                        form.reset();
                         refetch();
                     }
                     if (data?.error) {
@@ -78,22 +79,20 @@ export const CommentForm = ({
                                         rows={isReply ? 4 : isBlogCard ? 2 : 8}
                                     />
                                 </FormControl>
-                                <FormMessage />
                             </FormItem>
                         )}
                     />
-                    <LoginButton open={openLoginMOdal} setOpen={setOpenLoginModal} asChild={true} mode="Modal">
-                        <Button
-                            type={"submit"}
-                            onClick={() => !user && setOpenLoginModal(true)}
-                            disabled={isPending}
-                            className={cn("!absolute w-auto bottom-1 right-2", isPending && "cursor-not-allowed")}
-                        >
-                            Send
-                        </Button>
-                    </LoginButton>
+                    <Button
+                        type={"submit"}
+                        onClick={() => !user && setOpenLoginModal(true)}
+                        disabled={isPending}
+                        className={cn("!absolute w-auto bottom-1 right-2", isPending && "cursor-not-allowed")}
+                    >
+                        Send
+                    </Button>
                 </div>
             </form>
-        </Form>
+            {openLoginModal && <LoginButton open={openLoginModal} setOpen={setOpenLoginModal} asChild={true} mode="Modal" />}
+        </Form >
     )
 }

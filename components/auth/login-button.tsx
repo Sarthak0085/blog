@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { LoginForm } from "@/components/auth/login-form";
 
 interface LoginButtonProps {
@@ -27,8 +27,9 @@ export default function LoginButton({
   if (mode === "Modal") {
     return (
       <Dialog defaultOpen={open} onOpenChange={() => { setOpen && setOpen(!open) }}>
-        <DialogTrigger onClick={() => { setOpen && setOpen(true) }} asChild={asChild}>{children}</DialogTrigger>
+        <DialogTrigger onClick={() => { setOpen && setOpen(true) }} />
         <DialogContent className="p-0 w-auto bg-transparent border-none">
+          <DialogTitle hidden aria-hidden>Login Form</DialogTitle>
           <LoginForm />
         </DialogContent>
       </Dialog>

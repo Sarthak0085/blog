@@ -18,7 +18,11 @@ export const getBlogDetailsBySlug = async (slug: string) => {
                 comments: {
                     include: {
                         user: true,
+                        likes: true,
                     },
+                    orderBy: {
+                        createdAt: "desc",
+                    }
                 },
                 dislikes: true,
                 favourites: true,

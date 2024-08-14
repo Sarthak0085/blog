@@ -48,7 +48,7 @@ export const LoginForm = () => {
     setSuccess("");
 
     startTransition(() => {
-      login(values, callbackUrl ?? pathname)
+      login(values, callbackUrl)
         .then((data) => {
           console.log("data", data)
           if (data?.error) {
@@ -56,6 +56,7 @@ export const LoginForm = () => {
           }
           if (data?.success) {
             setSuccess(data?.success);
+            window.location.reload();
           }
           if (data?.twoFactor) {
             setShowTwoFactor(true);

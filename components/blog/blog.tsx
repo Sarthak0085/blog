@@ -8,6 +8,7 @@ import { BlogDetails } from "./blog-detail";
 import { RelatedBlogs } from "./related-blogs";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { User } from "next-auth";
+import { BlogDetailSkeleton } from "../loader/blog-detail-skeleton";
 
 export const Blog = () => {
     const { slug } = useParams();
@@ -16,30 +17,36 @@ export const Blog = () => {
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await getBlogDetailsBySlug(slug as string);
-                if (data?.error) {
-                    setError(data?.error);
-                }
-                if (data?.data) {
-                    setData(data?.data as ExtendBlog);
-                }
-            } catch (error) {
-                console.error("Error fetching blog data:", error);
-                setError("Error while fetching data");
-            } finally {
-                setIsLoading(false);
+    const fetchData = async () => {
+        try {
+            const data = await getBlogDetailsBySlug(slug as string);
+            if (data?.error) {
+                setError(data?.error);
             }
-        };
+            if (data?.data) {
+                setData(data?.data as ExtendBlog);
+            }
+        } catch (error) {
+            console.error("Error fetching blog data:", error);
+            setError("Error while fetching data");
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchData();
     }, [slug]);
 
+    const handleRefetch = () => {
+        fetchData();
+    }
+
+    console.log("user", user);
+
     if (isLoading) {
         return (
-            <div>Loading...</div>
+            <BlogDetailSkeleton />
         )
     }
 
@@ -56,7 +63,7 @@ export const Blog = () => {
         >
             <div className="flex items-center justify-center lg:block w-full lg:w-[75%]">
                 <div className="w-full md:w-[80%] lg:w-[75%] xl:w-[70%] px-10 py-10">
-                    {!isLoading && !error && <BlogDetails data={data} user={user as User} />}
+                    {!isLoading && !error && <BlogDetails data={data} user={user as User} refetch={handleRefetch} />}
                 </div>
             </div>
             <div className="fixed hidden lg:block lg:w-[300px] xl:w-[400px] right-2 py-8">

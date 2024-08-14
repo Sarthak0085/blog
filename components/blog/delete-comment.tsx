@@ -1,56 +1,43 @@
 import { Button } from "@/components/ui/button"
-import { LikeCommentSchema } from "@/schemas";
-import { ExtendComment } from "@/utils/types";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { DeleteCommentSchema } from "@/schemas";
 import * as z from "zod";
 import { useState, useTransition } from "react"
-import { likeComment } from "@/actions/comments/like-comment";
 import { toast } from "sonner";
-import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import LoginButton from "@/components/auth/login-button";
+import { MdDeleteOutline } from "react-icons/md";
+import { deleteComment } from "@/actions/comments/delete-comment";
+import { ExtendComment } from "@/utils/types";
 import { User } from "next-auth";
 
-interface LikeCommentProps {
+interface DeleteCommentProps {
     comment?: Omit<ExtendComment, "blog">;
     refetch: () => void;
     user: User
 }
 
-export const LikeComment = ({
-    comment,
-    refetch,
-    user
-}: LikeCommentProps
-) => {
+export const DeleteComment = ({ comment, refetch, user }: DeleteCommentProps) => {
     const [isPending, startTransition] = useTransition();
     const [openLoginModal, setOpenLoginModal] = useState(false);
-    const [like, setLike] = useState({
-        isLiked: comment && !!comment.likes?.find((item) => item.userId === user?.id),
-    });
 
-    const handleLike = (values: z.infer<typeof LikeCommentSchema>) => {
-        const prevLike = like;
-        setLike((prev) => ({
-            isLiked: !prev.isLiked,
-        }));
+    const handleLike = (values: z.infer<typeof DeleteCommentSchema>) => {
         startTransition(() => {
-            likeComment(values)
+            deleteComment(values)
                 .then((data) => {
                     if (data?.success) {
                         toast.success(data?.success);
                         refetch();
                     }
                     if (data?.error) {
-                        setLike(prevLike);
                         toast.error(data?.error);
                     }
                 }).catch(() => {
-                    setLike(prevLike);
                     toast.error("Something went wrong");
                 })
         })
     }
 
-    return (
+    return (user?.id === comment?.userId &&
         <>
             <Button
                 title="Favourite"
@@ -60,11 +47,7 @@ export const LikeComment = ({
                 disabled={isPending}
                 onClick={() => !user ? setOpenLoginModal(true) : handleLike({ commentId: comment?.id as string })}
             >
-                {like.isLiked ? (
-                    <IoMdHeart color="red" size={20} />
-                ) : (
-                    <IoMdHeartEmpty color="red" size={20} />
-                )}
+                <MdDeleteOutline color="red" size={22} />
             </Button>
             {openLoginModal && <LoginButton open={openLoginModal} setOpen={setOpenLoginModal} asChild={true} mode="Modal" />}
         </>

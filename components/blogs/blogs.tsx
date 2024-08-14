@@ -16,19 +16,43 @@ export const Blogs = () => {
   const [refetch, setRefetch] = useState(false);
   const [error, setError] = useState("");
   const [blogs, setBlogs] = useState<ExtendBlog[]>([]);
+  const [searchParamsState, setSearchParamsState] = useState<{ [key: string]: string }>({});
 
   const searchParams = useSearchParams();
-  const category: string = searchParams.get("category") as string;
-  const tags: string = searchParams.get("tags") as string;
-  const authorId: string = searchParams.get("authorId") as string;
-  const time: string = searchParams.get("time") as string;
-  const date: string = searchParams.get("date") as string;
+  // const category: string = searchParams.get("category") as string;
+  // const tags: string = searchParams.get("tags") as string;
+  // const authorId: string = searchParams.get("authorId") as string;
+  // const time: string = searchParams.get("time") as string;
+  // const date: string = searchParams.get("date") as string;
 
+  useEffect(() => {
+    const params: { [key: string]: string } = {};
+
+    searchParams.forEach((value, key) => {
+      params[key] = value;
+    });
+
+    setSearchParamsState(params);
+  }, [searchParams]);
+
+  const handleSearchParamsState = (key: string, value?: string) => {
+    setSearchParamsState(prev => {
+      const updatedParams = { ...prev };
+
+      if (value === undefined) {
+        delete updatedParams[key];
+      } else {
+        updatedParams[key] = value;
+      }
+
+      return updatedParams;
+    });
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getAllPublishedBlogs({ category: category, tags: tags, authorId: authorId, time: time, date: date });
+        const data = await getAllPublishedBlogs({ category: searchParamsState?.category, tags: searchParamsState?.tags, authorId: searchParamsState?.authorId, time: searchParamsState?.time, date: searchParamsState?.date });
         if (data?.error) {
           setError(data?.error);
         }
@@ -42,7 +66,7 @@ export const Blogs = () => {
       }
     }
     fetchData()
-  }, [category, tags, authorId, time, date, refetch]);
+  }, [searchParamsState, refetch]);
 
   const handleRefetch = () => {
     setRefetch((prev) => !prev);
@@ -59,7 +83,7 @@ export const Blogs = () => {
   return (
     <>
       <div className="lg:w-[75%] flex flex-col items-center justify-start">
-        <CategoriesList />
+        <CategoriesList searchParamsState={searchParamsState} onSearchParamsChange={handleSearchParamsState} />
         {
           isLoading &&
           [1, 2, 3].map((_, index) => (
@@ -68,7 +92,7 @@ export const Blogs = () => {
             </div>
           ))
         }
-        {!isLoading && blogs.length > 0 ?
+        {!isLoading && !error ? blogs.length > 0 ?
           <div className="flex flex-col items-center justify-center w-full bg-transparent space-y-5">
             {blogs.map((blog) => (
               <div key={blog?.id} >
@@ -82,7 +106,9 @@ export const Blogs = () => {
           :
           <div className="flex items-center justify-center text-5xl text-[red]">
             No Blogs Found
-          </div>}
+          </div>
+          : null
+        }
       </div>
       <div className="hidden lg:block lg:w-[25%] mt-8">
         {!isLoading && <FilterList />}

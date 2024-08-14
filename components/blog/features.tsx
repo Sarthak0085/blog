@@ -86,7 +86,6 @@ export const Features = ({
           </Button>
           <span>{count(data?.views ?? 0)}</span>
         </div>
-        <LoginButton open={openLoginModal} setOpen={setOpenLoginModal} mode="Modal" asChild={true} />
         {((like.isLiked && !dislike.isDisliked) ||
           (!like.isLiked && !dislike.isDisliked)) && (
             <div className="flex items-center">
@@ -197,6 +196,7 @@ export const Features = ({
           </Button>
         </ShareModal>
       </div>
+      {openLoginModal && <LoginButton open={openLoginModal} setOpen={setOpenLoginModal} mode="Modal" />}
     </>
   );
 }
