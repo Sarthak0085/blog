@@ -2,11 +2,11 @@ import { cn } from "@/lib/utils";
 import { ExtendComment } from "@/utils/types";
 import { forwardRef, useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FaUser } from "react-icons/fa";
 import { CommentForm } from "./comment-form";
 import { LikeComment } from "./like-comment";
-import { Separator } from "../ui/separator";
+import { Separator } from "@/components/ui/separator";
 import { getAllCommentsByBlogId } from "@/actions/comments/get-comments";
 import { PulseLoader } from "react-spinners";
 
@@ -17,13 +17,10 @@ interface BlogCommentsProps {
 export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props, ref) => {
   const { blogId } = props;
   const [isLoading, setIsLoading] = useState(true);
-  const [refetch, setRefetch] = useState(true);
   const [error, setError] = useState<string>("");
   const [comments, setComments] = useState<ExtendComment[]>([]);
   const [showReplies, setShowReplies] = useState<Record<string, boolean>>({});
   const [openReplyInput, setOpenReplyInputs] = useState<Record<string, boolean>>({});
-
-  console.log(comments);
 
   const repliesComments = (commentId: string) => {
     return comments?.filter((comment) => comment.parentId === commentId);
@@ -52,26 +49,30 @@ export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props
     }
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getAllCommentsByBlogId(blogId as string);
-        if (data?.error) {
-          console.error("Error while fetching Comments.");
-          setError(data?.error);
-        }
-        if (data?.data) {
-          setComments(data?.data as ExtendComment[]);
-        }
-      } catch (error) {
-        setError("Error while fetching Comments.");
-      } finally {
-        setIsLoading(false);
+  const fetchData = async () => {
+    try {
+      const data = await getAllCommentsByBlogId(blogId as string);
+      if (data?.error) {
+        console.error("Error while fetching Comments.");
+        setError(data?.error);
       }
-    };
+      if (data?.data) {
+        setComments(data?.data as ExtendComment[]);
+      }
+    } catch (error) {
+      setError("Error while fetching Comments.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
-  }, [blogId, refetch]);
+  }, []);
+
+  const handleRefetch = () => {
+    fetchData();
+  }
 
   if (isLoading) {
     return (
@@ -92,7 +93,7 @@ export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props
   return (
     <div ref={ref} className="w-full mt-6">
       <h2 className="uppercase text-xl font-medium my-2">Post a comment</h2>
-      <CommentForm blogId={blogId} />
+      <CommentForm refetch={handleRefetch} blogId={blogId} />
       <h2 className="text-xl font-medium text-black mb-1">
         Comments
       </h2>
@@ -142,7 +143,7 @@ export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props
                   </div>
                   {
                     openReplyInput[item?.id] &&
-                    <CommentForm isReply={true} commentId={item?.id} blogId={blogId} setOpen={setOpenReplyInputs} />
+                    <CommentForm isReply={true} refetch={handleRefetch} commentId={item?.id} blogId={blogId} setOpen={setOpenReplyInputs} />
                   }
 
                   {!item.parentId && Number(repliesComments(item?.id)?.length) > 0 && (
@@ -160,7 +161,7 @@ export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props
                 </div>
 
               </div>
-              <LikeComment comment={item} setRefetch={setRefetch} />
+              <LikeComment comment={item} refetch={handleRefetch} />
             </div>
           }
           {showReplies[item?.id] && repliesComments(item?.id)?.map((comment: ExtendComment) => {
@@ -207,7 +208,7 @@ export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props
                     </div>
                   </div>
                 </div>
-                <LikeComment comment={comment} setRefetch={setRefetch} />
+                <LikeComment comment={comment} refetch={handleRefetch} />
               </div>
             )
           })}

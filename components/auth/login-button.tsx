@@ -5,15 +5,19 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { LoginForm } from "@/components/auth/login-form";
 
 interface LoginButtonProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   mode?: "Modal" | "Redirect";
   asChild?: boolean;
+  open?: boolean;
+  setOpen?: (open: boolean) => void;
 }
 
 export default function LoginButton({
   children,
   mode,
   asChild,
+  open,
+  setOpen
 }: LoginButtonProps) {
   const router = useRouter();
   const onClick = () => {
@@ -22,8 +26,8 @@ export default function LoginButton({
 
   if (mode === "Modal") {
     return (
-      <Dialog>
-        <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
+      <Dialog defaultOpen={open} onOpenChange={() => { setOpen && setOpen(!open) }}>
+        <DialogTrigger onClick={() => { setOpen && setOpen(true) }} asChild={asChild}>{children}</DialogTrigger>
         <DialogContent className="p-0 w-auto bg-transparent border-none">
           <LoginForm />
         </DialogContent>

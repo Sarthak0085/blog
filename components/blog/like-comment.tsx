@@ -7,10 +7,12 @@ import { useState, useTransition } from "react"
 import { likeComment } from "@/actions/comments/like-comment";
 import { toast } from "sonner";
 import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
+import LoginButton from "../auth/login-button";
 
-export const LikeComment = ({ comment, setRefetch }: { comment: ExtendComment | undefined; setRefetch: (refetch: boolean) => void; }) => {
+export const LikeComment = ({ comment, refetch }: { comment: ExtendComment | undefined; refetch: () => void; }) => {
     const user = useCurrentUser();
     const [isPending, startTransition] = useTransition();
+    const [openLoginModal, setOpenLoginModal] = useState(false);
     const [like, setLike] = useState({
         isLiked: comment && !!comment.likes?.find((item) => item.userId === user?.id),
     });
@@ -25,7 +27,7 @@ export const LikeComment = ({ comment, setRefetch }: { comment: ExtendComment | 
                 .then((data) => {
                     if (data?.success) {
                         toast.success(data?.success);
-                        setRefetch(true ? false : true);
+                        refetch();
                     }
                     if (data?.error) {
                         setLike(prevLike);
@@ -39,19 +41,21 @@ export const LikeComment = ({ comment, setRefetch }: { comment: ExtendComment | 
     }
 
     return (
-        <Button
-            title="Favourite"
-            aria-label="Favourite"
-            variant={"icon"}
-            className="text-left"
-            disabled={isPending}
-            onClick={() => handleLike({ commentId: comment?.id as string })}
-        >
-            {like.isLiked ? (
-                <IoMdHeart color="red" size={20} />
-            ) : (
-                <IoMdHeartEmpty color="red" size={20} />
-            )}
-        </Button>
+        <LoginButton open={openLoginModal} setOpen={setOpenLoginModal} asChild={true} mode="Modal">
+            <Button
+                title="Favourite"
+                aria-label="Favourite"
+                variant={"icon"}
+                className="text-left"
+                disabled={isPending}
+                onClick={() => !user ? setOpenLoginModal(true) : handleLike({ commentId: comment?.id as string })}
+            >
+                {like.isLiked ? (
+                    <IoMdHeart color="red" size={20} />
+                ) : (
+                    <IoMdHeartEmpty color="red" size={20} />
+                )}
+            </Button>
+        </LoginButton>
     )
 } 

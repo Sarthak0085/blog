@@ -6,7 +6,6 @@ import { auth } from "@/auth";
 import { Toaster } from "@/components/ui/sonner";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/Header";
-import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -58,44 +57,22 @@ export default async function RootLayout({
     "https://tailwindcss.com/_next/static/media/docs@30.8b9a76a2.avif";
 
   return (
-    <>
-      <Head>
-        <meta name="keywords" content="blog, stories, writing, community, literature, personal stories" />
-        <meta name="author" content="Sarthak" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#ffffff" />
-        <meta name="application-name" content="Vortex Vista" />
-        <meta name="msapplication-TileColor" content="#ffffff" />
-        <meta name="msapplication-config" content="/browserconfig.xml" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <meta name="twitter:site" content="@yourtwitterhandle" />
-        <meta name="twitter:creator" content="@yourtwitterhandle" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Vortex Vista: A platform for every story. A blog for you by you" />
-        <meta name="twitter:description" content="A blog for you to share your stories and read others'. Join a community of writers and readers." />
-        <meta name="twitter:image" content="https://www.yourwebsite.com/your-image.jpg" />
-        <meta name="twitter:image:alt" content="A description of the image" />
-      </Head>
-      <html lang="en">
-        <SessionProvider session={session}>
-          <body className={inter.className}>
-            <Header />
-            <main
-              style={{
-                backgroundImage: `url(${backgroundImageUrl})`,
-              }}
-              className="bg-cover bg-center pt-[5rem]  w-full bg-fixed flex flex-col justify-center items-center"
-            >
-              <Toaster position="top-right" />
-              {children}
-            </main>
-            <Footer />
-          </body>
-        </SessionProvider>
-      </html>
-    </>
+    <html lang="en">
+      <SessionProvider session={session}>
+        <body className={inter.className}>
+          <Header />
+          <main
+            style={{
+              backgroundImage: `url(${backgroundImageUrl})`,
+            }}
+            className="bg-cover bg-center pt-[5rem]  w-full bg-fixed flex flex-col justify-center items-center"
+          >
+            <Toaster position="top-right" />
+            {children}
+          </main>
+          <Footer />
+        </body>
+      </SessionProvider>
+    </html>
   );
 }

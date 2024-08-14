@@ -48,7 +48,7 @@ export function BlogTableRowActions<TData>({
         .then((data) => {
           if (data?.success) {
             toast.success(data?.success);
-            window.location.reload();
+            // window.location.reload();
           }
           if (data?.error) {
             toast.error(data?.error);
@@ -60,13 +60,13 @@ export function BlogTableRowActions<TData>({
     });
   };
 
-  const handleBlogPublsih = (values: z.infer<typeof PublishBlogSchema>) => {
+  const handleBlogPublish = (values: z.infer<typeof PublishBlogSchema>) => {
     startTransition(() => {
       publishBlog(values)
         .then((data) => {
           if (data?.success) {
             toast.success(data?.success);
-            window.location.reload();
+            // window.location.reload();
           }
           if (data?.error) {
             toast.error(data?.error);
@@ -85,7 +85,7 @@ export function BlogTableRowActions<TData>({
           if (data?.success) {
             toast.success(data?.success);
             setOpen(false);
-            window.location.reload();
+            // window.location.reload();
           }
           if (data?.error) {
             toast.error(data?.error);
@@ -143,7 +143,7 @@ export function BlogTableRowActions<TData>({
                   className="w-full !justify-start px-2 py-2 space-x-2 h-auto  font-medium text-[blue] hover:text-[blue]"
                   variant="ghost"
                   disabled={isPending}
-                  onClick={() => handleBlogPublsih({ id: blog?.id })}
+                  onClick={() => handleBlogPublish({ id: blog?.id })}
                 >
                   <BsSend color="blue" size={20} />
                   <span> Published </span>
@@ -154,19 +154,19 @@ export function BlogTableRowActions<TData>({
           }
           {user?.id === blog.userId &&
             <>
-           <DropdownMenuItem className="p-0">
-            <Link href={`/${user?.id}/edit-blog/${blog?.id}`}>
-              <Button
-                className="w-full !justify-start p-1 space-x-2 font-medium"
-                variant={"edit"}
-                >
-                <CiEdit color="#FFC107" size={20} />
-                <span> Edit </span>
-              </Button>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-                </>
+              <DropdownMenuItem className="p-0">
+                <Link href={`/${user?.id}/edit-blog/${blog?.id}`}>
+                  <Button
+                    className="w-full !justify-start p-1 space-x-2 font-medium"
+                    variant={"edit"}
+                  >
+                    <CiEdit color="#FFC107" size={20} />
+                    <span> Edit </span>
+                  </Button>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
           }
           <DropdownMenuItem className="p-0">
             {user?.id === blog.userId &&

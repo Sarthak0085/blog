@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import { DeleteBlogSchema } from "@/schemas";
 import { deleteImageFromCloudinary } from "@/utils/helpers";
 import { validateDeleteBlog } from "@/validations";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 const extractImageUrls = (content: string): string[] => {
@@ -95,7 +96,9 @@ export const deleteBlog = async (values: z.infer<typeof DeleteBlogSchema>) => {
                     where: {
                         id: blogId
                     }
-                })
+                });
+
+                revalidatePath(`/${user?.id}/get-blogs`);
 
                 return {
                     success: "Blog deleted successfully",

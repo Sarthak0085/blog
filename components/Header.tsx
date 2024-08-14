@@ -2,7 +2,6 @@
 
 import Link from "next/link"
 import { Button } from "./ui/button"
-import { Input } from "./ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { FaUser } from "react-icons/fa"
 import { FaArrowRightLong } from "react-icons/fa6";
@@ -52,10 +51,10 @@ export const Header = () => {
 
     return (
         <>
-            <div className="hidden md:flex w-full z-20 fixed top-0 left-0 h-[80px] items-center justify-between border-b mb-10 px-10 bg-transparent shadow-md">
+            <div className="hidden md:flex w-full z-20 fixed top-0 left-0 h-[80px] items-center justify-between border-b mb-10 px-10 bg-white/50  shadow-md">
                 <div className="flex space-x-2 ">
                     <Link href={"/"}>
-                        <h2 className={cn("text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-700", font.className)}>VortexVista</h2>
+                        <h2 className={cn("text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-700", font.className)}>VortexVista</h2>
                     </Link>
                 </div>
                 <div className="w-[300px]">
@@ -98,7 +97,7 @@ export const Header = () => {
                             </Button>
                             <Button
                                 variant={"default"}
-                                className={cn("!bg-transparent text-muted-foreground hover:!text-blue-500", pathname === `/auth/register` && "text-blue-600")}
+                                className={cn("!bg-blue-500 hover:!bg-transparenthover:!text-blue-500")}
                             >
                                 <Link href={"/auth/register"} className="flex gap-2 items-center justify-center">
                                     Get Started <FaArrowRightLong />

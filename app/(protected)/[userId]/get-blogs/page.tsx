@@ -6,7 +6,7 @@ import { AllBlogsTable } from "@/components/admin/blog/blogs-table";
 import { Button } from "@/components/ui/button";
 import { ExtendBlog } from "@/utils/types";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PulseLoader } from "react-spinners";
 
@@ -15,6 +15,7 @@ export default function BlogsPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState<ExtendBlog[]>([]);
     const [error, setError] = useState("");
+    console.log("hello",)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -35,7 +36,7 @@ export default function BlogsPage() {
         }
 
         fetchData();
-    }, []);
+    }, [userId]);
 
     if (isLoading) {
         return (

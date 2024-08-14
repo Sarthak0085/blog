@@ -83,7 +83,7 @@ export function SearchDialog({ blogs, isLoading, error }: SearchDialogProps) {
     return (
         <Dialog open={dialogOpen} onOpenChange={handleClose}>
             <DialogTitle hidden>Search</DialogTitle>
-            <Button variant="outline" className="pr-2 !bg-transparent border border-black shadow" onClick={() => setDialogOpen(true)}>
+            <Button variant="outline" className="pr-2 !bg-transparent border text-muted-foreground border-black shadow" onClick={() => setDialogOpen(true)}>
                 <div className="items-center gap-2 flex">
                     <MagnifyingGlassIcon className="h-[1.2rem] w-[1.2rem]" />
                     Search title, slug...

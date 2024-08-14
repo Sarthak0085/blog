@@ -6,6 +6,7 @@ import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
 import { PinnedBlogSchema } from "@/schemas";
 import { validatePinnedBlog } from "@/validations";
+import { revalidatePath, revalidateTag } from "next/cache";
 import * as z from "zod";
 
 export const pinnedBlog = async (values: z.infer<typeof PinnedBlogSchema>) => {
@@ -36,6 +37,8 @@ export const pinnedBlog = async (values: z.infer<typeof PinnedBlogSchema>) => {
                     isPinned: !isPinned
                 }
             });
+
+            revalidatePath("/[userId]/get-blogs", "page");
 
             return {
                 success: isPinned ? "Blog UnPinned Successfully" : "Blog Pinned Successfully"

@@ -8,6 +8,8 @@ import { db } from "@/lib/db";
 import { AddBlogSchema } from "@/schemas";
 import { uploadFilesToCloudinary } from "@/utils/helpers";
 import { validateCreateBlog } from "@/validations";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import * as z from "zod";
 
 const extractImageUrls = (content: string): string[] => {
@@ -113,6 +115,8 @@ export const createBlog = async (values: z.infer<typeof AddBlogSchema>) => {
                 error: "Error while creating blog."
             }
         }
+
+        revalidatePath(`/blogs`);
 
         return {
             success: "Blog Created Successfully.",

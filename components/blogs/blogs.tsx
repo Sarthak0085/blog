@@ -13,6 +13,7 @@ import { AuthorLists } from "./author-lists";
 
 export const Blogs = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [refetch, setRefetch] = useState(false);
   const [error, setError] = useState("");
   const [blogs, setBlogs] = useState<ExtendBlog[]>([]);
 
@@ -22,6 +23,7 @@ export const Blogs = () => {
   const authorId: string = searchParams.get("authorId") as string;
   const time: string = searchParams.get("time") as string;
   const date: string = searchParams.get("date") as string;
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,7 +42,11 @@ export const Blogs = () => {
       }
     }
     fetchData()
-  }, [category, tags, authorId, time, date])
+  }, [category, tags, authorId, time, date, refetch]);
+
+  const handleRefetch = () => {
+    setRefetch((prev) => !prev);
+  }
 
   if (error) {
     return (
@@ -68,6 +74,7 @@ export const Blogs = () => {
               <div key={blog?.id} >
                 <BlogCard
                   data={blog}
+                  refetch={handleRefetch}
                 />
               </div>
             ))}

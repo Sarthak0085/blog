@@ -92,7 +92,7 @@ export const ContactForm = () => {
             </div>
             <div className="lg:w-[40%] w-full">
                 <h2 className="text-3xl font-semibold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-blue-500 to-purple-700">
-                    Contact {authorName ? authorName : "Us"}
+                    Contact {authorName ? `"${authorName}"` : "Us"}
                 </h2>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

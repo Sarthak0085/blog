@@ -39,7 +39,7 @@ export const AboutAuthor = ({ author }: { author?: User | null }) => {
                     asChild
                     className="!pt-2 hover:bg-sky-500"
                 >
-                    <Link href={`blogs?authorId=${author?.id}`}>
+                    <Link href={`/blogs?authorId=${author?.id}`}>
                         View Posts <FaArrowRight size={14} className="ms-2" />
                     </Link>
                 </Button>

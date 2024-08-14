@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { SingleBlogCard } from "./single-blog-card";
 import Link from "next/link";
 import { BlogsListSkeleton } from "@/components/loader/blogs-list-skeleton";
+import { BlogCard } from "../blog-card";
 
 export const BlogsList = () => {
     const { id } = useParams();
@@ -50,14 +51,12 @@ export const BlogsList = () => {
 
     return (
         <div className="flex w-full items-center justify-center mx-4">
-            <div className="py-2 px-3 mt-4 rounded-lg lg:min-w-[85%] bg-white min-h-[720px] max-h-[720px] shadow-md overflow-y-auto hide-scrollbar">
+            <div className="py-2 px-3 mt-4 rounded-lg lg:min-w-[85%] bg-white min-h-[720px] max-h-[720px] shadow-md overflow-y-auto hide-scrollbar space-y-2">
                 <h2 className="text-xl py-3 text-muted-foreground font-semibold mb-4">Blogs Related to Author</h2>
                 {blogs.map((blog) => (
-                    <Link key={blog?.id} href={`/blog/${blog?.slug}`}>
-                        <SingleBlogCard
-                            blog={blog}
-                        />
-                    </Link>
+                    <div key={blog?.id} className="w-full px-1 shadow-md rounded-md hover:scale-105">
+                        <BlogCard blog={blog} />
+                    </div>
                 ))}
             </div>
         </div>

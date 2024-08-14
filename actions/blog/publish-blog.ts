@@ -8,6 +8,7 @@ import CustomError from "@/lib/customError";
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { BlogStatus } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 
 
 export const publishBlog = async (values: z.infer<typeof PublishBlogSchema>) => {
@@ -40,6 +41,8 @@ export const publishBlog = async (values: z.infer<typeof PublishBlogSchema>) => 
                 status: BlogStatus.PUBLISHED,
             }
         });
+
+        revalidatePath(`/${user?.id}/get-blogs`);
 
         return {
             success: "Blog Published successfully"

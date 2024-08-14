@@ -1,6 +1,6 @@
 "use server";
 
-import { getBlogById } from "@/data/blog";
+import { getBlogById, getBlogBySlug } from "@/data/blog";
 import { getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
 import CustomError from "@/lib/customError";
@@ -107,6 +107,50 @@ export const getAllCommentsByBlogId = async (blogId: string) => {
         const comments = await db.comment.findMany({
             where: {
                 blogId: blogId
+            },
+            include: {
+                blog: true,
+                user: true,
+                likes: true,
+            },
+            orderBy: [
+                {
+                    createdAt: 'desc',
+                },
+            ],
+        })
+        if (!comments) {
+            throw new CustomError("No comments present", 404);
+        }
+
+        return {
+            data: comments
+        }
+    } catch (error) {
+        if (error instanceof CustomError) {
+            return {
+                error: error.message,
+                code: error.code,
+            };
+        }
+        return {
+            error: "An unexpected error occurred.",
+            code: 500,
+        };
+    }
+}
+
+export const getAllCommentsByBlogSlug = async (slug: string) => {
+    try {
+        const blog = await getBlogBySlug(slug);
+
+        if (!blog) {
+            throw new CustomError("Blog Not Found", 404);
+        }
+
+        const comments = await db.comment.findMany({
+            where: {
+                blogId: blog?.id,
             },
             include: {
                 blog: true,

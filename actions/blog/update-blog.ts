@@ -8,6 +8,7 @@ import { db } from "@/lib/db";
 import { UpdateBlogSchema } from "@/schemas";
 import { deleteImageFromCloudinary, uploadFilesToCloudinary } from "@/utils/helpers";
 import { validateUpdateBlog } from "@/validations";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 const extractImageUrls = (content: string): string[] => {
@@ -141,6 +142,9 @@ export const EditBlog = async (values: z.infer<typeof UpdateBlogSchema>) => {
                 error: "Error while creating blog."
             }
         }
+
+        revalidatePath(`/${user?.id}/get-blogs`);
+        revalidatePath(`/blog/${slug}`);
 
         return {
             success: "Blog Updated Successfully.",

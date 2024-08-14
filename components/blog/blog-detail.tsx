@@ -27,12 +27,6 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
   const [displayComment, setDisplayComment] = useState(false);
 
   const commentSectionRef = useRef<HTMLDivElement>(null);
-  const handleCommentButtonClick = () => {
-    setDisplayComment(true);
-    if (commentSectionRef.current) {
-      commentSectionRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   const [like, setLike] = useState({
     isLiked: !!data?.likes.find((item) => item.userId === user?.id),
@@ -74,6 +68,15 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
           toast.error(error);
         });
     });
+  };
+
+  const handleCommentButtonClick = () => {
+    setDisplayComment(true);
+    setTimeout(() => {
+      if (commentSectionRef.current) {
+        commentSectionRef.current.scrollIntoView({ behavior: 'smooth' })
+      }
+    }, 500);
   };
 
   const handleDislike = (values: z.infer<typeof DislikeSchema>) => {
@@ -216,9 +219,9 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
       <div className="pt-[70px]">
         <AboutAuthor author={data?.user as User} />
       </div>
-      {displayComment && <div className="text-black">
-        <BlogComments ref={commentSectionRef} blogId={data?.id} />
-      </div>}
+      <div className="text-black">
+        {displayComment && <BlogComments ref={commentSectionRef} blogId={data?.id} />}
+      </div>
     </div>
   );
 };
