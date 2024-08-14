@@ -19,10 +19,11 @@ import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { useState, useTransition } from "react";
 import { login } from "@/actions/auth/login";
-import { useSearchParams } from "next/navigation";
+import { redirect, usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 export const LoginForm = () => {
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
   const urlError =
@@ -42,15 +43,14 @@ export const LoginForm = () => {
     },
   });
 
-  console.log("error: ", error);
-
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     setError("");
     setSuccess("");
 
     startTransition(() => {
-      login(values, callbackUrl)
+      login(values, callbackUrl ?? pathname)
         .then((data) => {
+          console.log("data", data)
           if (data?.error) {
             setError(data?.error);
           }

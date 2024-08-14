@@ -17,12 +17,12 @@ import { savedBlogPost } from "@/actions/savedpost/saved-blog-post";
 import { BlogComments } from "./blog-comments";
 import { incrementViewCount } from "@/actions/blog/get-blogs";
 import { AboutAuthor } from "./about-author";
-import { User } from "@prisma/client";
 import { Separator } from "../ui/separator";
 import { AiOutlineTag } from "react-icons/ai";
+import { User as UserType } from "next-auth";
+import { User } from "@prisma/client";
 
-export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
-  const user = useCurrentUser();
+export const BlogDetails = ({ data, user }: { data: ExtendBlog | null; user: UserType }) => {
   const [isPending, startTransition] = useTransition();
   const [displayComment, setDisplayComment] = useState(false);
 
@@ -191,6 +191,7 @@ export const BlogDetails = ({ data }: { data: ExtendBlog | null }) => {
         isPending={isPending}
         handleCommentButtonClick={handleCommentButtonClick}
         data={data}
+        user={user}
       />
       <div className="text-muted-foreground bold">{data?.shortSummary}</div>
       <Image

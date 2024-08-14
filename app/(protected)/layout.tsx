@@ -7,6 +7,7 @@ import { useState } from "react";
 import { UserButton } from "@/components/user-button";
 import { MobileNavbar } from "./_components/mobile-navbar";
 import { AdminMobileNavbar } from "./admin/_components/admin-mobile-navbar";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 export default function ProtectedLayout({
   children,
@@ -14,8 +15,10 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const user = useCurrentUser();
   const [open, setOpen] = useState(false);
   const [openAdminModal, setOpenAdminModal] = useState(false);
+  console.log("User ,", user);
   return (
     <>
       <div className="flex w-full min-h-screen lg:space-x-10 py-5">

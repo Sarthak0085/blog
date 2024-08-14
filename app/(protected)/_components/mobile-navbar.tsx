@@ -16,16 +16,17 @@ import { IoAddCircleOutline } from "react-icons/io5";
 import { FaRegThumbsDown, FaRegThumbsUp } from "react-icons/fa";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
+import { User } from "next-auth";
 
 interface MobileNavbarProps {
     open: boolean;
     setOpen: (open: boolean) => void;
+    user?: User
 }
 
-export const MobileNavbar = ({ open, setOpen }: MobileNavbarProps) => {
+export const MobileNavbar = ({ open, setOpen, user }: MobileNavbarProps) => {
     const pathname = usePathname();
     const role = useCurrentRole();
-    const user = useCurrentUser();
     return (
         <DropdownMenu defaultOpen={open}>
             <DropdownMenuTrigger asChild>

@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { UserButton } from "@/components/user-button";
 import { useCurrentRole } from "@/hooks/useCurrentRole";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { BookmarkIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,11 +11,12 @@ import { LuUser2 } from "react-icons/lu";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 export const Navbar = () => {
   const pathname = usePathname();
-  const role = useCurrentRole();
   const user = useCurrentUser();
+  const role = useCurrentRole();
   return (
     <aside className="hidden lg:flex bg-transparent fixed top-[78px] pt-[30px] shadow-lg w-[220px] max-w-[250px] h-[calc(100vh-68px)]  flex-col justify-between items-center rounded-xl border border-r">
       <div className="flex w-full flex-col gap-y-5">

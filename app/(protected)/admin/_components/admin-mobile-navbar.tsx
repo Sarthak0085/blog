@@ -17,6 +17,8 @@ import { FaRegThumbsDown, FaRegThumbsUp } from "react-icons/fa";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { HiOutlineUserGroup } from "react-icons/hi2";
 import { BiCategory } from "react-icons/bi";
+import { User } from "next-auth";
+import { useSession } from "next-auth/react";
 
 interface AdminMobileNavbarProps {
     open: boolean;
@@ -25,8 +27,8 @@ interface AdminMobileNavbarProps {
 
 export const AdminMobileNavbar = ({ open, setOpen }: AdminMobileNavbarProps) => {
     const pathname = usePathname();
-    const role = useCurrentRole();
     const user = useCurrentUser();
+    const role = useCurrentRole();
     return (role === "ADMIN" &&
         <DropdownMenu defaultOpen={open}>
             <DropdownMenuTrigger asChild>

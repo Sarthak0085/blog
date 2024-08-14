@@ -15,15 +15,15 @@ import { usePathname } from "next/navigation";
 import { SearchDialog } from "./search-dialog";
 import { getAllPublishedBlogs } from "@/actions/blog/get-blogs";
 import { Blog } from "@prisma/client";
+import { User } from "next-auth";
 
 const font = Lato({
     subsets: ["latin"],
     weight: ["400", "700", "900"],
 })
 
-export const Header = () => {
+export const Header = ({ user }: { user?: User }) => {
     const pathname = usePathname();
-    const user = useCurrentUser();
     const [open, setOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");

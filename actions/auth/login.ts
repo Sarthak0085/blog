@@ -7,7 +7,6 @@ import {
   generateTwoFactorToken,
   generateVerificationToken,
 } from "@/lib/tokens";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { LoginSchema } from "@/schemas";
 import { AuthError } from "next-auth";
 import bcrypt from "bcryptjs";
@@ -15,6 +14,7 @@ import * as z from "zod";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 import { db } from "@/lib/db";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 const domain = process.env.NEXT_PUBLIC_APP_URL;
 
@@ -65,15 +65,12 @@ export const login = async (
   if (existingUser.isTwoFactorEnabled && existingUser.email) {
     if (code) {
       const twoFactorToken = await getTwoFactorTokenByEmail(existingUser.email);
-      console.log(twoFactorToken);
 
       if (!twoFactorToken) {
         return {
           error: "Inavlid Code",
         };
       }
-
-      console.log(twoFactorToken.token.toString() === code.toString());
 
       if (twoFactorToken.token.toString() !== code.toString()) {
         return {
@@ -131,8 +128,10 @@ export const login = async (
     await signIn("credentials", {
       email,
       password,
-      redirectTo: callbackUrl ?? DEFAULT_LOGIN_REDIRECT,
+      redirect: true,
+      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
     });
+
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error?.type) {

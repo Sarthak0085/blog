@@ -11,9 +11,11 @@ import { IoMdHeartEmpty } from "react-icons/io";
 import { IoAddCircleOutline, IoSettingsOutline } from "react-icons/io5";
 import { BiCategory } from "react-icons/bi";
 import { HiOutlineUserGroup } from "react-icons/hi2";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 export const AdminNavbar = () => {
   const pathname = usePathname();
+  const user = useCurrentUser();
   const role = useCurrentRole();
   return (role === "ADMIN" &&
     <aside className="bg-transparent fixed top-[78px] pt-[30px] shadow-lg w-[220px] max-w-[250px] h-[calc(100vh-68px)] flex flex-col justify-between items-center rounded-xl border border-r">

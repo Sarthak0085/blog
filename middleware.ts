@@ -19,7 +19,6 @@ export default auth(async function middleware(req) {
 
     const dynamicRoutePattern = /\/blog\/[^/]+|\/author\/[^/]+|\/contact\/[^/]+/;
     const isPublicRoute = publicRoutes.includes(nextUrl.pathname) || dynamicRoutePattern.test(nextUrl.pathname);
-    console.log("Public Route :", isPublicRoute, nextUrl.pathname);
 
     const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
@@ -49,7 +48,6 @@ export default auth(async function middleware(req) {
         if (!isLoggedIn) {
             return Response.redirect(new URL(`/auth/login?callbackUrl=${encodeURIComponent(nextUrl.pathname)}`, nextUrl));
         }
-        console.log(req.auth);
         if (token?.role !== UserRole.ADMIN) {
             return Response.redirect(new URL('/', nextUrl));
         }

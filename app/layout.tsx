@@ -53,14 +53,15 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
+  console.log("session", session)
   const backgroundImageUrl =
     "https://tailwindcss.com/_next/static/media/docs@30.8b9a76a2.avif";
 
   return (
     <html lang="en">
-      <SessionProvider session={session}>
-        <body className={inter.className}>
-          <Header />
+      <body className={inter.className}>
+        <SessionProvider session={session}>
+          <Header user={session?.user} />
           <main
             style={{
               backgroundImage: `url(${backgroundImageUrl})`,
@@ -71,8 +72,8 @@ export default async function RootLayout({
             {children}
           </main>
           <Footer />
-        </body>
-      </SessionProvider>
+        </SessionProvider>
+      </body>
     </html>
   );
 }

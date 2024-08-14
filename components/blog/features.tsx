@@ -24,6 +24,7 @@ import LoginButton from "../auth/login-button";
 import { useState } from "react";
 import { ShareModal } from "./share-modal";
 import { domain } from "@/lib/domain";
+import { User } from "next-auth";
 
 interface FeaturesProps {
   like: { isLiked: boolean; count: number | undefined };
@@ -34,6 +35,7 @@ interface FeaturesProps {
   toggleFavourite: (values: z.infer<typeof FavouriteSchema>) => void;
   data: ExtendBlog | null;
   isPending: boolean;
+  user: User;
   handleCommentButtonClick: () => void;
   savedPost: { isSaved: boolean; count: number | undefined };
   handleSavedPost: (values: z.infer<typeof SavedPostSchema>) => void;
@@ -50,9 +52,9 @@ export const Features = ({
   savedPost,
   handleSavedPost,
   data,
-  handleCommentButtonClick
+  handleCommentButtonClick,
+  user
 }: FeaturesProps) => {
-  const user = useCurrentUser();
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [openShareModal, setOpenShareModal] = useState(false);
   const count = (value: number) => {
@@ -84,85 +86,82 @@ export const Features = ({
           </Button>
           <span>{count(data?.views ?? 0)}</span>
         </div>
-        <LoginButton open={openLoginModal} setOpen={setOpenLoginModal} mode="Modal" >
-          <div className="flex flex-wrap text-muted-forground gap-4">
-            {((like.isLiked && !dislike.isDisliked) ||
-              (!like.isLiked && !dislike.isDisliked)) && (
-                <div className="flex items-center">
-                  <Button
-                    aria-label="Like"
-                    variant={"icon"}
-                    className="text-left !p-3"
-                    disabled={isPending}
-                    onClick={() => !user ? setOpenLoginModal(true) : handleLike({ blogId: data?.id as string })}
-                  >
-                    {like.isLiked ? (
-                      <FaThumbsUp color="blue" size={16} />
-                    ) : (
-                      <FaRegThumbsUp color="blue" size={16} />
-                    )}
-                    <span className="sr-only">Like</span>
-                  </Button>
-                  <span>{count(like?.count ?? 0)}</span>
-                </div>
-              )}
-            {((!like.isLiked && dislike.isDisliked) ||
-              (!like.isLiked && !dislike.isDisliked)) && (
-                <div className="flex items-center">
-                  <Button
-                    aria-label="Dislike"
-                    variant={"icon"}
-                    className="text-left !p-3"
-                    disabled={isPending}
-                    onClick={() => !user ? setOpenLoginModal(true) : handleDislike({ blogId: data?.id as string })}
-                  >
-                    {dislike.isDisliked ? (
-                      <FaThumbsDown color="blue" size={16} />
-                    ) : (
-                      <FaRegThumbsDown color="blue" size={16} />
-                    )}
-                    <span className="sr-only">Dislike</span>
-                  </Button>
-                  <span>{count(dislike?.count ?? 0)}</span>
-                </div>
-              )}
+        <LoginButton open={openLoginModal} setOpen={setOpenLoginModal} mode="Modal" asChild={true} />
+        {((like.isLiked && !dislike.isDisliked) ||
+          (!like.isLiked && !dislike.isDisliked)) && (
             <div className="flex items-center">
               <Button
-                aria-label="Favourite"
+                aria-label="Like"
                 variant={"icon"}
                 className="text-left !p-3"
                 disabled={isPending}
-                onClick={() => !user ? setOpenLoginModal(true) : toggleFavourite({ blogId: data?.id as string })}
+                onClick={() => !user ? setOpenLoginModal(true) : handleLike({ blogId: data?.id as string })}
               >
-                {favourites.isFavourite ? (
-                  <IoMdHeart color="red" size={20} />
+                {like.isLiked ? (
+                  <FaThumbsUp color="blue" size={16} />
                 ) : (
-                  <IoMdHeartEmpty color="red" size={20} />
+                  <FaRegThumbsUp color="blue" size={16} />
                 )}
-                <span className="sr-only">Favourite</span>
+                <span className="sr-only">Like</span>
               </Button>
-              <span>{count(favourites?.count ?? 0)}</span>
+              <span>{count(like?.count ?? 0)}</span>
             </div>
+          )}
+        {((!like.isLiked && dislike.isDisliked) ||
+          (!like.isLiked && !dislike.isDisliked)) && (
             <div className="flex items-center">
               <Button
-                title="Saved Post"
-                aria-label="Saved Post"
+                aria-label="Dislike"
                 variant={"icon"}
                 className="text-left !p-3"
                 disabled={isPending}
-                onClick={() => !user ? setOpenLoginModal(true) : handleSavedPost({ blogId: data?.id as string })}
+                onClick={() => !user ? setOpenLoginModal(true) : handleDislike({ blogId: data?.id as string })}
               >
-                {savedPost.isSaved ? (
-                  <BookmarkFilledIcon color="gray" height={20} width={20} />
+                {dislike.isDisliked ? (
+                  <FaThumbsDown color="blue" size={16} />
                 ) : (
-                  <BookmarkIcon color="gray" height={20} width={20} />
+                  <FaRegThumbsDown color="blue" size={16} />
                 )}
-                <span className="sr-only">Saved Post</span>
+                <span className="sr-only">Dislike</span>
               </Button>
-              <span>{count(savedPost?.count ?? 0)}</span>
+              <span>{count(dislike?.count ?? 0)}</span>
             </div>
-          </div>
-        </LoginButton>
+          )}
+        <div className="flex items-center">
+          <Button
+            aria-label="Favourite"
+            variant={"icon"}
+            className="text-left !p-3"
+            disabled={isPending}
+            onClick={() => user ? toggleFavourite({ blogId: data?.id as string }) : setOpenLoginModal(true)}
+          >
+            {favourites.isFavourite ? (
+              <IoMdHeart color="red" size={20} />
+            ) : (
+              <IoMdHeartEmpty color="red" size={20} />
+            )}
+            <span className="sr-only">Favourite</span>
+          </Button>
+          <span>{count(favourites?.count ?? 0)}</span>
+        </div>
+        <div className="flex items-center">
+          <Button
+            title="Saved Post"
+            aria-label="Saved Post"
+            variant={"icon"}
+            className="text-left !p-3"
+            disabled={isPending}
+            onClick={() => !user ? setOpenLoginModal(true) : handleSavedPost({ blogId: data?.id as string })}
+          >
+            {savedPost.isSaved ? (
+              <BookmarkFilledIcon color="gray" height={20} width={20} />
+            ) : (
+              <BookmarkIcon color="gray" height={20} width={20} />
+            )}
+            <span className="sr-only">Saved Post</span>
+          </Button>
+          <span>{count(savedPost?.count ?? 0)}</span>
+        </div>
         <div className="flex items-center">
           <Button
             variant={"icon"}
