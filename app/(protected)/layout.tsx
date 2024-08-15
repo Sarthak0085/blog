@@ -8,6 +8,7 @@ import { UserButton } from "@/components/user-button";
 import { MobileNavbar } from "./_components/mobile-navbar";
 import { AdminMobileNavbar } from "./admin/_components/admin-mobile-navbar";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { Header } from "@/components/Header";
 
 export default function ProtectedLayout({
   children,
@@ -18,7 +19,6 @@ export default function ProtectedLayout({
   const user = useCurrentUser();
   const [open, setOpen] = useState(false);
   const [openAdminModal, setOpenAdminModal] = useState(false);
-  console.log("User ,", user);
   return (
     <>
       <div className="flex w-full min-h-screen lg:space-x-10 py-5">
@@ -30,9 +30,9 @@ export default function ProtectedLayout({
             <Navbar />
           </div>
         }
-        <main className="w-full lg:pl-[200px] overflow-x-auto flex items-center my-5 justify-center">
+        <div className="w-full lg:pl-[200px] overflow-x-auto flex items-center my-5 justify-center">
           {children}
-        </main>
+        </div>
         <div className="lg:hidden fixed w-full h-[60px] bg-gray-200 bottom-0 flex items-center justify-between px-4">
           {pathname.startsWith("/admin") ?
             <AdminMobileNavbar open={openAdminModal} setOpen={setOpenAdminModal} /> :

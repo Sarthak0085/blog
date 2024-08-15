@@ -22,7 +22,7 @@ import { IoMdHeart, IoMdHeartEmpty } from "react-icons/io";
 import * as z from "zod";
 import LoginButton from "../auth/login-button";
 import { useState } from "react";
-import { ShareModal } from "./share-modal";
+import { ShareModal } from "../share-modal";
 import { domain } from "@/lib/domain";
 import { User } from "next-auth";
 

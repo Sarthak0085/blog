@@ -55,7 +55,7 @@ export const Footer = () => {
                 <div className="sm:flex sm:items-center sm:justify-between">
                     <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
                         © 2024
-                        <a href="/" className="hover:underline">
+                        <a href="/" className="hover:underline ms-1">
                             VortexVista™
                         </a>.
                         All Rights Reserved.
@@ -85,7 +85,7 @@ export const Footer = () => {
                             </svg>
                             <span className="sr-only">Discord community</span>
                         </a> */}
-                        <a href="https://twitter.com/" className="text-gray-500 hover:text-gray-900 dark:hover:text-white ms-5">
+                        <a href="https://x.com/sarthak102000" target="_blank" className="text-gray-500 hover:text-gray-900 dark:hover:text-white ms-5">
                             <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 17">
                                 <path
                                     fillRule="evenodd"
@@ -100,7 +100,7 @@ export const Footer = () => {
                             </svg>
                             <span className="sr-only">Twitter page</span>
                         </a>
-                        <a href="https://github.com/Sarthak0085" className="text-gray-500 hover:text-gray-900 dark:hover:text-white ms-5">
+                        <a href="https://github.com/Sarthak0085" target="_blank" className="text-gray-500 hover:text-gray-900 dark:hover:text-white ms-5">
                             <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                 <path
                                     fillRule="evenodd"

@@ -18,7 +18,7 @@ export const BlogsList = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await getAllPublishedBlogs({ authorId: id as string });
+                const data = await getAllPublishedBlogs({ author: id as string });
                 if (data?.error) {
                     setError(data?.error);
                 }

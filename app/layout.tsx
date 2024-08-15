@@ -61,7 +61,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <SessionProvider session={session}>
-          <Header user={session?.user} />
+          <Header />
           <main
             style={{
               backgroundImage: `url(${backgroundImageUrl})`,
@@ -71,7 +71,6 @@ export default async function RootLayout({
             <Toaster position="top-right" />
             {children}
           </main>
-          <Footer />
         </SessionProvider>
       </body>
     </html>

@@ -22,8 +22,9 @@ const font = Lato({
     weight: ["400", "700", "900"],
 })
 
-export const Header = ({ user }: { user?: User }) => {
+export const Header = () => {
     const pathname = usePathname();
+    const user = useCurrentUser();
     const [open, setOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");

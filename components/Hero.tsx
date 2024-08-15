@@ -4,7 +4,7 @@ import Link from "next/link"
 
 export const Hero = () => {
     return (
-        <div className="w-[80%] mt-[7rem] mb-8 flex items-center justify-between">
+        <div className="w-[80%] mt-[2rem] max-h-7xl mb-8 flex items-center justify-between">
             <div className="w-[60%] flex flex-col justify-items-start space-y-10 px-10">
                 <h1 className="text-primary text-7xl font-bold leading-tight">
                     A Platform for <br /> Every Story:<br /> Blogs by You,<br /> for You

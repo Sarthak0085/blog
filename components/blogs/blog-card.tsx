@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { savedBlogPost } from "@/actions/savedpost/saved-blog-post";
 import { BookmarkFilledIcon, BookmarkIcon } from "@radix-ui/react-icons";
 import { CommentForm } from "../blog/comment-form";
-import { ShareModal } from "../blog/share-modal";
+import { ShareModal } from "../share-modal";
 import { domain } from "@/lib/domain";
 import { formatDate } from "@/lib/date-format";
 import { useCurrentUser } from "@/hooks/useCurrentUser";

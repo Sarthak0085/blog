@@ -25,7 +25,7 @@ export default function BlogsPage() {
                     setError(data?.error);
                 }
                 if (data?.blogs) {
-                    setData(data?.blogs as ExtendBlog[]);
+                    setData(data?.blogs as unknown as ExtendBlog[]);
                 }
             } catch (error) {
                 console.error("Error while fetching blogs")
