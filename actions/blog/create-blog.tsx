@@ -45,6 +45,16 @@ const updateTagCounts = async (tags: string[]) => {
     }
 };
 
+const calculateReadingTime = (text: string, wordsPerMinute: number = 200) => {
+    const plainText = text.replace(/<\/?[^>]+(>|$)/g, " ");
+
+    const wordCount = plainText.split(/\s+/).filter(Boolean).length;
+
+    const minutes = Math.ceil(wordCount / wordsPerMinute);
+
+    return minutes;
+}
+
 
 export const createBlog = async (values: z.infer<typeof AddBlogSchema>) => {
 
@@ -75,7 +85,9 @@ export const createBlog = async (values: z.infer<typeof AddBlogSchema>) => {
             throw new CustomError(`Category ${category} doesn't exist.`, 404);
         }
 
-        const transformedTags = tags?.split(",").map(tag => tag.trim()).filter(tag => tag);
+        const readTime = calculateReadingTime(content);
+
+        const transformedTags = tags?.split(",").map(tag => tag.trim().toUpperCase()).filter(tag => tag);
 
         let updatedContent;
         try {
@@ -101,6 +113,7 @@ export const createBlog = async (values: z.infer<typeof AddBlogSchema>) => {
                 tags: transformedTags,
                 shortSummary,
                 status,
+                read_time: readTime,
                 imageUrl: result?.url,
                 imagePublicId: result?.public_id,
                 userId: user?.id as string

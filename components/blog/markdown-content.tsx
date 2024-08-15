@@ -92,16 +92,17 @@ export const MarkdownContent = ({
         ),
         img: ({ src, alt }) => (
           <div className="flex flex-col items-center px-1 !rounded-md justify-center my-2">
-            <Image
-              src={
-                src ?? ""
-              }
-              alt={alt || "image"}
-              layout="responsive"
-              className="w-full h-auto py-2 !rounded"
-              width={"100"}
-              height={"100"}
-            />
+            <picture>
+              <img
+                src={
+                  src ?? ""
+                }
+                alt={alt || "image"}
+                className="w-full h-auto py-2 !rounded"
+                width={"100"}
+                height={"100"}
+              />
+            </picture>
             {alt && <span className="text-muted-foreground text-sm">{alt}</span>}
           </div>
         ),

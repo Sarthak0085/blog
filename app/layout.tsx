@@ -61,7 +61,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <SessionProvider session={session}>
-          <Header />
+          <Header user={session?.user} />
           <main
             style={{
               backgroundImage: `url(${backgroundImageUrl})`,

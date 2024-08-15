@@ -21,6 +21,7 @@ import { useState, useTransition } from "react";
 import { login } from "@/actions/auth/login";
 import { redirect, usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 
 export const LoginForm = () => {
   const pathname = usePathname();
@@ -34,6 +35,7 @@ export const LoginForm = () => {
   const [success, setSuccess] = useState<string | undefined>("");
   const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -123,13 +125,23 @@ export const LoginForm = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input
-                        {...field}
-                        disabled={isPending}
-                        placeholder="********"
-                        type="password"
-                      />
+                      <div className="relative">
+                        <Input
+                          {...field}
+                          disabled={isPending}
+                          placeholder="********"
+                          type={showPassword ? "text" : "password"}
+                        />
+                        <div
+                          className="absolute cursor-pointer !right-2 !bottom-2"
+                          onClick={() => setShowPassword((prev) => !prev)}
+                        >
+                          {showPassword ? <IoEyeOffOutline size={20} /> : <IoEyeOutline size={20} />}
+                          <span className="sr-only">Show Password</span>
+                        </div>
+                      </div>
                     </FormControl>
+                    <FormMessage />
                     <Button
                       size={"sm"}
                       variant={"link"}
@@ -138,7 +150,6 @@ export const LoginForm = () => {
                     >
                       <Link href="/auth/reset">forgot password?</Link>
                     </Button>
-                    <FormMessage />
                   </FormItem>
                 )}
               />

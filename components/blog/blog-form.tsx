@@ -35,12 +35,15 @@ import { createBlog } from "@/actions/blog/create-blog";
 import { EditBlog } from "@/actions/blog/update-blog";
 import { ExtendBlog } from "@/utils/types";
 import { getAllCategories } from "@/actions/category/get-categories";
+import { MarkdownContent } from "./markdown-content";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 type BlogSchema =
   | z.infer<typeof UpdateBlogSchema>
   | z.infer<typeof AddBlogSchema>;
 
 export const BlogForm = ({ blogData, isUpdate = false }: { blogData?: ExtendBlog | undefined; isUpdate?: boolean }) => {
+  const user = useCurrentUser();
   const [isPending, startTransition] = useTransition();
   const [content, setContent] = useState(blogData?.content ?? "");
   const [categories, setCategories] = useState<Category[]>([]);
@@ -109,7 +112,7 @@ export const BlogForm = ({ blogData, isUpdate = false }: { blogData?: ExtendBlog
           .then((data) => {
             if (data?.success) {
               toast.success(data.success);
-              router.push("/admin/get-blogs");
+              router.push(`/${user?.id}/get-blogs`);
             }
             if (data?.error) {
               toast.error(
@@ -127,7 +130,7 @@ export const BlogForm = ({ blogData, isUpdate = false }: { blogData?: ExtendBlog
 
   useEffect(() => {
     form.setValue("image", blogData?.imageUrl ?? "");
-  }, [blogData]);
+  }, [blogData, form]);
 
 
   useEffect(() => {
@@ -244,51 +247,54 @@ export const BlogForm = ({ blogData, isUpdate = false }: { blogData?: ExtendBlog
                         {...field}
                         value={content}
                         onChange={(e) => changeHandleContent(e)}
-                        className="w-full h-[400px] bg-transparent"
+                        className="w-full h-[400px] !bg-transparent"
                         renderHTML={(text) => (
-                          <ReactMarkdown
-                            components={{
-                              code: ({
-                                node,
-                                inline,
-                                className,
-                                children,
-                                ...props
-                              }) => {
-                                const match = /language-(\w+)/.exec(
-                                  className || ""
-                                );
-                                if (inline) {
-                                  return <code>{children}</code>;
-                                } else if (match) {
-                                  return (
-                                    <div className="relative">
-                                      <pre
-                                        className="p-0 border-[5px] overflow-x-auto whitespace-pre-wrap"
-                                        {...props}
-                                      >
-                                        <code>{children}</code>
-                                      </pre>
-                                      <button
-                                        className="absolute top-0 right-0 z-1"
-                                        onClick={() =>
-                                          navigator.clipboard.writeText(
-                                            String(children)
-                                          )
-                                        }
-                                      >
-                                        Copy Code
-                                      </button>
-                                    </div>
-                                  );
-                                } else {
-                                  return <code {...props}>{children}</code>;
-                                }
-                              },
-                            }}
-                          >
-                            {text}
-                          </ReactMarkdown>
+                          // <ReactMarkdown
+                          //   components={{
+                          //     code: ({
+                          //       node,
+                          //       inline,
+                          //       className,
+                          //       children,
+                          //       ...props
+                          //     }) => {
+                          //       const match = /language-(\w+)/.exec(
+                          //         className || ""
+                          //       );
+                          //       if (inline) {
+                          //         return <code>{children}</code>;
+                          //       } else if (match) {
+                          //         return (
+                          //           <div className="relative">
+                          //             <pre
+                          //               className="p-0 border-[5px] overflow-x-auto whitespace-pre-wrap"
+                          //               {...props}
+                          //             >
+                          //               <code>{children}</code>
+                          //             </pre>
+                          //             <button
+                          //               className="absolute top-0 right-0 z-1"
+                          //               onClick={() =>
+                          //                 navigator.clipboard.writeText(
+                          //                   String(children)
+                          //                 )
+                          //               }
+                          //             >
+                          //               Copy Code
+                          //             </button>
+                          //           </div>
+                          //         );
+                          //       } else {
+                          //         return <code {...props}>{children}</code>;
+                          //       }
+                          //     },
+                          //   }}
+                          // >
+                          //   {text}
+                          // </ReactMarkdown>
+                          <div className="!bg-transparent">
+                            <MarkdownContent content={text} />
+                          </div>
                         )}
                       />
                     </FormControl>
