@@ -5,7 +5,8 @@ import { Tag } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
-import { TagsListSkeleton } from "../loader/tags-list-skeleton";
+import { TagsListSkeleton } from "@/components/loader/tags-list-skeleton";
+import { useCustomSearchParams } from "@/hooks/useSearchParams";
 
 export const TagsLists = () => {
     const router = useRouter();
@@ -15,30 +16,31 @@ export const TagsLists = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
     const [tags, setTags] = useState<Tag[]>([]);
-    const [selectedTags, setSelectedTags] = useState<string[]>(queryTags?.split(",") ?? []);
+    const { params, updateParam } = useCustomSearchParams();
+    const [selectedTags, setSelectedTags] = useState<string[]>(params?.tags?.split(",") ?? []);
 
-    const handleClick = (tag: string) => {
-        setSelectedTags((prevTags) => {
-            const updatedTags = prevTags.includes(tag)
-                ? prevTags.filter((item) => item !== tag)
-                : [...prevTags, tag];
+    // const handleClick = (tag: string) => {
+    //     setSelectedTags((prevTags) => {
+    //         const updatedTags = prevTags.includes(tag)
+    //             ? prevTags.filter((item) => item !== tag)
+    //             : [...prevTags, tag];
 
-            updateQueryParams(updatedTags);
+    //         updateQueryParams(updatedTags);
 
-            return updatedTags;
-        });
-    }
+    //         return updatedTags;
+    //     });
+    // }
 
-    const updateQueryParams = (tags: string[]) => {
-        const tagQuery = tags.length > 0 ? `tags=${encodeURIComponent(tags.join(','))}` : '';
-        const categoryQuery = category ? `category=${encodeURIComponent(category)}` : '';
+    // const updateQueryParams = (tags: string[]) => {
+    //     const tagQuery = tags.length > 0 ? `tags=${encodeURIComponent(tags.join(','))}` : '';
+    //     const categoryQuery = category ? `category=${encodeURIComponent(category)}` : '';
 
-        const queryString = [tagQuery, categoryQuery].filter(Boolean).join('&');
+    //     const queryString = [tagQuery, categoryQuery].filter(Boolean).join('&');
 
-        const url = `/blogs${queryString ? `?${queryString}` : ''}`;
+    //     const url = `/blogs${queryString ? `?${queryString}` : ''}`;
 
-        router.push(url);
-    };
+    //     router.push(url);
+    // };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -77,9 +79,9 @@ export const TagsLists = () => {
                 {tags.slice(0, 10).map((tag, index) => (
                     <Button
                         key={index}
-                        variant={selectedTags.includes(tag?.name) ? "primary" : "outline"}
+                        variant={params.tags.includes(tag?.name) ? "primary" : "outline"}
                         className="!bg-transparent !border border-black mx-2 my-2"
-                        onClick={() => handleClick(tag?.name)}
+                        onClick={() => updateParam("tags", tag?.name)}
                     >
                         {tag?.name}
                     </Button>

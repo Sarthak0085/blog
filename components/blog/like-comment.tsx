@@ -28,6 +28,11 @@ export const LikeComment = ({
     });
 
     const handleLike = (values: z.infer<typeof LikeCommentSchema>) => {
+        if (!user) {
+            setOpenLoginModal(true);
+            return;
+        }
+
         const prevLike = like;
         setLike((prev) => ({
             isLiked: !prev.isLiked,
@@ -58,7 +63,7 @@ export const LikeComment = ({
                 variant={"icon"}
                 className="text-left"
                 disabled={isPending}
-                onClick={() => !user ? setOpenLoginModal(true) : handleLike({ commentId: comment?.id as string })}
+                onClick={() => handleLike({ commentId: comment?.id as string })}
             >
                 {like.isLiked ? (
                     <IoMdHeart color="red" size={20} />

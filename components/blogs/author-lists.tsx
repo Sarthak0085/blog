@@ -7,20 +7,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FaUser } from "react-icons/fa";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useCustomSearchParams } from "@/hooks/useSearchParams";
 
 export const AuthorLists = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
     const [authors, setAuthors] = useState<User[]>([]);
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const authorId = searchParams.get("authorId");
-
-    const handleClick = (id: string) => {
-        const queryString = id !== authorId ? `authorId=${encodeURIComponent(id)}` : "";
-        const url = `/blogs?${queryString ? queryString : ""}`
-        router.push(url);
-    }
+    const { updateParam } = useCustomSearchParams();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -60,7 +54,7 @@ export const AuthorLists = () => {
                     <Card key={index}>
                         <CardContent
                             className="flex items-center justify-center space-x-4 !p-5 cursor-pointer"
-                            onClick={() => handleClick(author?.id)}
+                            onClick={() => updateParam("author", author?.id)}
                         >
                             <Avatar>
                                 <AvatarImage src={author?.image ?? ""} alt="Avatar" />

@@ -19,6 +19,8 @@ import { domain } from "@/lib/domain";
 import { formatDate } from "@/lib/date-format";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import LoginButton from "../auth/login-button";
+import { useCustomSearchParams } from "@/hooks/useSearchParams";
+import { FaArrowRight } from "react-icons/fa6";
 
 interface BlogCardProps {
   data: ExtendBlog;
@@ -44,6 +46,7 @@ export const BlogCard = ({
   const [openShareModal, setOpenShareModal] = useState(false);
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const { params, updateParam } = useCustomSearchParams();
   const [favourites, setFavourites] = useState({
     isFavourite: !!data?.favourites?.find((item) => item.userId === data.user?.id),
     count: data?.favourites?.length,
@@ -105,61 +108,59 @@ export const BlogCard = ({
 
   return (
     <>
-      <Card className="w-full bg-gradient-to-br from-purple-300 to-emerald-200 min-h-[250px] min-w-[400px] max-w-[600px] border-[2px] shadow-md shadow-[#00000000d]">
+      <Card className="w-full relative bg-gradient-to-br from-purple-300 to-emerald-200 min-h-[250px] min-w-[400px] max-w-[600px] border-[2px] shadow-md shadow-[#00000000d]">
         <CardContent >
-          <Link href={`/blog/${data?.slug}`}>
-            <div className="flex min-h-[200px]">
-              <div className="flex flex-col-reverse pt-8 sm:py-2 sm:flex-row items-center justify-between gap-6">
-                <div className="min-h-[100px] space-y-2 flex-1">
-                  <div className="flex flex-col">
-                    <h2 className="break-words text-xl">{data?.title}</h2>
-                    <div className="flex text-[14px]">
-                      <div className={cn("flex items-start space-x-1", roboto.className)}>
-                        <Link href={`/author/${data?.user?.id}`}>
-                          <span className="text-muted-foreground hover:text-[#0675c4]  capitalize cursor-pointer text-[13px]">
-                            {data?.user?.name}
-                          </span>
-                        </Link>
-                        <span>·</span>
-                        <Link href={`/blogs?category=${data?.category?.name}`}>
-                          <span className="text-muted-foreground hover:text-[#0675c4]  cursor-pointer text-[13px]">
-                            {data?.category?.name}
-                          </span>
-                        </Link>
-                        <span>·</span>
-                        <Link href={`/blogs?date=${data?.createdAt}`}>
-                          <span className="text-muted-foreground hover:text-[#0675c4]  cursor-pointer text-[13px]">
-                            {formatDate(data?.createdAt)}
-                          </span>
-                        </Link>
-                        <span>·</span>
-                        <Link href={`/blogs?time=${data?.read_time}`}>
-                          <span className="text-muted-foreground hover:text-[#0675c4]  cursor-pointer text-[13px]">
-                            {data?.read_time !== 1 ? `${data?.read_time} mins` : `${data?.read_time} min`}
-                          </span>
-                        </Link>
+          <div className="flex min-h-[200px]">
+            <div className="flex flex-col-reverse pt-8 sm:py-2 sm:flex-row items-center justify-between gap-6">
+              <div className="min-h-[100px] space-y-2 flex-1">
+                <div className="flex flex-col">
+                  <h2 className="break-words text-xl">{data?.title}</h2>
+                  <div className="flex text-[14px]">
+                    <div className={cn("flex items-start space-x-1", roboto.className)}>
+                      <Link href={`/author/${data?.user?.id}`}>
+                        <span className="text-muted-foreground hover:text-[#0675c4]  capitalize cursor-pointer text-[13px]">
+                          {data?.user?.name}
+                        </span>
+                      </Link>
+                      <span>·</span>
+                      <div onClick={() => updateParam("category", data?.category?.name)}>
+                        <span className="text-muted-foreground hover:text-[#0675c4]  cursor-pointer text-[13px]">
+                          {data?.category?.name}
+                        </span>
+                      </div>
+                      <span>·</span>
+                      <div onClick={() => updateParam("date", data?.createdAt)}>
+                        <span className="text-muted-foreground hover:text-[#0675c4]  cursor-pointer text-[13px]">
+                          {formatDate(data?.createdAt)}
+                        </span>
+                      </div>
+                      <span>·</span>
+                      <div onClick={() => updateParam("time", data?.read_time)}>
+                        <span className="text-muted-foreground hover:text-[#0675c4]  cursor-pointer text-[13px]">
+                          {data?.read_time !== 1 ? `${data?.read_time} mins` : `${data?.read_time} min`}
+                        </span>
                       </div>
                     </div>
                   </div>
-                  <p className={cn("mb-[10px] text-wrap", oxygen.className)}>
-                    {data?.shortSummary.length > 170 ? `${data?.shortSummary.slice(0, 170)}...` : data?.shortSummary}
-                  </p>
                 </div>
-                <div className="items-end">
-                  <div className="flex items-center justify-center">
-                    <Image
-                      src={data?.imageUrl ?? ""}
-                      alt={data?.slug}
-                      className="w-full sm:w-[180px] sm:h-[150px] object-fill rounded-md"
-                      height={180}
-                      width={180}
-                    />
-                  </div>
+                <p className={cn("mb-[10px] text-wrap", oxygen.className)}>
+                  {data?.shortSummary.length > 170 ? `${data?.shortSummary.slice(0, 170)}...` : data?.shortSummary}
+                </p>
+              </div>
+              <div className="items-end">
+                <div className="flex items-center justify-center">
+                  <Image
+                    src={data?.imageUrl ?? ""}
+                    alt={data?.slug}
+                    className="w-full sm:w-[180px] sm:h-[150px] object-fill rounded-md"
+                    height={180}
+                    width={180}
+                  />
                 </div>
               </div>
             </div>
-          </Link>
-          <ul className="flex items-start mb-5">
+          </div>
+          <ul className="flex items-start mb-2">
             <li>
               <ShareModal
                 open={openShareModal}
@@ -234,8 +235,15 @@ export const BlogCard = ({
             </li>
           </ul>
           {open &&
-            <CommentForm refetch={refetch} blogId={data?.id} isBlogCard={true} />
+            <div className="pb-3">
+              <CommentForm refetch={refetch} blogId={data?.id} isBlogCard={true} />
+            </div>
           }
+          <Button asChild variant={"primary"} className="absolute right-1 bottom-2">
+            <Link href={`/blog/${data?.slug}`} passHref>
+              Read More <FaArrowRight className="ms-2" />
+            </Link>
+          </Button>
         </CardContent>
       </Card >
       {openLoginModal && <LoginButton open={openLoginModal} setOpen={setOpenLoginModal} mode="Modal" />}

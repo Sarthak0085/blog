@@ -5,6 +5,7 @@ import { Input } from "../ui/input"
 import { DatePicker } from "./date-picker";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "../ui/button";
+import { useCustomSearchParams } from "@/hooks/useSearchParams";
 
 export const FilterList = () => {
     const router = useRouter();
@@ -19,6 +20,7 @@ export const FilterList = () => {
     const [maxTime, setMaxTime] = useState((queryTime && Number(queryTime[1])) || 60);
     const [minThumb, setMinThumb] = useState(0);
     const [maxThumb, setMaxThumb] = useState(0);
+    const { updateParam } = useCustomSearchParams();
 
     const min = 1, max = 60;
 
@@ -41,17 +43,17 @@ export const FilterList = () => {
         setMaxThumb(newMaxThumb);
     }, [minTime, maxTime]);
 
-    const handleClick = () => {
-        const tagQuery = tags ? `tags=${encodeURIComponent(tags)}` : '';
-        const categoryQuery = category ? `category=${encodeURIComponent(category)}` : '';
-        const timeQuery = minTime ? `time=${encodeURIComponent(minTime)},${encodeURIComponent(maxTime)}` : '';
+    // const handleClick = () => {
+    //     const tagQuery = tags ? `tags=${encodeURIComponent(tags)}` : '';
+    //     const categoryQuery = category ? `category=${encodeURIComponent(category)}` : '';
+    //     const timeQuery = minTime ? `time=${encodeURIComponent(minTime)},${encodeURIComponent(maxTime)}` : '';
 
-        const queryString = [timeQuery, tagQuery, categoryQuery].filter(Boolean).join('&');
+    //     const queryString = [timeQuery, tagQuery, categoryQuery].filter(Boolean).join('&');
 
-        const url = `/blogs${queryString ? `?${queryString}` : ''}`;
+    //     const url = `/blogs${queryString ? `?${queryString}` : ''}`;
 
-        router.push(url);
-    }
+    //     router.push(url);
+    // }
 
     return (
         <div className="max-w-[600px] px-4 w-full flex flex-col items-center justify-center">
@@ -68,7 +70,6 @@ export const FilterList = () => {
                         onChange={(e) => setMinTime(Number(e.target.value))}
                         className="absolute pointer-events-none appearance-none z-20 h-2 w-full opacity-0 cursor-pointer"
                     />
-
                     <Input
                         type="range"
                         min={min}
@@ -79,14 +80,11 @@ export const FilterList = () => {
                         className="absolute pointer-events-none appearance-none z-20 h-2 w-full opacity-0 cursor-pointer" />
 
                     <div className="relative z-10 h-2">
-
                         <div className="absolute z-10 left-0 right-0 bottom-0 top-0 rounded-md bg-gray-200"></div>
-
                         <div
                             className="absolute z-20 top-0 bottom-0 rounded-md bg-green-300"
                             style={{ right: `${maxThumb}%`, left: `${minThumb}%` }}
                         ></div>
-
                         <div
                             id="min-time"
                             className="absolute z-30 w-6 h-6 top-0 left-0 bg-green-300 rounded-full -mt-2 -ml-1"
@@ -124,7 +122,7 @@ export const FilterList = () => {
             </div>
             <Button
                 variant={"default"}
-                onClick={() => handleClick()}
+                onClick={() => updateParam("time", [minTime, maxTime])}
             >
                 Filter
             </Button>

@@ -1,14 +1,12 @@
 import { cn } from "@/lib/utils";
 import { ExtendComment } from "@/utils/types";
-import { forwardRef, useEffect, useState } from "react";
-import { Button } from "../ui/button";
+import { forwardRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FaUser } from "react-icons/fa";
 import { CommentForm } from "./comment-form";
 import { LikeComment } from "./like-comment";
 import { Separator } from "@/components/ui/separator";
-import { getAllCommentsByBlogId } from "@/actions/comments/get-comments";
-import { PulseLoader } from "react-spinners";
 import { DeleteComment } from "./delete-comment";
 import { User } from "next-auth";
 
@@ -21,9 +19,6 @@ interface BlogCommentsProps {
 
 export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props, ref) => {
   const { comments, refetch, blogId, user } = props;
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string>("");
-  // const [comments, setComments] = useState<ExtendComment[]>([]);
   const [showReplies, setShowReplies] = useState<Record<string, boolean>>({});
   const [openReplyInput, setOpenReplyInputs] = useState<Record<string, boolean>>({});
 
@@ -53,47 +48,6 @@ export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props
       return `${seconds}s`;
     }
   }
-
-  // const fetchData = async () => {
-  //   try {
-  //     const data = await getAllCommentsByBlogId(blogId as string);
-  //     if (data?.error) {
-  //       console.error("Error while fetching Comments.");
-  //       setError(data?.error);
-  //     }
-  //     if (data?.data) {
-  //       setComments(data?.data as ExtendComment[]);
-  //     }
-  //   } catch (error) {
-  //     setError("Error while fetching Comments.");
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-
-  // const handleRefetch = () => {
-  //   fetchData();
-  // }
-
-  // if (isLoading) {
-  //   return (
-  //     <div className="w-full h-[100vh] flex items-center justify-center">
-  //       <PulseLoader margin={3} size={20} />
-  //     </div>
-  //   );
-  // }
-
-  // if (error) {
-  //   return (
-  //     <div className="w-full h-[100vh] flex items-center justify-center text-[red] font-bold text-3xl">
-  //       {error}
-  //     </div>
-  //   );
-  // }
 
   return (
     <div ref={ref} className="w-full mt-6">

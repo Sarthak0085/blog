@@ -4,60 +4,53 @@ import { useEffect, useState } from "react";
 import { BlogCard } from "./blog-card";
 import { ExtendBlog } from "@/utils/types";
 import { getAllPublishedBlogs } from "@/actions/blog/get-blogs";
-import { useSearchParams } from "next/navigation";
 import { BlogCardSkeleton } from "../loader/blog-card-skeleton";
 import { CategoriesList } from "./categories-list";
 import { FilterList } from "./filters-lists";
 import { TagsLists } from "./tags-list";
 import { AuthorLists } from "./author-lists";
+import { Button } from "../ui/button";
+import { RxCross1 } from "react-icons/rx";
+import { useCustomSearchParams } from "@/hooks/useSearchParams";
+import { PulseLoader } from "react-spinners";
 
 export const Blogs = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [refetch, setRefetch] = useState(false);
   const [error, setError] = useState("");
   const [blogs, setBlogs] = useState<ExtendBlog[]>([]);
-  const [searchParamsState, setSearchParamsState] = useState<{ [key: string]: string }>({});
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const limit = 2;
 
-  const searchParams = useSearchParams();
-  // const category: string = searchParams.get("category") as string;
-  // const tags: string = searchParams.get("tags") as string;
-  // const authorId: string = searchParams.get("authorId") as string;
-  // const time: string = searchParams.get("time") as string;
-  // const date: string = searchParams.get("date") as string;
-
-  useEffect(() => {
-    const params: { [key: string]: string } = {};
-
-    searchParams.forEach((value, key) => {
-      params[key] = value;
-    });
-
-    setSearchParamsState(params);
-  }, [searchParams]);
-
-  const handleSearchParamsState = (key: string, value?: string) => {
-    setSearchParamsState(prev => {
-      const updatedParams = { ...prev };
-
-      if (value === undefined) {
-        delete updatedParams[key];
-      } else {
-        updatedParams[key] = value;
-      }
-
-      return updatedParams;
-    });
-  };
+  const { params, updateParam } = useCustomSearchParams();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getAllPublishedBlogs({ category: searchParamsState?.category, tags: searchParamsState?.tags, authorId: searchParamsState?.authorId, time: searchParamsState?.time, date: searchParamsState?.date });
+        const data = await getAllPublishedBlogs({
+          category: params?.category,
+          tags: params?.tags,
+          author: params?.author,
+          time: params?.time,
+          date: params?.date,
+          page: page,
+          limit: limit
+        });
         if (data?.error) {
           setError(data?.error);
         }
         if (data?.blogs) {
-          setBlogs(data?.blogs as unknown as ExtendBlog[])
+          //@ts-ignore
+          setBlogs((prevBlogs) => {
+            const newBlogs = data.blogs;
+            if (page === 1) {
+              return newBlogs;
+            }
+            return [...prevBlogs, ...newBlogs] as ExtendBlog[];
+          });
+          setHasMore(data.blogs.length === limit);
         }
       } catch (error) {
         setError("Error while fetching the blogs");
@@ -66,7 +59,19 @@ export const Blogs = () => {
       }
     }
     fetchData()
-  }, [searchParamsState, refetch]);
+  }, [page, params, refetch]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.offsetHeight - 100;
+      if (nearBottom && hasMore && !loading) {
+        setPage(prevPage => prevPage + 1);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [hasMore, loading]);
 
   const handleRefetch = () => {
     setRefetch((prev) => !prev);
@@ -83,7 +88,46 @@ export const Blogs = () => {
   return (
     <>
       <div className="lg:w-[75%] flex flex-col items-center justify-start">
-        <CategoriesList searchParamsState={searchParamsState} onSearchParamsChange={handleSearchParamsState} />
+        <div className="flex justify-center items-center w-full max-w-[600px] my-2">
+          <div className="flex items-start gap-4 flex-wrap">
+            {Object.entries(params).filter(([key, value]) => value !== '').map(([key, value]) => {
+              if (key === 'tags') {
+                const tags = value.split(',');
+                return (
+                  <div key={key} className="flex items-start gap-4 flex-wrap">
+                    {tags.map((tag, index) => (
+                      <Button
+                        key={index}
+                        variant={"primary"}
+                        onClick={() => updateParam(key, tag)}
+                      >
+                        {tag}
+                        <RxCross1 className="ms-2" />
+                      </Button>
+                    ))}
+                  </div>
+                );
+              } else {
+                let time, date;
+                if (key === "time" || key === "date") {
+                  time = key === "time" && value.split(",").join("-");
+                  date = key === "date" && (value.split(",").slice(4, 15).join("-") || value.slice(4, 15));
+                }
+                return (
+                  <Button
+                    key={key}
+                    variant={"primary"}
+                    onClick={() => updateParam(key)}
+                  >
+                    {time || date || value}
+                    <RxCross1 className="ms-2" />
+                  </Button>
+                );
+              }
+            })}
+          </div>
+        </div>
+        <CategoriesList />
         {
           isLoading &&
           [1, 2, 3].map((_, index) => (
@@ -92,24 +136,28 @@ export const Blogs = () => {
             </div>
           ))
         }
-        {!isLoading && !error ? blogs.length > 0 ?
-          <div className="flex flex-col items-center justify-center w-full bg-transparent space-y-5">
-            {blogs.map((blog) => (
-              <div key={blog?.id} >
-                <BlogCard
-                  data={blog}
-                  refetch={handleRefetch}
-                />
-              </div>
-            ))}
-          </div>
-          :
-          <div className="flex items-center justify-center text-5xl text-[red]">
-            No Blogs Found
-          </div>
-          : null
+        {
+          !isLoading && !error ? blogs.length > 0 ?
+            <div className="flex flex-col items-center justify-center w-full bg-transparent space-y-5">
+              {blogs.map((blog) => (
+                <div key={blog?.id} >
+                  <BlogCard
+                    data={blog}
+                    refetch={handleRefetch}
+                  />
+                </div>
+              ))}
+            </div>
+            :
+            <div className="flex items-center justify-center text-5xl text-[red]">
+              No Blogs Found
+            </div>
+            : null
         }
-      </div>
+        {loading && <div className="flex items-center justify-center">
+          <PulseLoader />
+        </div>}
+      </div >
       <div className="hidden lg:block lg:w-[25%] mt-8">
         {!isLoading && <FilterList />}
         <TagsLists />

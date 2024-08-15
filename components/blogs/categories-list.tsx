@@ -9,21 +9,16 @@ import { BiLeftArrow, BiRightArrow } from "react-icons/bi";
 import { cn } from "@/lib/utils";
 import { useWindowSize } from "@/hooks/useWindowSize";
 import { CategoryListSkeleton } from "@/components/loader/category-list-skeleton";
+import { useCustomSearchParams } from "@/hooks/useSearchParams";
 
-interface CategoriesListProps {
-    searchParamsState: { [key: string]: string };
-    onSearchParamsChange: (key: string, value?: string) => void;
-}
-
-export const CategoriesList = ({ searchParamsState, onSearchParamsChange }: CategoriesListProps) => {
+export const CategoriesList = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
     const [categories, setCategories] = useState<Category[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [itemsToShow, setItemsToShow] = useState(6);
-
     const { width } = useWindowSize();
-
+    const { params, updateParam } = useCustomSearchParams();
     const router = useRouter();
 
     const handleNext = () => {
@@ -40,23 +35,20 @@ export const CategoriesList = ({ searchParamsState, onSearchParamsChange }: Cate
 
     const currentCategories = categories.slice(currentIndex, currentIndex + itemsToShow);
 
-    const handleClick = (name: string) => {
-        const updatedParams = { ...searchParamsState };
-
-        if (updatedParams.category === name) {
-            delete updatedParams.category;
-        } else {
-            updatedParams.category = name;
-        }
-        onSearchParamsChange('category', updatedParams?.category);
-
-        const queryString = Object.entries(updatedParams)
-            .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-            .join('&');
-
-        const url = `/blogs${queryString ? `?${queryString}` : ''}`;
-        router.push(url);
-    };
+    // const handleClick = (name: string) => {
+    //     const updatedParams = { ...searchParamsState };
+    //     if (updatedParams.category === name) {
+    //         delete updatedParams.category;
+    //     } else {
+    //         updatedParams.category = name;
+    //     }
+    //     onSearchParamsChange('category', updatedParams?.category);
+    //     const queryString = Object.entries(updatedParams)
+    //         .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+    //         .join('&');
+    //     const url = `/blogs${queryString ? `?${queryString}` : ''}`;
+    //     router.push(url);
+    // };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -134,9 +126,9 @@ export const CategoriesList = ({ searchParamsState, onSearchParamsChange }: Cate
                         {currentCategories?.map((category) => (
                             <Button
                                 key={category?.id}
-                                variant={searchParamsState?.category !== category?.name ? "outline" : "primary"}
-                                className={cn(searchParamsState?.category !== category?.id && "!bg-transparent !border border-black")}
-                                onClick={() => handleClick(category?.name)}
+                                variant={params?.category !== category?.name ? "outline" : "primary"}
+                                className={cn(params?.category !== category?.id && "!bg-transparent !border border-black")}
+                                onClick={() => updateParam("category", category?.name)}
                             >
                                 <span>{category?.name}</span>
                             </Button>
