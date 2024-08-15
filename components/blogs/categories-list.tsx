@@ -19,7 +19,6 @@ export const CategoriesList = () => {
     const [itemsToShow, setItemsToShow] = useState(6);
     const { width } = useWindowSize();
     const { params, updateParam } = useCustomSearchParams();
-    const router = useRouter();
 
     const handleNext = () => {
         setCurrentIndex((prevIndex) =>
@@ -34,21 +33,6 @@ export const CategoriesList = () => {
     };
 
     const currentCategories = categories.slice(currentIndex, currentIndex + itemsToShow);
-
-    // const handleClick = (name: string) => {
-    //     const updatedParams = { ...searchParamsState };
-    //     if (updatedParams.category === name) {
-    //         delete updatedParams.category;
-    //     } else {
-    //         updatedParams.category = name;
-    //     }
-    //     onSearchParamsChange('category', updatedParams?.category);
-    //     const queryString = Object.entries(updatedParams)
-    //         .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-    //         .join('&');
-    //     const url = `/blogs${queryString ? `?${queryString}` : ''}`;
-    //     router.push(url);
-    // };
 
     useEffect(() => {
         const fetchData = async () => {

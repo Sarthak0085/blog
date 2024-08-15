@@ -77,11 +77,51 @@ export const getBlogById = async (id: string) => {
 }
 
 
-export const getAllPublishedBlogs = async ({ category = "", tags = "", author = "", time = "", date = "", limit = 10, page = 1 }) => {
+export const getAllPublishedBlogs = async ({ category = "", tags = "", author = "", time = "", date = "", limit = 10, page = 1, orderby = "" }) => {
     try {
         const whereConditions: any = {
             status: BlogStatus.PUBLISHED,
         };
+
+        const orderByConditions: any = {}
+
+        if (orderby === "recommendation") {
+            const user = await currentUser();
+
+            if (user) {
+                const getUserFavourites = await db.favourite.findMany({
+                    where: {
+                        userId: user?.id,
+                    },
+                    include: {
+                        blog: true
+                    }
+                });
+
+                console.log("favourites", getUserFavourites);
+
+                const categoryIds = new Set(
+                    getUserFavourites.map(favourite => favourite.blog.categoryId)
+                );
+
+                if (categoryIds.size > 0) {
+                    whereConditions.categoryId = {
+                        in: Array.from(categoryIds)
+                    };
+                }
+
+            } else {
+                orderByConditions.views = "desc";
+            }
+        }
+
+        if (orderby === "most_recent") {
+            orderByConditions.createdAt = "desc";
+        }
+
+        if (orderby === "most_oldest") {
+            orderByConditions.createdAt = "asc";
+        }
 
         if (category && category !== "") {
             const existedCategory = await getCategoryByName(category)
@@ -129,18 +169,31 @@ export const getAllPublishedBlogs = async ({ category = "", tags = "", author = 
                 favourites: true,
                 savedPosts: true,
                 likes: true,
+                _count: {
+                    select: {
+                        likes: true
+                    }
+                },
                 comments: true,
                 user: true,
             },
             skip: skip,
             take: limit,
+            orderBy: orderByConditions,
         });
+
+        let sortedBlogs = [...blogs];
+
+        if (orderby === "most_liked") {
+            sortedBlogs = blogs.sort((a, b) => b._count.likes - a._count.likes);
+        }
+
 
         if (!blogs) {
             throw new CustomError("Error While fetching blogs", 400);
         }
 
-        return { success: true, blogs };
+        return { success: true, blogs: sortedBlogs };
     } catch (error) {
         if (error instanceof CustomError) {
             return {

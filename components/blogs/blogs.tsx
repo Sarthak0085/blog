@@ -10,9 +10,29 @@ import { FilterList } from "./filters-lists";
 import { TagsLists } from "./tags-list";
 import { AuthorLists } from "./author-lists";
 import { Button } from "../ui/button";
-import { RxCross1 } from "react-icons/rx";
 import { useCustomSearchParams } from "@/hooks/useSearchParams";
 import { PulseLoader } from "react-spinners";
+import { cn } from "@/lib/utils";
+import { DisplayQueryParams } from "./display-query-params";
+
+const ordersBy = [
+  {
+    label: "Recommended",
+    value: "recommendation"
+  },
+  {
+    label: "Most Recent",
+    value: "most_recent"
+  },
+  {
+    label: "Most Oldest",
+    value: "most_oldest"
+  },
+  {
+    label: "Most Liked",
+    value: "most_liked"
+  }
+]
 
 export const Blogs = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -27,6 +47,10 @@ export const Blogs = () => {
   const { params, updateParam } = useCustomSearchParams();
 
   useEffect(() => {
+    setPage(1);
+  }, [params])
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await getAllPublishedBlogs({
@@ -35,6 +59,7 @@ export const Blogs = () => {
           author: params?.author,
           time: params?.time,
           date: params?.date,
+          orderby: params?.orderby,
           page: page,
           limit: limit
         });
@@ -43,12 +68,11 @@ export const Blogs = () => {
         }
         if (data?.blogs) {
           //@ts-ignore
-          setBlogs((prevBlogs) => {
-            const newBlogs = data.blogs;
+          setBlogs(prevBlogs => {
             if (page === 1) {
-              return newBlogs;
+              return data.blogs;
             }
-            return [...prevBlogs, ...newBlogs] as ExtendBlog[];
+            return [...prevBlogs, ...data.blogs];
           });
           setHasMore(data.blogs.length === limit);
         }
@@ -59,7 +83,7 @@ export const Blogs = () => {
       }
     }
     fetchData()
-  }, [page, params, refetch]);
+  }, [page, params, refetch, limit]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -88,45 +112,25 @@ export const Blogs = () => {
   return (
     <>
       <div className="lg:w-[75%] flex flex-col items-center justify-start">
-        <div className="flex justify-center items-center w-full max-w-[600px] my-2">
-          <div className="flex items-start gap-4 flex-wrap">
-            {Object.entries(params).filter(([key, value]) => value !== '').map(([key, value]) => {
-              if (key === 'tags') {
-                const tags = value.split(',');
-                return (
-                  <div key={key} className="flex items-start gap-4 flex-wrap">
-                    {tags.map((tag, index) => (
-                      <Button
-                        key={index}
-                        variant={"primary"}
-                        onClick={() => updateParam(key, tag)}
-                      >
-                        {tag}
-                        <RxCross1 className="ms-2" />
-                      </Button>
-                    ))}
-                  </div>
-                );
-              } else {
-                let time, date;
-                if (key === "time" || key === "date") {
-                  time = key === "time" && value.split(",").join("-");
-                  date = key === "date" && (value.split(",").slice(4, 15).join("-") || value.slice(4, 15));
-                }
-                return (
+        {!isLoading &&
+          <>
+            <DisplayQueryParams />
+            <div className="flex justify-center items-center w-full max-w-[600px] my-2">
+              <div className="flex items-start gap-4 flex-wrap">
+                {ordersBy.map((item, index) => (
                   <Button
-                    key={key}
-                    variant={"primary"}
-                    onClick={() => updateParam(key)}
+                    key={index}
+                    variant={params.orderby === item?.value ? "primary" : "outline"}
+                    className={cn(params?.orderby !== item?.value && "!bg-transparent !border border-black")}
+                    onClick={() => updateParam("orderby", item?.value)}
                   >
-                    {time || date || value}
-                    <RxCross1 className="ms-2" />
+                    {item?.label}
                   </Button>
-                );
-              }
-            })}
-          </div>
-        </div>
+                ))}
+              </div>
+            </div>
+          </>
+        }
         <CategoriesList />
         {
           isLoading &&
