@@ -8,7 +8,6 @@ import { UserButton } from "@/components/user-button";
 import { MobileNavbar } from "./_components/mobile-navbar";
 import { AdminMobileNavbar } from "./admin/_components/admin-mobile-navbar";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { Header } from "@/components/Header";
 
 export default function ProtectedLayout({
   children,

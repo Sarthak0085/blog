@@ -37,6 +37,7 @@ import { ExtendBlog } from "@/utils/types";
 import { getAllCategories } from "@/actions/category/get-categories";
 import { MarkdownContent } from "./markdown-content";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { cn } from "@/lib/utils";
 
 type BlogSchema =
   | z.infer<typeof UpdateBlogSchema>
@@ -411,7 +412,7 @@ export const BlogForm = ({ blogData, isUpdate = false }: { blogData?: ExtendBlog
                 )}
               />
             </div>
-            <Button type="submit" disabled={isPending} className="w-full">
+            <Button type="submit" disabled={isPending} className={cn("w-full", isPending && "cursor-not-allowed")}>
               {isUpdate ? "Update" : "Create"}
             </Button>
           </form>

@@ -21,6 +21,7 @@ import Image from "next/image";
 import { contact } from "@/actions/contact";
 import { toast } from "sonner";
 import { useParams, useSearchParams } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const subjects = [
     'General Inquiry',
@@ -55,10 +56,11 @@ export const ContactForm = () => {
             name: "",
             email: "",
             message: "",
-            authorName: authorName ?? "",
-            blogTitle: "",
+            subject: "",
             ...(authorId && {
-                authorId: authorId as string
+                authorId: authorId as string,
+                authorName: authorName ?? "",
+                blogTitle: "",
             }),
         }
     });
@@ -246,7 +248,7 @@ export const ContactForm = () => {
                                                 {...field}
                                                 placeholder="Enter your message"
                                                 rows={5}
-                                                className={`border-gray-300 rounded-md shadow-sm`}
+                                                className={cn(`border-gray-300 rounded-md shadow-sm`)}
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -254,7 +256,7 @@ export const ContactForm = () => {
                                 )}
                             />
                         </div>
-                        <Button type="submit" disabled={isPending} className="w-full">
+                        <Button type="submit" disabled={isPending} className={cn("w-full", isPending && "cursor-not-allowed")}>
                             Send
                         </Button>
                     </form>

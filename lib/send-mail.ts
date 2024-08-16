@@ -1,6 +1,7 @@
 import nodemailer, { Transporter } from "nodemailer";
 import ejs from "ejs";
 import path from "path";
+import CustomError from "./customError";
 
 interface EmailOptions {
     email: string,
@@ -33,7 +34,7 @@ const sendEmail = async (options: EmailOptions): Promise<void> => {
             emailHtml = await ejs.renderFile(templatePath, data);
         } catch (error) {
             console.error("Error rendering email template:", error);
-            throw new Error("Could not render email template");
+            throw new CustomError("Could not render email template", 400);
         }
     } else if (html) {
         emailHtml = html;
@@ -49,7 +50,7 @@ const sendEmail = async (options: EmailOptions): Promise<void> => {
     try {
         await transporter.sendMail(mailOptions);
     } catch (error) {
-        throw new Error("Could not send email");
+        throw new CustomError("Could not send email", 500);
     }
 }
 

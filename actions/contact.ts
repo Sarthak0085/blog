@@ -12,7 +12,7 @@ export const contact = async (values: z.infer<typeof ContactSchema>) => {
         const validateData = validateContact(values);
         const { name, email, subject, message, authorId, authorName, blogTitle } = validateData;
 
-        let recipientEmail = "s74078961@gmail.com";
+        let recipientEmail = "sarth.mahajan2000@gmail.com";
 
         if (authorId) {
             const author = await getUserById(authorId as string);
@@ -41,7 +41,7 @@ export const contact = async (values: z.infer<typeof ContactSchema>) => {
         await sendEmail({
             email: email,
             subject: subject,
-            template: "thank.ejs",
+            template: authorId ? "thank-author.ejs" : "thank.ejs",
             data: {
                 name: name,
                 email: email,

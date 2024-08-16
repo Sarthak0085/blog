@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You for Your Message</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #28a745;
+        }
+
+        .content {
+            margin-bottom: 20px;
+        }
+
+        .content p {
+            margin: 10px 0;
+        }
+
+        .footer {
+            font-size: 0.8em;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Thank You for Your Message!</h1>
+        <div class="content">
+            <p>Dear <%= name %>,</p>
+                <p>Thank you for reaching out to the author. The author have received your message and the author will
+                    review it shortly.
+                </p>
+                    <p><strong>Your Details:</strong></p>
+                    <% if (blogSlug) { %>
+                        <p><strong>Blog Slug:</strong>
+                            <%= blogSlug %>
+                        </p>
+                        <% } %>
+                            <p><strong>Email:</strong>
+                                <%= email %>
+                            </p>
+                            <p><strong>Subject:</strong>
+                                <%= subject %>
+                            </p>
+                            <p><strong>Message:</strong></p>
+                            <p>
+                                <%= message %>
+                            </p>
+        </div>
+        <div class="footer">
+                <p>If you have any immediate questions or concerns, please feel free to reply to <%= authorEmail %>.</p>
+                <p>Best regards,<br><%= authorName %></p>
+        </div>
+    </div>
+</body>
+
+</html>
