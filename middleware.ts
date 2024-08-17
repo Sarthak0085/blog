@@ -14,9 +14,10 @@ export default auth(async function middleware(req) {
     console.log("middleware");
     //@ts-ignore
     const token = await getToken({ req, secret });
-    console.log("token", token);
+    const session = await auth();
+    console.log("token", token, session);
     const { nextUrl } = req;
-    const isLoggedIn = !!token;
+    const isLoggedIn = !!session ?? !!token;
     console.log("isLoggedIn", isLoggedIn);
 
     const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
