@@ -26,7 +26,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
             >
                 <picture>
                     <img
-                        src={blog.imageUrl}
+                        src={blog?.imageUrl as string}
                         alt={blog?.slug}
                         className="w-full h-full object-cover"
                         width={100}

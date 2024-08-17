@@ -110,7 +110,7 @@ model Blog {
   shortSummary         String
   categoryId           String
   imagePublicId        String?
-  imageUrl             String
+  imageUrl             String?
   isPinned             Boolean     @default(false)
   status               BlogStatus  @default(DRAFT)
   publishedDateAndTime DateTime?
