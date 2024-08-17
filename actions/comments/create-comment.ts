@@ -7,6 +7,7 @@ import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
 import { CreateCommentSchema } from "@/schemas";
 import { validateComment } from "@/validations";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 export const createComment = async (values: z.infer<typeof CreateCommentSchema>) => {
@@ -38,6 +39,9 @@ export const createComment = async (values: z.infer<typeof CreateCommentSchema>)
                 }
             });
 
+            revalidatePath("/blogs");
+            revalidatePath(`/blog/${existedBlog?.slug}`);
+
             return {
                 success: "Commnet Added",
                 data: comment
@@ -50,6 +54,9 @@ export const createComment = async (values: z.infer<typeof CreateCommentSchema>)
                     content: content,
                 },
             });
+
+            revalidatePath("/blogs");
+            revalidatePath(`/blog/${existedBlog?.slug}`);
 
             return {
                 success: "Comment Added",

@@ -7,6 +7,7 @@ import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
 import { LikeSchema } from "@/schemas";
 import { validateLikeInput } from "@/validations";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 export const likeBlog = async (values: z.infer<typeof LikeSchema>) => {
@@ -38,6 +39,8 @@ export const likeBlog = async (values: z.infer<typeof LikeSchema>) => {
                 },
             });
 
+            revalidatePath(`/blog/${existedBlog?.slug}`, "page")
+
             return {
                 success: "Like removed.",
             };
@@ -52,6 +55,8 @@ export const likeBlog = async (values: z.infer<typeof LikeSchema>) => {
             if (!like) {
                 throw new CustomError("An unexpected error occurred. Please try again later.", 500);
             }
+
+            revalidatePath(`/blog/${existedBlog?.slug}`, "page")
 
             return {
                 success: "You liked this blog.",

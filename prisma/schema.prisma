@@ -43,6 +43,7 @@ model User {
   dislikes              Dislike[]
   favourites            Favourite[]
   createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @default(now())
   CommentLike           CommentLike[]
 }
 
@@ -109,7 +110,7 @@ model Blog {
   shortSummary         String
   categoryId           String
   imagePublicId        String?
-  imageUrl             String?
+  imageUrl             String
   isPinned             Boolean     @default(false)
   status               BlogStatus  @default(DRAFT)
   publishedDateAndTime DateTime?

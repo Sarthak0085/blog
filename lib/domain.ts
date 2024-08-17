@@ -1,1 +1,1 @@
-export const domain = `http://localhost:3000`;
+export const domain = process.env.NEXT_PUBLIC_APP_URL;

@@ -1,8 +1,13 @@
 import { Blogs } from "@/components/blogs/blogs";
 import { Footer } from "@/components/footer";
 import { Separator } from "@/components/ui/separator";
+import { Metadata } from "next";
 
-export default function BlogsPage() {
+export const metadata: Metadata = {
+    title: "Blogs",
+}
+
+export default async function BlogsPage() {
     return (
         <div className="w-full">
             <section className="py-10 bg-transparent">

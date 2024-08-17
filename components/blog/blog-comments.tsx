@@ -84,7 +84,7 @@ export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props
                   </p>
                   <div className="w-full flex items-center justify-start space-x-2">
                     <small className="text-muted-foreground text-[15px] font-medium">
-                      {formatRelativeTime(item?.createdAt)} •
+                      {formatRelativeTime(new Date(item?.createdAt))} •
                     </small>
                     <small className="text-muted-foreground text-[15px] font-medium">
                       {item?.likes?.length ?? 0} likes •
@@ -152,7 +152,7 @@ export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props
                     </p>
                     <div className="w-full flex items-center justify-start space-x-2">
                       <small className="text-muted-foreground text-[15px] font-medium">
-                        {formatRelativeTime(comment?.createdAt)} •
+                        {formatRelativeTime(new Date(comment?.createdAt))} •
                       </small>
                       <small className="text-muted-foreground text-[15px] font-medium">
                         {comment?.likes?.length} likes •

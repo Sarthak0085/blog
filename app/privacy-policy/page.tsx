@@ -1,5 +1,14 @@
 import { Footer } from "@/components/footer";
 import { domain } from "@/lib/domain";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Privacy Policy",
+    robots: {
+        index: false,
+        follow: true,
+    }
+}
 
 export default function PrivacyPolicyPage() {
     return (
