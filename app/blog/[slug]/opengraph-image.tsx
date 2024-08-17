@@ -15,10 +15,10 @@ export default async function Image({ params }: { params: { slug: string } }) {
         (
             <div
                 style={{
-                    fontSize: 48,
-                    background: 'white',
                     width: '100%',
                     height: '100%',
+                    position: 'relative',
+                    overflow: 'hidden',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -28,12 +28,32 @@ export default async function Image({ params }: { params: { slug: string } }) {
                     <img
                         src={blog?.imageUrl as string}
                         alt={blog?.slug}
-                        className="w-full h-full object-cover"
-                        width={100}
-                        height={100}
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            filter: 'blur(8px)',
+                            zIndex: 0,
+                        }}
                     />
                 </picture>
-                {blog?.title}
+                <div
+                    style={{
+                        position: 'relative',
+                        color: 'white',
+                        fontSize: '48px',
+                        textAlign: 'center',
+                        padding: '0 20px',
+                        zIndex: 1,
+                        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                        borderRadius: '8px',
+                    }}
+                >
+                    {blog?.title}
+                </div>
             </div>
         ),
         {

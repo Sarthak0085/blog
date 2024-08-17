@@ -79,7 +79,7 @@ export const ProfileForm = ({ user, refetch }: ProfileFormProps) => {
 
     useEffect(() => {
         form.setValue("image", image ?? "");
-    }, [image]);
+    }, [image, form]);
 
     const isMe = user?.id === currentUser?.id;
 

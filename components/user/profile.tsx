@@ -2,7 +2,7 @@
 
 import { getUserById } from "@/actions/user/get-users";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { PulseLoader } from "react-spinners";
 import { ProfileForm } from "./profile-form";
 import { ExtendUser } from "@/nextauth";
@@ -13,7 +13,7 @@ export const Profile = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const data = await getUserById(userId as string);
             if (data?.error) {
@@ -27,11 +27,11 @@ export const Profile = () => {
         } finally {
             setIsLoading(false);
         }
-    }
+    }, [userId]);
 
     useEffect(() => {
         fetchData()
-    }, [userId]);
+    }, [userId, fetchData]);
 
     const handleRefetch = () => {
         fetchData();

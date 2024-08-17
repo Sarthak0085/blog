@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { ExtendBlog } from "@/utils/types";
 import { getBlogDetailsBySlug } from "@/actions/blog/blog-details";
 import { BlogDetails } from "./blog-detail";
@@ -17,7 +17,7 @@ export const Blog = () => {
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(true);
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const data = await getBlogDetailsBySlug(slug as string);
             if (data?.error) {
@@ -32,11 +32,11 @@ export const Blog = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [slug]);
 
     useEffect(() => {
         fetchData();
-    }, [slug]);
+    }, [slug, fetchData]);
 
     const handleRefetch = () => {
         fetchData();
