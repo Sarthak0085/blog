@@ -39,5 +39,15 @@ export default {
                 return null;
             }
         })
-    ]
+    ],
+    cookies: {
+        sessionToken: {
+            name: "next-auth.session-token",
+            options: {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+            }
+        }
+    }
 } satisfies NextAuthConfig

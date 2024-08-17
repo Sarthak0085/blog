@@ -19,13 +19,14 @@ import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { useState, useTransition } from "react";
 import { login } from "@/actions/auth/login";
-import { redirect, usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 export const LoginForm = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
   const urlError =
@@ -60,7 +61,7 @@ export const LoginForm = () => {
           }
           if (data?.success) {
             setSuccess(data?.success);
-            redirect(callbackUrl ?? `/${user?.id}`)
+            router.push(callbackUrl ?? `/${user?.id}`);
           }
           if (data?.twoFactor) {
             setShowTwoFactor(true);
