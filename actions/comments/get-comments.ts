@@ -15,6 +15,9 @@ export const getAllComments = async () => {
             },
             orderBy: [
                 {
+                    isPinned: "desc",
+                },
+                {
                     createdAt: 'desc',
                 },
             ],

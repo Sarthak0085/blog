@@ -57,6 +57,8 @@ export const createComment = async (values: z.infer<typeof CreateCommentSchema>)
 
             revalidatePath("/blogs");
             revalidatePath(`/blog/${existedBlog?.slug}`);
+            revalidatePath(`/${user?.id}/get-comments`);
+            revalidatePath(`/admin/get-comments`);
 
             return {
                 success: "Comment Added",

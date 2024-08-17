@@ -6,6 +6,7 @@ import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
 import { LikeCommentSchema } from "@/schemas";
 import { validateLikeComment } from "@/validations";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 export const likeComment = async (values: z.infer<typeof LikeCommentSchema>) => {
@@ -26,7 +27,7 @@ export const likeComment = async (values: z.infer<typeof LikeCommentSchema>) => 
                 where: {
                     id: existedCommentLike.id
                 }
-            })
+            });
 
             return {
                 success: "Comment Liked Removed"
@@ -38,6 +39,7 @@ export const likeComment = async (values: z.infer<typeof LikeCommentSchema>) => 
                     commentId,
                 },
             });
+
             return {
                 success: "Comment Liked Successfully"
             };

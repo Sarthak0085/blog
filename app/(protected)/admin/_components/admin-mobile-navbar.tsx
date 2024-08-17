@@ -11,18 +11,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCurrentRole } from "@/hooks/useCurrentRole";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { LuUser2 } from "react-icons/lu";
 import { IoAddCircleOutline, IoSettingsOutline } from "react-icons/io5";
 import { FaRegThumbsDown, FaRegThumbsUp } from "react-icons/fa";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { HiOutlineUserGroup } from "react-icons/hi2";
 import { BiCategory } from "react-icons/bi";
 import { User } from "next-auth";
-import { useSession } from "next-auth/react";
 
 interface AdminMobileNavbarProps {
     open: boolean;
     setOpen: (open: boolean) => void;
+    user: User
 }
 
 export const AdminMobileNavbar = ({ open, setOpen }: AdminMobileNavbarProps) => {
@@ -177,7 +176,7 @@ export const AdminMobileNavbar = ({ open, setOpen }: AdminMobileNavbarProps) => 
                             variant={pathname === `/${user?.id}/get-comments` ? "primary" : "outline"}
                         >
                             <Link
-                                href={`/${user?.id}/get-comments`}
+                                href={`/admin/get-comments`}
                                 className="gap-2"
                             >
                                 <svg fill="none" viewBox="0 0 20 20" width="20" height="20" xmlns="http://www.w3.org/2000/svg">

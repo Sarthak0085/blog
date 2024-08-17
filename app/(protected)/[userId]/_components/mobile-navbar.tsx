@@ -1,3 +1,5 @@
+"use client";
+
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -10,7 +12,6 @@ import { BookmarkIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCurrentRole } from "@/hooks/useCurrentRole";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { LuUser2 } from "react-icons/lu";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { FaRegThumbsDown, FaRegThumbsUp } from "react-icons/fa";

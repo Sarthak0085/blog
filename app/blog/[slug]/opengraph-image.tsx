@@ -1,3 +1,4 @@
+import { domain } from '@/lib/domain';
 import { ExtendBlog } from '@/utils/types';
 import { ImageResponse } from 'next/og'
 
@@ -5,11 +6,32 @@ export const size = {
     width: 1200,
     height: 630,
 }
-export const contentType = 'image/png'
+
+const MIME_TYPES: Record<string, string> = {
+    png: 'image/png',
+    jpeg: 'image/jpeg',
+    jpg: 'image/jpeg',
+    gif: 'image/gif',
+    svg: 'image/svg+xml',
+    webp: 'image/webp',
+    avif: 'image/avif',
+    bmp: 'image/bmp',
+};
+
+// export const contentType = 'image/png'
 
 export default async function Image({ params }: { params: { slug: string } }) {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/blog/${params.slug}`);
+    const response = await fetch(`${domain}/api/blog/${params.slug}`);
     const blog: ExtendBlog = await response.json();
+
+    const imageUrl = blog?.imageUrl as string;
+    console.log(imageUrl);
+    const extension = imageUrl.split('.').pop()?.toLowerCase() || 'png';
+    const contentType = MIME_TYPES[extension] || 'image/avif';
+    const imageBuffer = await fetch(imageUrl).then((res) => res.arrayBuffer());
+
+    const imageWidth = 1200;
+    const imageHeight = 630;
 
     return new ImageResponse(
         (
@@ -26,7 +48,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
             >
                 <picture>
                     <img
-                        src={blog?.imageUrl as string}
+                        src={imageBuffer as unknown as string ?? 'https://res.cloudinary.com/dkzfopuco/image/upload/v1723206903/blog/demon-slayer-all-12-hashira-ranked-weakest-to-strongest.avif'}
                         alt={blog?.slug}
                         style={{
                             width: '100%',
@@ -36,8 +58,9 @@ export default async function Image({ params }: { params: { slug: string } }) {
                             top: 0,
                             left: 0,
                             filter: 'blur(8px)',
-                            zIndex: 0,
                         }}
+                        width={imageWidth}
+                        height={imageHeight}
                     />
                 </picture>
                 <div

@@ -14,6 +14,15 @@ export const metadata: Metadata = {
     template: "%s - Vortex Vista"
   },
   description: "A blog for you all for share your stories and read other's stories!",
+  openGraph: {
+    title: {
+      default: "Vortex Vista: A blog for you",
+      template: "%s - Vortex Vista"
+    },
+    description: "A blog for you all for share your stories and read other's stories!",
+    siteName: "https://vortex-vista.vercel.app",
+    url: "https://vortex-vista.vercel.app",
+  },
   twitter: {
     card: "summary_large_image",
     site: "https://x.com/sarthak102000",

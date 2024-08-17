@@ -1,3 +1,5 @@
+"use client"
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,10 +11,10 @@ import { FaUser } from "react-icons/fa";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { ExitIcon } from "@radix-ui/react-icons";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { User } from "next-auth";
 
-export const UserButton = () => {
-  const user = useCurrentUser();
-  console.log("user", user);
+export const UserButton = ({ user }: { user: User }) => {
+  // const user = useCurrentUser();
 
   return (
     <DropdownMenu>

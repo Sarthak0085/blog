@@ -6,9 +6,12 @@ import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
 import { UpdateCommentSchema } from "@/schemas";
 import { validateUpdateComment } from "@/validations";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
-export const updateComment = async (values: z.infer<typeof UpdateCommentSchema>) => {
+export const updateComment = async (
+    values: z.infer<typeof UpdateCommentSchema>
+) => {
     try {
         const validatedData = validateUpdateComment(values);
         const { id, parentId, content, blogId } = validatedData;
@@ -29,22 +32,24 @@ export const updateComment = async (values: z.infer<typeof UpdateCommentSchema>)
             throw new CustomError("Forbidden. You are not allowed to do this!", 403);
         }
 
+        await db.comment.update({
+            where: {
+                id,
+            },
+            data: {
+                blogId: comment?.blogId || blogId,
+                userId: comment?.userId || user?.id,
+                content: content,
+                parentId: comment?.parentId || parentId,
+            },
+        });
 
-            await db.comment.update({
-                where: {
-                    id
-                },
-                data: {
-                    blogId: comment?.blogId || blogId,
-                    userId: comment?.userId || user?.id,
-                    content: content,
-                    parentId: comment?.parentId || parentId,
-                }
-            });
+        revalidatePath(`/${user?.id}/get-comments`);
+        revalidatePath(`/admin/get-comments`);
 
-            return {
-                success: "Comment Updated Successfully"
-            }
+        return {
+            success: "Comment Updated Successfully",
+        };
     } catch (error) {
         if (error instanceof CustomError) {
             return {
@@ -57,4 +62,4 @@ export const updateComment = async (values: z.infer<typeof UpdateCommentSchema>)
             code: 500,
         };
     }
-}
+};

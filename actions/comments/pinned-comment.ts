@@ -6,6 +6,7 @@ import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
 import { PinnedCommentSchema } from "@/schemas";
 import { validatePinnedComment } from "@/validations";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 export const pinnedComment = async (values: z.infer<typeof PinnedCommentSchema>) => {
@@ -36,6 +37,9 @@ export const pinnedComment = async (values: z.infer<typeof PinnedCommentSchema>)
                     isPinned: !isPinned
                 }
             });
+
+            revalidatePath(`/${user?.id}/get-comments`);
+            revalidatePath(`/admin/get-comments`);
 
             return {
                 success: isPinned ? "Comment UnPinned Successfully" : "Comment Pinned Successfully"

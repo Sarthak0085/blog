@@ -1,5 +1,3 @@
-"use client";
-
 import { ExtendComment } from "@/utils/types";
 import { useEffect, useState } from "react";
 import { PulseLoader } from "react-spinners";
@@ -7,39 +5,43 @@ import { AllCommentsTable } from "@/components/admin/comment/comment-table";
 import { commentColumns } from "@/components/admin/comment/comment-columns";
 import { getAllComments } from "@/actions/comments/get-comments";
 
-export default function AllCommentsPage() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string>("");
-  const [data, setData] = useState<ExtendComment[]>([]);
+export default async function AllCommentsPage() {
+  // const [isLoading, setIsLoading] = useState(true);
+  // const [error, setError] = useState<string>("");
+  // const [data, setData] = useState<ExtendComment[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getAllComments();
-        if (data?.error) {
-          console.error("Error while fetching Comments.");
-          setError(data?.error);
-        }
-        if (data?.data) {
-          setData(data?.data as ExtendComment[]);
-        }
-      } catch (error) {
-        setError("Error while fetching Comments.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const data = await getAllComments();
+  //       if (data?.error) {
+  //         console.error("Error while fetching Comments.");
+  //         setError(data?.error);
+  //       }
+  //       if (data?.data) {
+  //         setData(data?.data as ExtendComment[]);
+  //       }
+  //     } catch (error) {
+  //       setError("Error while fetching Comments.");
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
-  if (isLoading) {
-    return (
-      <div className="w-full h-[100vh] flex items-center justify-center">
-        <PulseLoader margin={3} size={20} />
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="w-full h-[100vh] flex items-center justify-center">
+  //       <PulseLoader margin={3} size={20} />
+  //     </div>
+  //   );
+  // }
+
+  const response = await getAllComments();
+  const data = response?.data as ExtendComment[];
+  const error = response?.error;
 
   if (error) {
     return (

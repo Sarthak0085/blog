@@ -6,6 +6,7 @@ import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
 import { DeleteCommentSchema } from "@/schemas";
 import { validateCommentDelete } from "@/validations";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 export const deleteComment = async (values: z.infer<typeof DeleteCommentSchema>) => {
@@ -35,6 +36,9 @@ export const deleteComment = async (values: z.infer<typeof DeleteCommentSchema>)
                 }
             });
 
+            revalidatePath(`/${user?.id}/get-comments`);
+            revalidatePath(`/admin/get-comments`);
+
             return {
                 success: "Comment Deleted Successfully"
             }
@@ -49,6 +53,9 @@ export const deleteComment = async (values: z.infer<typeof DeleteCommentSchema>)
                         ]
                     }
                 });
+
+                revalidatePath(`/${user?.id}/get-comments`);
+                revalidatePath(`/admin/get-comments`);
 
                 return {
                     success: "Comment deleted successfully"

@@ -101,7 +101,8 @@ export function CommentTableRowActions<TData>({
         <DropdownMenuContent align="end" className="w-[100px]">
           <DropdownMenuItem className="p-0">
             <Button
-              className="w-full !justify-start px-2 py-2 space-x-2 h-auto font-medium text-[blue] hover:text-[blue]"
+              asChild
+              className="w-full !justify-start p-1 space-x-2 text-[blue] hover:text-[blue]"
               variant="ghost"
             >
               <Link href={`/blog/${comment?.blog?.slug}`}>

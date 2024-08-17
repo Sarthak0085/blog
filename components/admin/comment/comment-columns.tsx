@@ -177,7 +177,7 @@ export const commentColumns: ColumnDef<ExtendComment>[] = [
       const parentId: string | null = row.getValue("parentId");
       return (
         <div className="flex space-x-2 items-center">
-          {!parentId === true ? "YES" : "NO"}
+          {!parentId !== true ? "YES" : "NO"}
         </div>
       );
     },
