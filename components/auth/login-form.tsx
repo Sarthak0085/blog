@@ -22,6 +22,7 @@ import { login } from "@/actions/auth/login";
 import { redirect, usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 export const LoginForm = () => {
   const pathname = usePathname();
@@ -36,6 +37,7 @@ export const LoginForm = () => {
   const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
+  const user = useCurrentUser();
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -58,7 +60,7 @@ export const LoginForm = () => {
           }
           if (data?.success) {
             setSuccess(data?.success);
-            window.location.reload();
+            redirect(callbackUrl ?? `/${user?.id}`)
           }
           if (data?.twoFactor) {
             setShowTwoFactor(true);

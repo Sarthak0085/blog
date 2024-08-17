@@ -26,7 +26,7 @@ const sendEmail = async (options: EmailOptions): Promise<void> => {
 
     let emailHtml;
     if (template && data) {
-        const templatePath = `https://vortex-vista.vercel.app/mails/${template}` ?? path.resolve('public', 'mails', template);
+        const templatePath = path.resolve('public', 'mails', template);
         console.log("template", templatePath);
 
         try {

@@ -14,9 +14,7 @@ import * as z from "zod";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 import { db } from "@/lib/db";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
-
-const domain = process.env.NEXT_PUBLIC_APP_URL;
+import { domain } from "@/lib/domain";
 
 export const login = async (
   values: z.infer<typeof LoginSchema>,
@@ -128,8 +126,7 @@ export const login = async (
     await signIn("credentials", {
       email,
       password,
-      redirect: callbackUrl === null ? false : true,
-      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+      redirect: false
     });
 
     return {
