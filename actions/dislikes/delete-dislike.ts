@@ -6,6 +6,7 @@ import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
 import { DeleteDislikeSchema } from "@/schemas";
 import { validateDeleteDislike } from "@/validations";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 export const deleteDislike = async (values: z.infer<typeof DeleteDislikeSchema>) => {
@@ -32,6 +33,9 @@ export const deleteDislike = async (values: z.infer<typeof DeleteDislikeSchema>)
                 }
             });
 
+            revalidatePath(`/${user?.id}/get-dislikes`, "page");
+            revalidatePath('/admin/get-dislikes', "page");
+
             return {
                 success: "Dislike Deleted Successfully"
             }
@@ -42,7 +46,10 @@ export const deleteDislike = async (values: z.infer<typeof DeleteDislikeSchema>)
                     where: {
                         id: dislikeId,
                     }
-                })
+                });
+
+                revalidatePath(`/${dislike?.userId}/get-dislikes`, "page");
+                revalidatePath('/admin/get-dislikes', "page");
 
                 return {
                     success: "Dislike deleted successfully"

@@ -1,23 +1,18 @@
 import { ExtendComment } from "@/utils/types";
-import { useEffect, useState } from "react";
-import { PulseLoader } from "react-spinners";
 import { AllCommentsTable } from "@/components/admin/comment/comment-table";
 import { commentColumns } from "@/components/admin/comment/comment-columns";
 import { getAllCommentsByUserId } from "@/actions/comments/get-comments";
-import { useParams } from "next/navigation";
 
-export default async function CommentsPage({ params: { userId } }: {
+interface CommentsPageProps {
     params: {
-        userId: string
+        userId: string;
     }
-}) {
-    // const { userId } = useParams();
-    // const [isLoading, setIsLoading] = useState(true);
-    // const [error, setError] = useState<string>("");
-    // const [data, setData] = useState<ExtendComment[]>([]);
+}
 
+export default async function CommentsPage({ params: { userId } }: CommentsPageProps) {
     const response = await getAllCommentsByUserId(userId as string);
     const error = response.error;
+    const data = response.data as ExtendComment[];
 
     if (error) {
         return (
@@ -27,44 +22,6 @@ export default async function CommentsPage({ params: { userId } }: {
         );
     }
 
-    const data = response.data as ExtendComment[];
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             const data = await getAllCommentsByUserId(userId as string);
-    //             if (data?.error) {
-    //                 console.error("Error while fetching Comments.");
-    //                 setError(data?.error);
-    //             }
-    //             if (data?.data) {
-    //                 setData(data?.data as ExtendComment[]);
-    //             }
-    //         } catch (error) {
-    //             setError("Error while fetching Comments.");
-    //         } finally {
-    //             setIsLoading(false);
-    //         }
-    //     };
-
-    //     fetchData();
-    // }, [userId]);
-
-    // if (isLoading) {
-    //     return (
-    //         <div className="w-full h-[100vh] flex items-center justify-center">
-    //             <PulseLoader margin={3} size={20} />
-    //         </div>
-    //     );
-    // }
-
-    // if (error) {
-    //     return (
-    //         <div className="w-full h-[100vh] flex items-center justify-center text-[red] font-bold text-3xl">
-    //             {error}
-    //         </div>
-    //     );
-    // }
     return (
         <div className="h-full flex-col space-y-8 p-8 flex">
             <div className="flex items-center justify-between space-y-2">

@@ -6,6 +6,7 @@ import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
 import { DeleteFavouriteSchema } from "@/schemas";
 import { validateDeleteFavourite } from "@/validations";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 export const deleteFavourite = async (values: z.infer<typeof DeleteFavouriteSchema>) => {
@@ -32,6 +33,9 @@ export const deleteFavourite = async (values: z.infer<typeof DeleteFavouriteSche
                 }
             });
 
+            revalidatePath(`/${user?.id}/get-favourites`, "page");
+            revalidatePath('/admin/get-favourites', "page");
+
             return {
                 success: "Favourite Deleted Successfully"
             }
@@ -42,7 +46,10 @@ export const deleteFavourite = async (values: z.infer<typeof DeleteFavouriteSche
                     where: {
                         id: favouriteId,
                     }
-                })
+                });
+
+                revalidatePath(`/${favourite?.userId}/get-favourites`, "page");
+                revalidatePath('/admin/get-favourites', "page");
 
                 return {
                     success: "Favourite deleted successfully"

@@ -1,47 +1,18 @@
-"use client";
-
 import { getAllDislikesByUserId } from "@/actions/dislikes/get-dislikes";
 import { dislikeColumns } from "@/components/admin/dislike/dislike-columns";
 import { AllDislikesTable } from "@/components/admin/dislike/dislike-table";
 import { ExtendDislike } from "@/utils/types";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { PulseLoader } from "react-spinners";
 
-export default function DislikesPage() {
-    const { userId } = useParams();
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string>("");
-    const [data, setData] = useState<ExtendDislike[]>([]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await getAllDislikesByUserId(userId as string);
-                if (data?.error) {
-                    console.error("Error while fetching Dislikes.");
-                    setError(data?.error);
-                }
-                if (data?.data) {
-                    setData(data?.data as ExtendDislike[]);
-                }
-            } catch (error) {
-                setError("Error while fetching Dislikes.");
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchData();
-    }, [userId]);
-
-    if (isLoading) {
-        return (
-            <div className="w-full h-[100vh] flex items-center justify-center">
-                <PulseLoader margin={3} size={20} />
-            </div>
-        );
+interface DislikesPageProps {
+    params: {
+        userId: string;
     }
+}
+
+export default async function DislikesPage({ params: { userId } }: DislikesPageProps) {
+    const response = await getAllDislikesByUserId(userId as string);
+    const error = response.error;
+    const data = response.data as ExtendDislike[];
 
     if (error) {
         return (
@@ -50,6 +21,7 @@ export default function DislikesPage() {
             </div>
         );
     }
+
     return (
         <div className="h-full flex-1 flex-col space-y-8 p-8 flex">
             <div className="flex items-center justify-between space-y-2">

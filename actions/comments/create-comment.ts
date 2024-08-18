@@ -39,8 +39,10 @@ export const createComment = async (values: z.infer<typeof CreateCommentSchema>)
                 }
             });
 
-            revalidatePath("/blogs");
-            revalidatePath(`/blog/${existedBlog?.slug}`);
+            revalidatePath('/blogs', "page");
+            revalidatePath(`/blog/${existedBlog?.slug}`, "page");
+            revalidatePath(`/${user?.id}/get-comments`, "page");
+            revalidatePath(`/admin/get-comments`, "page");
 
             return {
                 success: "Commnet Added",
@@ -55,10 +57,10 @@ export const createComment = async (values: z.infer<typeof CreateCommentSchema>)
                 },
             });
 
-            revalidatePath("/blogs");
-            revalidatePath(`/blog/${existedBlog?.slug}`);
-            revalidatePath(`/${user?.id}/get-comments`);
-            revalidatePath(`/admin/get-comments`);
+            revalidatePath("/blogs", "page");
+            revalidatePath(`/blog/${existedBlog?.slug}`, "page");
+            revalidatePath(`/${user?.id}/get-comments`, "page");
+            revalidatePath(`/admin/get-comments`, "page");
 
             return {
                 success: "Comment Added",

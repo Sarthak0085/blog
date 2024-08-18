@@ -7,7 +7,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@//components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
@@ -20,7 +19,6 @@ import { deleteDislike } from "@/actions/dislikes/delete-dislike";
 import { pinnedDislike } from "@/actions/dislikes/pinned-dislike";
 import { IoEyeOutline } from "react-icons/io5";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { CiEdit } from "react-icons/ci";
 import { TbPinned, TbPinnedFilled } from "react-icons/tb";
 import { MdDeleteOutline } from "react-icons/md";
 
@@ -44,7 +42,6 @@ export function DislikeTableRowActions<TData>({
           if (data?.success) {
             toast.success(data?.success);
             setOpen(false);
-            window.location.reload();
           }
           if (data?.error) {
             toast.error(data?.error);
@@ -62,7 +59,6 @@ export function DislikeTableRowActions<TData>({
         .then((data) => {
           if (data?.success) {
             toast.success(data?.success);
-            window.location.reload();
           }
           if (data?.error) {
             toast.error(data?.error);

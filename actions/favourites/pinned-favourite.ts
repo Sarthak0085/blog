@@ -6,6 +6,7 @@ import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
 import { FavouritePinnedSchema } from "@/schemas";
 import { validateFavouritePinned } from "@/validations";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 export const pinnedFavourite = async (values: z.infer<typeof FavouritePinnedSchema>) => {
@@ -36,6 +37,9 @@ export const pinnedFavourite = async (values: z.infer<typeof FavouritePinnedSche
                     isPinned: !isPinned
                 }
             });
+
+            revalidatePath(`/${user?.id}/get-favourites`, "page");
+            revalidatePath('/admin/get-favourites', "page");
 
             return {
                 success: isPinned ? "Favourite UnPinned Successfully" : "Favourite Pinned Successfully"

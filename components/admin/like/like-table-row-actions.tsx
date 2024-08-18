@@ -41,7 +41,6 @@ export function LikeTableRowActions<TData>({
           if (data?.success) {
             toast.success(data?.success);
             setOpen(false);
-            window.location.reload();
           }
           if (data?.error) {
             toast.error(data?.error);
@@ -59,7 +58,6 @@ export function LikeTableRowActions<TData>({
         .then((data) => {
           if (data?.success) {
             toast.success(data?.success);
-            window.location.reload();
           }
           if (data?.error) {
             toast.error(data?.error);

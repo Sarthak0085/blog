@@ -41,7 +41,6 @@ export function SavedPostTableRowActions<TData>({
           if (data?.success) {
             toast.success(data?.success);
             setOpen(false);
-            window.location.reload();
           }
           if (data?.error) {
             toast.error(data?.error);
@@ -60,7 +59,6 @@ export function SavedPostTableRowActions<TData>({
           if (data?.success) {
             toast.success(data?.success);
             setOpen(false);
-            window.location.reload();
           }
           if (data?.error) {
             toast.error(data?.error);

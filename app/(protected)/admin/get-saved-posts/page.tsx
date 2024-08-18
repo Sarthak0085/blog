@@ -7,39 +7,10 @@ import { AllSavedPostsTables } from "@/components/admin/saved-post/saved-post-ta
 import { ExtendSavedPost } from "@/utils/types";
 import { getAllSavedPosts } from "@/actions/savedpost/get-saved-posts";
 
-export default function AllSavedPostsPage() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string>("");
-  const [data, setData] = useState<ExtendSavedPost[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getAllSavedPosts();
-        if (data?.error) {
-          console.error("Error while fetching saved posts.");
-          setError(data?.error);
-        }
-        if (data?.data) {
-          setData(data?.data as ExtendSavedPost[]);
-        }
-      } catch (error) {
-        setError("Error while fetching saved posts.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div className="w-full h-[100vh] flex items-center justify-center">
-        <PulseLoader margin={3} size={20} />
-      </div>
-    );
-  }
+export default async function AllSavedPostsPage() {
+  const response = await getAllSavedPosts();
+  const error = response.error;
+  const data = response.data as ExtendSavedPost[];
 
   if (error) {
     return (
@@ -48,6 +19,7 @@ export default function AllSavedPostsPage() {
       </div>
     );
   }
+
   return (
     <div className="h-full flex-1 flex-col space-y-8 p-8 flex">
       <div className="flex items-center justify-between space-y-2">

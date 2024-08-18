@@ -7,6 +7,7 @@ import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
 import { DislikeSchema } from "@/schemas";
 import { validateDislikeInput } from "@/validations/";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 export const dislikeBlog = async (values: z.infer<typeof DislikeSchema>) => {
@@ -38,6 +39,10 @@ export const dislikeBlog = async (values: z.infer<typeof DislikeSchema>) => {
                 },
             });
 
+            revalidatePath(`blog/${existedBlog?.slug}`, "page")
+            revalidatePath(`/${user?.id}/get-dislikes`, "page");
+            revalidatePath('/admin/get-dislikes', "page");
+
             return {
                 success: "Dislike removed.",
             };
@@ -52,6 +57,10 @@ export const dislikeBlog = async (values: z.infer<typeof DislikeSchema>) => {
             if (!dislike) {
                 throw new CustomError("An unexpected error occurred. Please try again later.", 500);
             }
+
+            revalidatePath(`blog/${existedBlog?.slug}`, "page")
+            revalidatePath(`/${user?.id}/get-dislikes`, "page");
+            revalidatePath('/admin/get-dislikes', "page");
 
             return {
                 success: "You disliked this blog.",

@@ -6,6 +6,7 @@ import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
 import { PinnedDislikeSchema } from "@/schemas";
 import { validatePinnedDislike } from "@/validations";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 export const pinnedDislike = async (values: z.infer<typeof PinnedDislikeSchema>) => {
@@ -36,6 +37,9 @@ export const pinnedDislike = async (values: z.infer<typeof PinnedDislikeSchema>)
                     isPinned: !isPinned
                 }
             });
+
+            revalidatePath(`/${user?.id}/get-dislikes`, "page");
+            revalidatePath('/admin/get-dislikes', "page");
 
             return {
                 success: isPinned ? "Dislike UnPinned Successfully" : "Dislike Pinned Successfully"

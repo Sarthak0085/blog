@@ -44,8 +44,8 @@ export const updateComment = async (
             },
         });
 
-        revalidatePath(`/${user?.id}/get-comments`);
-        revalidatePath(`/admin/get-comments`);
+        revalidatePath(`/${user?.id}/get-comments`, "page");
+        revalidatePath(`/admin/get-comments`, "page");
 
         return {
             success: "Comment Updated Successfully",

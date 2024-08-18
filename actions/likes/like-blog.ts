@@ -39,7 +39,9 @@ export const likeBlog = async (values: z.infer<typeof LikeSchema>) => {
                 },
             });
 
-            revalidatePath(`/blog/${existedBlog?.slug}`, "page")
+            revalidatePath(`/blog/${existedBlog?.slug}`, "page");
+            revalidatePath(`/${user?.id}/get-likes`, "page");
+            revalidatePath('/admin/get-likes', "page");
 
             return {
                 success: "Like removed.",
@@ -56,7 +58,9 @@ export const likeBlog = async (values: z.infer<typeof LikeSchema>) => {
                 throw new CustomError("An unexpected error occurred. Please try again later.", 500);
             }
 
-            revalidatePath(`/blog/${existedBlog?.slug}`, "page")
+            revalidatePath(`/blog/${existedBlog?.slug}`, "page");
+            revalidatePath(`/${user?.id}/get-likes`, "page");
+            revalidatePath('/admin/get-likes', "page");
 
             return {
                 success: "You liked this blog.",

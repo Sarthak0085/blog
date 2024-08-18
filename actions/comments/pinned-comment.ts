@@ -13,7 +13,6 @@ export const pinnedComment = async (values: z.infer<typeof PinnedCommentSchema>)
     try {
         const validatedData = validatePinnedComment(values);
         const { commentId } = validatedData;
-        console.log("commentId", commentId);
 
         if (!commentId) {
             throw new CustomError("Comment Id is empty", 400);
@@ -43,8 +42,8 @@ export const pinnedComment = async (values: z.infer<typeof PinnedCommentSchema>)
                 }
             });
 
-            revalidatePath(`/${user?.id}/get-comments`);
-            revalidatePath(`/admin/get-comments`);
+            revalidatePath(`/${user?.id}/get-comments`, "page");
+            revalidatePath(`/admin/get-comments`, "page");
 
             return {
                 success: isPinned ? "Comment UnPinned Successfully" : "Comment Pinned Successfully"

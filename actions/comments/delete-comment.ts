@@ -54,8 +54,8 @@ export const deleteComment = async (values: z.infer<typeof DeleteCommentSchema>)
                     }
                 });
 
-                revalidatePath(`/${user?.id}/get-comments`);
-                revalidatePath(`/admin/get-comments`);
+                revalidatePath(`/${comment?.userId}/get-comments`, "page");
+                revalidatePath(`/admin/get-comments`, "page");
 
                 return {
                     success: "Comment deleted successfully"

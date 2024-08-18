@@ -7,6 +7,7 @@ import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
 import { FavouriteSchema } from "@/schemas";
 import { validateFavouriteInput } from "@/validations";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 export const addOrRemoveToFavourite = async (values: z.infer<typeof FavouriteSchema>) => {
@@ -37,6 +38,11 @@ export const addOrRemoveToFavourite = async (values: z.infer<typeof FavouriteSch
                     },
                 },
             });
+
+            revalidatePath(`/blogs`, "page");
+            revalidatePath(`/blog/${existedBlog?.slug}`, "page")
+            revalidatePath(`/${user?.id}/get-favourites`, "page");
+            revalidatePath('/admin/get-favourites', "page");
 
             return {
                 success: "Removed from Favourite",

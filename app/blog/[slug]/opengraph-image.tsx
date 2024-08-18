@@ -25,9 +25,8 @@ export default async function Image({ params }: { params: { slug: string } }) {
     const blog: ExtendBlog = await response.json();
 
     const imageUrl = blog?.imageUrl as string;
-    console.log(imageUrl);
     const extension = imageUrl.split('.').pop()?.toLowerCase() || 'png';
-    const contentType = MIME_TYPES[extension] || 'image/avif';
+    const contentType = MIME_TYPES[extension] || 'image/png';
     const imageBuffer = await fetch(imageUrl).then((res) => res.arrayBuffer());
 
     const imageWidth = 1200;
@@ -48,7 +47,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
             >
                 <picture>
                     <img
-                        src={imageBuffer as unknown as string ?? 'https://res.cloudinary.com/dkzfopuco/image/upload/v1723206903/blog/demon-slayer-all-12-hashira-ranked-weakest-to-strongest.avif'}
+                        src={imageBuffer as unknown as string}
                         alt={blog?.slug}
                         style={{
                             width: '100%',
