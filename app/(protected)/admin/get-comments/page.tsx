@@ -40,8 +40,8 @@ export default async function AllCommentsPage() {
   // }
 
   const response = await getAllComments();
-  const data = response?.data as ExtendComment[];
   const error = response?.error;
+  const data = response?.data as ExtendComment[];
 
   if (error) {
     return (
@@ -50,6 +50,7 @@ export default async function AllCommentsPage() {
       </div>
     );
   }
+
   return (
     <div className="h-full flex-1 flex-col space-y-8 p-8 flex">
       <div className="flex items-center justify-between space-y-2">

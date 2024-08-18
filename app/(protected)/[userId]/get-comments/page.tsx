@@ -15,14 +15,14 @@ export default async function CommentsPage({ params: { userId } }: {
     // const [isLoading, setIsLoading] = useState(true);
     // const [error, setError] = useState<string>("");
     // const [data, setData] = useState<ExtendComment[]>([]);
-    console.log(userId);
 
     const response = await getAllCommentsByUserId(userId as string);
+    const error = response.error;
 
-    if (response.error) {
+    if (error) {
         return (
             <div className="w-full h-[100vh] flex items-center justify-center text-[red] font-bold text-3xl">
-                {response.error}
+                {error}
             </div>
         );
     }
@@ -66,7 +66,7 @@ export default async function CommentsPage({ params: { userId } }: {
     //     );
     // }
     return (
-        <div className="h-full flex-1 flex-col space-y-8 p-8 flex">
+        <div className="h-full flex-col space-y-8 p-8 flex">
             <div className="flex items-center justify-between space-y-2">
                 <div>
                     <h2 className="text-2xl font-bold tracking-tight">Welcome back!!</h2>

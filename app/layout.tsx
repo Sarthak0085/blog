@@ -48,7 +48,7 @@ export default async function RootLayout({
             style={{
               backgroundImage: `url(${backgroundImageUrl})`,
             }}
-            className="bg-cover bg-center pt-[5rem]  w-full bg-fixed flex flex-col justify-center items-center"
+            className="bg-cover bg-center pt-[5rem] overflow-x-hidden min-w-full bg-fixed flex flex-col justify-center items-center"
           >
             <Toaster position="top-right" />
             {children}

@@ -58,7 +58,6 @@ export const CommentForm = ({ initialValues, setOpen }: CategoryFormProps) => {
           if (data?.success) {
             setSuccess(data?.success);
             setOpen(false);
-            window.location.reload();
           }
         })
         .catch(() => setError("Something went wrong"));

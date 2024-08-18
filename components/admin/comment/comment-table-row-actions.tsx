@@ -38,8 +38,6 @@ export function CommentTableRowActions<TData>({
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  console.log(comment);
-
   const handleDeleteComment = () => {
     startTransition(() => {
       deleteComment({ commentId: comment?.id })
@@ -47,7 +45,6 @@ export function CommentTableRowActions<TData>({
           if (data?.success) {
             toast.success(data?.success);
             setOpenDeleteModal(false);
-            window.location.reload();
           }
           if (data?.error) {
             toast.error(data?.error);
@@ -65,7 +62,6 @@ export function CommentTableRowActions<TData>({
         .then((data) => {
           if (data?.success) {
             toast.success(data?.success);
-            window.location.reload();
           }
           if (data?.error) {
             toast.error(data?.error);

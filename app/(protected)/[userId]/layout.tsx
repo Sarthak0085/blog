@@ -18,7 +18,7 @@ export default async function ProtectedLayout({
                     <Navbar user={user} />
                 </div>
             )}
-            <div className="w-full lg:pl-[200px] overflow-x-auto flex items-center mt-5 mb-12 lg:my-5 justify-center">
+            <div className="w-full lg:pl-[200px] flex items-center mt-5 mb-12 lg:my-5 justify-center">
                 {children}
             </div>
             <div className="lg:hidden fixed w-full h-[60px] bottom-0 left-0 bg-gray-200 flex items-center justify-between px-4">

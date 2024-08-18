@@ -66,7 +66,7 @@ export function AllLikesTable<TData, TValue>({
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 overflow-x-auto">
       <DataTableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
@@ -79,9 +79,9 @@ export function AllLikesTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}

@@ -9,7 +9,6 @@ interface LogoutButtonProps {
 export const LogoutButton = ({ children }: LogoutButtonProps) => {
   const onClick = () => {
     logout();
-    setTimeout(() => window.location.reload(), 1500);
   };
 
   return (
