@@ -135,12 +135,22 @@ export const login = async (
     if (error instanceof AuthError) {
       switch (error?.type) {
         case "CredentialsSignin":
-          return { error: "Invalid Credentials" };
+          return {
+            error: "Invalid Credentials",
+            code: 409
+          };
         default:
-          return { error: "Something Went Wrong" };
+          if (error instanceof CustomError) {
+            return {
+              error: error.message,
+              code: error.code,
+            };
+          }
+          return {
+            error: "An unexpected error occurred.",
+            code: 500,
+          };
       }
     }
-
-    throw error;
   }
 };

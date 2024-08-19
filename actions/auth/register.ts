@@ -3,6 +3,7 @@
 import { getUserByEmail } from "@/data/user";
 import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
+import { domain } from "@/lib/domain";
 import sendEmail from "@/lib/send-mail";
 import { generateVerificationToken } from "@/lib/tokens";
 import { RegisterSchema } from "@/schemas";
@@ -24,7 +25,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     const existingUser = await getUserByEmail(email);
 
     if (existingUser) {
-      throw new CustomError("User Already Exists", 409);
+      throw new CustomError("User already exists", 409);
     }
 
     //Send Verification Token Email
@@ -34,7 +35,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
       throw new CustomError("Error while generating token", 400);
     }
 
-    const confirmLink = `http://localhost:3000/auth/verification?token=${verificationToken.token}`;
+    const confirmLink = `${domain}/auth/verification?token=${verificationToken.token}`;
 
     await sendEmail({
       email: email,

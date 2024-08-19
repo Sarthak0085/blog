@@ -38,7 +38,7 @@ export function UserTableRowActions<TData>({
         .then((data) => {
           if (data?.success) {
             toast.success(data?.success);
-            setOpen(false);
+            setOpenDeleteModal(false);
           }
           if (data?.error) {
             toast.error(data?.error);

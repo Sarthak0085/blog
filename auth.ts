@@ -39,7 +39,7 @@ export const {
             console.log("Existing User:", existingUser);
 
             // Prevent signin without email verified
-            if (!existingUser || !existingUser.emailVerified) {
+            if (!existingUser || !existingUser.emailVerified || existingUser.isBlocked === UserBlock.BLOCK) {
                 return false;
             }
 
