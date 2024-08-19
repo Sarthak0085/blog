@@ -6,6 +6,7 @@ import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
 import { EditUserSchema } from "@/schemas";
 import { validateEditUser } from "@/validations";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 
@@ -40,6 +41,9 @@ export const editUser = async (values: z.infer<typeof EditUserSchema>) => {
                 isBlocked: isBlocked,
             }
         });
+
+        revalidatePath("/admin/get-users");
+        revalidatePath(`/${existedUser?.id}`);
 
         return {
             success: "user updated successfully"

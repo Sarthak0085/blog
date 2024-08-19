@@ -55,13 +55,12 @@ export const LoginForm = () => {
     startTransition(() => {
       login(values, callbackUrl)
         .then((data) => {
-          console.log("data", data)
           if (data?.error) {
             setError(data?.error);
           }
           if (data?.success) {
             setSuccess(data?.success);
-            router.push(`/${callbackUrl}` ?? `/blogs`);
+            router.push(callbackUrl ? `/${callbackUrl}` ?? `/` : "/");
           }
           if (data?.twoFactor) {
             setShowTwoFactor(true);

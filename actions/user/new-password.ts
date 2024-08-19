@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import { NewPasswordSchema } from "@/schemas";
 import * as z from "zod";
 import { db } from "@/lib/db";
+import { revalidatePath } from "next/cache";
 
 export const newPassword = async (
   values: z.infer<typeof NewPasswordSchema>,
@@ -65,6 +66,9 @@ export const newPassword = async (
       id: existingToken.id,
     },
   });
+
+  revalidatePath("/admin/get-users");
+  revalidatePath(`/${existingUser?.id}`);
 
   return {
     success: "Password Updated Successfully!",

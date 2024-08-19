@@ -7,11 +7,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@//components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { User } from "@prisma/client";
 import { useState, useTransition } from "react";
 import { deleteUser } from "@/actions/user/delete-user";
@@ -41,7 +39,6 @@ export function UserTableRowActions<TData>({
           if (data?.success) {
             toast.success(data?.success);
             setOpen(false);
-            window.location.reload();
           }
           if (data?.error) {
             toast.error(data?.error);
@@ -63,11 +60,12 @@ export function UserTableRowActions<TData>({
 
   return (
     <>
-      <DropdownMenu>
+      <DropdownMenu defaultOpen={open}>
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
             className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+            onClick={() => setOpen((prev) => !prev)}
           >
             <DotsHorizontalIcon className="h-4 w-4" />
             <span className="sr-only">Open menu</span>

@@ -1,7 +1,6 @@
-import { getBlogDetailsBySlug } from "@/actions/blog/blog-details";
 import { Blog } from "@/components/blog/blog";
 import { Footer } from "@/components/footer";
-import { ExtendBlog } from "@/utils/types";
+import { domain } from "@/lib/domain";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -13,7 +12,7 @@ export async function generateMetadata({
     params: { slug }
 }: BlogPageProps): Promise<Metadata> {
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/blog/${slug}`);
+    const response = await fetch(`${domain}/api/blog/${slug}`);
     if (!response.ok) {
         throw new Error(`Error fetching blog: ${response.statusText}`);
     }
@@ -22,13 +21,17 @@ export async function generateMetadata({
     return {
         title: blog?.title,
         description: blog?.shortSummary,
+        openGraph: {
+            title: blog?.title,
+            description: blog?.description
+        }
     }
 }
 
 export default async function BlogPage({
     params: { slug }
 }: BlogPageProps) {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/blog/${slug}`);
+    const response = await fetch(`${domain}/api/blog/${slug}`);
     if (!response.ok) {
         <div className="w-full h-full items-center justify-center text-[red] text-3xl">
             Error while fecthing the data

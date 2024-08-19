@@ -10,6 +10,7 @@ import { generateVerificationToken } from "@/lib/tokens";
 import { ProfileSchema } from "@/schemas";
 import { deleteImageFromCloudinary, uploadFilesToCloudinary } from "@/utils/helpers";
 import { validateUserProfile } from "@/validations";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 const extractPublicId = (url: string) => {
@@ -84,6 +85,9 @@ export const updateUserProfile = async (values: z.infer<typeof ProfileSchema>) =
                 html: `<p>Please click <a href="${confirmLink}">here</a> to confirm your Email.</p>`,
             });
 
+            revalidatePath("/admin/get-users");
+            revalidatePath(`/${existedUser?.id}`);
+
             return {
                 success: "Confirmation Email Sent! Please verify your email.",
                 data: confirmLink
@@ -101,6 +105,9 @@ export const updateUserProfile = async (values: z.infer<typeof ProfileSchema>) =
                 image: result?.url ?? existedUser?.image,
             }
         });
+
+        revalidatePath("/admin/get-users");
+        revalidatePath(`/${user?.id}`);
 
         return {
             success: "Profile updated successfully"

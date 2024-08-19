@@ -2,6 +2,7 @@
 
 import { getUserByEmail } from "@/data/user";
 import { getVerificationTokenByToken } from "@/data/verification-token";
+import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
 
 export const verification = async (token: string) => {
@@ -9,21 +10,19 @@ export const verification = async (token: string) => {
     const existingToken = await getVerificationTokenByToken(token);
 
     if (!existingToken) {
-      return {
-        error: "Token doesn't exist",
-      };
+      throw new CustomError("token doesn't exist", 404);
     }
-    console.log(existingToken);
 
     const hasExpired = new Date(existingToken.expires) < new Date();
+
     if (hasExpired) {
-      return { error: "Token has expired." };
+      throw new CustomError("Token Expired", 400);
     }
 
     const existingUser = await getUserByEmail(existingToken.email);
 
     if (!existingUser) {
-      return { error: "User doesn't exist" };
+      throw new CustomError("User doesn't exist", 404);
     }
 
     await db.user.update({
@@ -44,6 +43,15 @@ export const verification = async (token: string) => {
       success: "Email Verified",
     };
   } catch (error) {
-    return { error: error };
+    if (error instanceof CustomError) {
+      return {
+        error: error.message,
+        code: error.code,
+      };
+    }
+    return {
+      error: "An unexpected error occurred.",
+      code: 500,
+    };
   }
 };

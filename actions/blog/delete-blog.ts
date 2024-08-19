@@ -31,7 +31,7 @@ const extractPublicId = (url: string) => {
 
     // The public_id is typically the second segment in the path, after the version and the 'image/upload'
     // For example, in `/v1633024464/blog/slug.jpg`, 'blog/slug' is the public_id
-    const publicIdWithExtension = pathSegments.slice(2).join('/'); // Remove the first two segments: 'v<version>' and 'image/upload'
+    const publicIdWithExtension = pathSegments.slice(2).join('/');
     const publicId = publicIdWithExtension.split('.')[0];
 
     return publicId;

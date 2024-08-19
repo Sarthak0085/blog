@@ -1,6 +1,6 @@
 "use client";
 
-import { settings } from "@/actions/settings";
+import { settings } from "@/actions/admin/settings";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { Button } from "@/components/ui/button";
@@ -24,12 +24,11 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { ExtendUser } from "@/nextauth";
 import { SettingsSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserRole } from "@prisma/client";
 import { useSession } from "next-auth/react";
-import React, { useEffect, useState, useTransition } from "react";
+import React, { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 

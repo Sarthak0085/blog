@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import { DeleteUserSchema } from "@/schemas";
 import { validateDeleteUser } from "@/validations";
 import { UserRole } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 export const deleteUser = async (values: z.infer<typeof DeleteUserSchema>) => {
@@ -36,6 +37,9 @@ export const deleteUser = async (values: z.infer<typeof DeleteUserSchema>) => {
                 id: userId
             }
         });
+
+        revalidatePath("/admin/get-users");
+        revalidatePath(`/${existedUser?.id}`);
 
         return {
             success: "User deleted successfully."

@@ -16,7 +16,6 @@ import {
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { TbPinnedFilled } from "react-icons/tb";
 import { MdOutlineArchive } from "react-icons/md";
-import { FaRegCalendarCheck } from "react-icons/fa";
 
 export const statuses = [
   {

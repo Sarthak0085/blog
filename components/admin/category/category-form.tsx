@@ -25,7 +25,6 @@ interface CategoryFormProps {
   isUpdate?: boolean;
   initialValues?: { id: string; name: string; userId: string };
   setOpen: (open: boolean) => void;
-  refetch: () => void;
 }
 
 type CategoryFormValues =
@@ -36,7 +35,6 @@ export const CategoryForm = ({
   isUpdate = false,
   initialValues,
   setOpen,
-  refetch
 }: CategoryFormProps) => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -75,7 +73,6 @@ export const CategoryForm = ({
             if (data?.success) {
               setSuccess(data?.success);
               setOpen(false);
-              refetch();
             }
           })
           .catch(() => setError("Something went wrong"));
@@ -88,7 +85,6 @@ export const CategoryForm = ({
             if (data?.success) {
               setSuccess(data?.success);
               setOpen(false);
-              refetch();
             }
           })
           .catch(() => setError("Something went wrong"));

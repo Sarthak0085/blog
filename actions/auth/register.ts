@@ -1,6 +1,7 @@
 "use server";
 
 import { getUserByEmail } from "@/data/user";
+import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
 import sendEmail from "@/lib/send-mail";
 import { generateVerificationToken } from "@/lib/tokens";
@@ -9,55 +10,61 @@ import bcrypt from "bcryptjs";
 import * as z from "zod";
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
-  console.log(values);
-  const validatedFields = RegisterSchema.safeParse(values);
+  try {
+    const validatedFields = RegisterSchema.safeParse(values);
 
-  if (!validatedFields.success) {
-    return { error: "Invalid Fields" };
-  }
+    if (!validatedFields.success) {
+      return { error: "Invalid Fields" };
+    }
 
-  const { name, email, password } = validatedFields.data;
+    const { name, email, password } = validatedFields.data;
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-  const existingUser = await getUserByEmail(email);
+    const existingUser = await getUserByEmail(email);
 
-  console.log(existingUser);
+    if (existingUser) {
+      throw new CustomError("User Already Exists", 409);
+    }
 
-  if (existingUser) {
-    return { error: "User Already Exists" };
-  }
+    //Send Verification Token Email
+    const verificationToken = await generateVerificationToken(email);
 
-  //Send Verification Token Email
-  const verificationToken = await generateVerificationToken(email);
+    if (!verificationToken) {
+      throw new CustomError("Error while generating token", 400);
+    }
 
-  if (!verificationToken) {
+    const confirmLink = `http://localhost:3000/auth/verification?token=${verificationToken.token}`;
+
+    await sendEmail({
+      email: email,
+      subject: "Confirm your Email",
+      html: `<p>Please click <a href="${confirmLink}">here</a> to confirm your Email.</p>`,
+    });
+
+    const user = await db.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+      },
+    });
+
+    if (!user) {
+      throw new CustomError("Something went wrong", 400);
+    }
+
+    return { success: "Confirmation Email Sent!" };
+  } catch (error) {
+    if (error instanceof CustomError) {
+      return {
+        error: error.message,
+        code: error.code,
+      };
+    }
     return {
-      error: "Error while generating token",
+      error: "An unexpected error occurred.",
+      code: 500,
     };
   }
-
-  const confirmLink = `http://localhost:3000/auth/verification?token=${verificationToken.token}`;
-
-  await sendEmail({
-    email: email,
-    subject: "Confirm your Email",
-    html: `<p>Please click <a href="${confirmLink}">here</a> to confirm your Email.</p>`,
-  });
-
-  const user = await db.user.create({
-    data: {
-      name,
-      email,
-      password: hashedPassword,
-    },
-  });
-
-  if (!user) {
-    return {
-      error: "Something went wrong!",
-    };
-  }
-
-  return { success: "Confirmation Email Sent!" };
 };

@@ -1,5 +1,13 @@
 import { ContactForm } from "@/components/contact/contact-form";
 import { Footer } from "@/components/footer";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Author's Contact",
+    openGraph: {
+        title: "Author's Contact",
+    }
+}
 
 interface ContactPageProps {
     params: { authorId: string }

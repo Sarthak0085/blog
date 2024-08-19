@@ -3,7 +3,10 @@ import { Footer } from "@/components/footer";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Contact"
+    title: "Contact",
+    openGraph: {
+        title: "Contact",
+    }
 }
 
 export default function ContactPage() {

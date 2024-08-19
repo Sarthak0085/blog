@@ -15,6 +15,8 @@ import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 import { db } from "@/lib/db";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 import { domain } from "@/lib/domain";
+import { UserBlock } from "@prisma/client";
+import CustomError from "@/lib/customError";
 
 export const login = async (
   values: z.infer<typeof LoginSchema>,
@@ -31,15 +33,17 @@ export const login = async (
   const existingUser = await getUserByEmail(email);
 
   if (!existingUser || !existingUser?.email || !existingUser?.password) {
-    return { error: "User doesn't exist!" };
+    throw new CustomError("User doesn't exist", 404);
+  }
+
+  if (existingUser?.isBlocked === UserBlock.BLOCK) {
+    throw new CustomError("Your account have been blocked. Please contact us to know the reason.", 403);
   }
 
   const isPasswordMatch = await bcrypt.compare(password, existingUser.password);
 
   if (!isPasswordMatch) {
-    return {
-      error: "Invalid Credentials",
-    };
+    throw new CustomError("Invalid Credentials", 400);
   }
 
   if (!existingUser.emailVerified) {
@@ -65,23 +69,17 @@ export const login = async (
       const twoFactorToken = await getTwoFactorTokenByEmail(existingUser.email);
 
       if (!twoFactorToken) {
-        return {
-          error: "Inavlid Code",
-        };
+        throw new CustomError("Invalid Code", 400)
       }
 
       if (twoFactorToken.token.toString() !== code.toString()) {
-        return {
-          error: "Inavlid Code",
-        };
+        throw new CustomError("Invalid Code", 400)
       }
 
       const hasExpired = new Date(twoFactorToken.expires) < new Date();
 
       if (hasExpired) {
-        return {
-          error: "Code expired!",
-        };
+        throw new CustomError("Code expired", 401)
       }
 
       await db.twoFactorToken.delete({
