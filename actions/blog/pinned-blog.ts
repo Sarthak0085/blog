@@ -38,7 +38,8 @@ export const pinnedBlog = async (values: z.infer<typeof PinnedBlogSchema>) => {
                 }
             });
 
-            revalidatePath("/[userId]/get-blogs", "page");
+            revalidatePath(`/${user?.id}/get-blogs`, "page");
+            revalidatePath(`/admin/get-blogs`, "page");
 
             return {
                 success: isPinned ? "Blog UnPinned Successfully" : "Blog Pinned Successfully"

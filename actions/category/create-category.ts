@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import { CreateCategorySchema } from "@/schemas";
 import { validateCreateCategoryInput } from "@/validations";
 import { UserRole } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 export const createCategory = async (values: z.infer<typeof CreateCategorySchema>) => {
@@ -37,6 +38,9 @@ export const createCategory = async (values: z.infer<typeof CreateCategorySchema
                 userId: user?.id
             }
         });
+
+        revalidatePath(`/blogs`, "page");
+        revalidatePath(`/admin/get-categories`, "page");
 
         return {
             success: "Category Created Successfully.",

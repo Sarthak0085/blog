@@ -129,7 +129,9 @@ export const createBlog = async (values: z.infer<typeof AddBlogSchema>) => {
             }
         }
 
-        revalidatePath(`/blogs`);
+        revalidatePath(`/blogs`, "page");
+        revalidatePath(`/${user?.id}/get-blogs`, "page");
+        revalidatePath(`/admin/get-blogs`, "page");
 
         return {
             success: "Blog Created Successfully.",

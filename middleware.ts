@@ -12,10 +12,8 @@ const { auth } = NextAuth(authConfig);
 //@ts-ignore
 export default auth(async function middleware(req) {
     console.log("middleware");
-    const token = await getToken({
-        req, secret,
-        salt: ""
-    });
+    //@ts-ignore
+    const token = await getToken({ req, secret });
     const session = await auth();
     console.log("token", token, session);
     const { nextUrl } = req;

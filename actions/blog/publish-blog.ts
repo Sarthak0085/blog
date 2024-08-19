@@ -42,7 +42,9 @@ export const publishBlog = async (values: z.infer<typeof PublishBlogSchema>) => 
             }
         });
 
-        revalidatePath(`/${user?.id}/get-blogs`);
+        revalidatePath(`/blogs`, "page");
+        revalidatePath(`/${user?.id}/get-blogs`, "page");
+        revalidatePath(`/admin/get-blogs`, "page");
 
         return {
             success: "Blog Published successfully"

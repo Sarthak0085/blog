@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import { UpdateCategorySchema } from "@/schemas";
 import { validateUpdateCategoryInput } from "@/validations";
 import { UserRole } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 export const updateCategory = async (values: z.infer<typeof UpdateCategorySchema>) => {
@@ -40,6 +41,9 @@ export const updateCategory = async (values: z.infer<typeof UpdateCategorySchema
                 userId: userId,
             }
         });
+
+        revalidatePath(`/blogs`, "page");
+        revalidatePath(`/admin/get-categories`, "page");
 
         return {
             success: "Category updated successfully.",

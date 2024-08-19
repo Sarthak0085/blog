@@ -1,50 +1,20 @@
-"use client";
-
 import { getAllBlogsByUserId } from "@/actions/blog/get-blogs";
 import { blogColumns } from "@/components/admin/blog/blog-columns";
 import { AllBlogsTable } from "@/components/admin/blog/blogs-table";
 import { Button } from "@/components/ui/button";
 import { ExtendBlog } from "@/utils/types";
 import Link from "next/link";
-import { useParams, } from "next/navigation";
-import { useEffect, useState } from "react";
-import { PulseLoader } from "react-spinners";
 
-export default function BlogsPage() {
-    const { userId } = useParams();
-    const [isLoading, setIsLoading] = useState(true);
-    const [data, setData] = useState<ExtendBlog[]>([]);
-    const [error, setError] = useState("");
-    console.log("hello",)
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await getAllBlogsByUserId(String(userId));
-                if (data.error) {
-                    setError(data?.error);
-                }
-                if (data?.blogs) {
-                    setData(data?.blogs as unknown as ExtendBlog[]);
-                }
-            } catch (error) {
-                console.error("Error while fetching blogs")
-                setError("Error while fetching Blogs.")
-            } finally {
-                setIsLoading(false);
-            }
-        }
-
-        fetchData();
-    }, [userId]);
-
-    if (isLoading) {
-        return (
-            <div className="w-full h-[100vh] flex items-center justify-center">
-                <PulseLoader margin={3} size={20} />
-            </div>
-        );
+interface BlogsPageProps {
+    params: {
+        userId: string;
     }
+}
+
+export default async function BlogsPage({ params: { userId } }: BlogsPageProps) {
+    const response = await getAllBlogsByUserId(userId as string);
+    const error = response.error;
+    const data = response.blogs as unknown as ExtendBlog[];
 
     if (error) {
         return (

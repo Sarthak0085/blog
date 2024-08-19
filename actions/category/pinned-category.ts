@@ -6,6 +6,7 @@ import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
 import { PinnedCategorySchema } from "@/schemas";
 import { validatePinnedCategory } from "@/validations";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 export const pinnedCategory = async (values: z.infer<typeof PinnedCategorySchema>) => {
@@ -36,6 +37,8 @@ export const pinnedCategory = async (values: z.infer<typeof PinnedCategorySchema
                     isPinned: !isPinned
                 }
             });
+
+            revalidatePath(`/admin/get-categories`, "page");
 
             return {
                 success: isPinned ? "Category UnPinned Successfully" : "Category Pinned Successfully"

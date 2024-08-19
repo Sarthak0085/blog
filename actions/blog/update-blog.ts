@@ -143,8 +143,10 @@ export const EditBlog = async (values: z.infer<typeof UpdateBlogSchema>) => {
             }
         }
 
-        revalidatePath(`/${user?.id}/get-blogs`);
-        revalidatePath(`/blog/${slug}`);
+        revalidatePath(`/blogs`, "page");
+        revalidatePath(`/${user?.id}/get-blogs`, "page");
+        revalidatePath(`/blog/${slug}`, "page");
+        revalidatePath(`/admin/get-blogs`, "page");
 
         return {
             success: "Blog Updated Successfully.",

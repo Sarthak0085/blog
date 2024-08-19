@@ -1,48 +1,14 @@
-"use client";
-
 import { AllBlogsTable } from "@/components/admin/blog/blogs-table";
 import { blogColumns } from "@/components/admin/blog/blog-columns";
 import { ExtendBlog } from "@/utils/types";
-import { useEffect, useState } from "react";
-import { PulseLoader } from "react-spinners";
 import { getAllBlogs } from "@/actions/blog/get-blogs";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export default function GetBlogsPage() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string>("");
-  const [data, setData] = useState<ExtendBlog[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getAllBlogs();
-        if (data?.error) {
-          console.error("Error while fetching Blogs.");
-          setError(data?.error);
-        }
-        if (data?.data) {
-          setData(data?.data as unknown as ExtendBlog[]);
-        }
-      } catch (error) {
-        console.error("Error fetching blog data:", error);
-        setError("Error while fetching Blogs.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div className="w-full h-[100vh] flex items-center justify-center">
-        <PulseLoader margin={3} size={20} />
-      </div>
-    );
-  }
+export default async function BlogsPage() {
+  const response = await getAllBlogs();
+  const error = response.error;
+  const data = response.data as unknown as ExtendBlog[];
 
   if (error) {
     return (
@@ -51,6 +17,7 @@ export default function GetBlogsPage() {
       </div>
     );
   }
+
   return (
     <div className="h-full flex-1 flex-col space-y-8 p-8 flex">
       <div className="flex items-center justify-between space-y-2">

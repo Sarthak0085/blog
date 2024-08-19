@@ -73,7 +73,11 @@ export const deleteBlog = async (values: z.infer<typeof DeleteBlogSchema>) => {
                 where: {
                     id: blogId
                 }
-            })
+            });
+
+            revalidatePath(`/blogs`, "page");
+            revalidatePath(`/${user?.id}/get-blogs`, "page");
+            revalidatePath(`/admin/get-blogs`, "page");
 
             return {
                 success: "Blog deleted successfully",
@@ -98,7 +102,9 @@ export const deleteBlog = async (values: z.infer<typeof DeleteBlogSchema>) => {
                     }
                 });
 
-                revalidatePath(`/${user?.id}/get-blogs`);
+                revalidatePath(`/blogs`, "page");
+                revalidatePath(`/${blog?.userId}/get-blogs`, "page");
+                revalidatePath(`/admin/get-blogs`, "page");
 
                 return {
                     success: "Blog deleted successfully",
