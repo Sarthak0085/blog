@@ -27,7 +27,9 @@ const sendEmail = async (options: EmailOptions): Promise<void> => {
 
     let emailHtml;
     if (template && data) {
-        const templatePath = __dirname.split(".next")[0] + `public/mails/${template}`;
+        console.log(process.cwd());
+        console.log(process.cwd(), "mails");
+        const templatePath = path.resolve("./public", "mails", template);
         console.log("template", templatePath);
 
         try {
