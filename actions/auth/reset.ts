@@ -36,8 +36,12 @@ export const reset = async (values: z.infer<typeof ResetSchema>) => {
 
     await sendEmail({
       email: email,
-      subject: "Confirm your Email",
-      html: `<p>Please click <a href="${confirmLink}">here</a> to reset your password.</p>`,
+      subject: "Reset your Password",
+      template: "reset-password.ejs",
+      data: {
+        name: existingUser?.name,
+        confirmLink: confirmLink,
+      }
     });
 
     return {

@@ -40,7 +40,11 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     await sendEmail({
       email: email,
       subject: "Confirm your Email",
-      html: `<p>Please click <a href="${confirmLink}">here</a> to confirm your Email.</p>`,
+      template: "confirmation.ejs",
+      data: {
+        name: name,
+        confirmLink: confirmLink,
+      }
     });
 
     const user = await db.user.create({

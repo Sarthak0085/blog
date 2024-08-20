@@ -17,6 +17,7 @@ import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation
 import { domain } from "@/lib/domain";
 import { UserBlock } from "@prisma/client";
 import CustomError from "@/lib/customError";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export const login = async (
   values: z.infer<typeof LoginSchema>,
@@ -56,7 +57,11 @@ export const login = async (
     await sendEmail({
       email: email,
       subject: "Confirm your Email",
-      html: `<p>Please click <a href="${confirmLink}">here</a> to confirm your Email.</p>`,
+      template: "confirmation.ejs",
+      data: {
+        name: existingUser?.name,
+        confirmLink: confirmLink,
+      }
     });
 
     return {
@@ -110,8 +115,12 @@ export const login = async (
 
       await sendEmail({
         email: twoFactorToken.email,
-        subject: "Two Factor Enabled Code",
-        html: `<p>2FA code: ${twoFactorToken.token}</p>`,
+        subject: "Two Factor Authentication Code",
+        template: "two-factor-auth.ejs",
+        data: {
+          name: existingUser?.name,
+          token: twoFactorToken?.token,
+        }
       });
 
       return {
@@ -124,7 +133,8 @@ export const login = async (
     await signIn("credentials", {
       email,
       password,
-      redirect: false
+      redirect: true,
+      redirectTo: callbackUrl ?? DEFAULT_LOGIN_REDIRECT,
     });
 
     return {

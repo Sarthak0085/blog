@@ -60,7 +60,6 @@ export const LoginForm = () => {
           }
           if (data?.success) {
             setSuccess(data?.success);
-            router.push(callbackUrl ? `/${callbackUrl}` ?? `/` : "/");
           }
           if (data?.twoFactor) {
             setShowTwoFactor(true);

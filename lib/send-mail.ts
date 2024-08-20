@@ -1,8 +1,6 @@
 import nodemailer, { Transporter } from "nodemailer";
 import ejs from "ejs";
-import path from "path";
 import CustomError from "./customError";
-import fs from "fs";
 
 interface EmailOptions {
     email: string,
@@ -25,43 +23,20 @@ const sendEmail = async (options: EmailOptions): Promise<void> => {
 
     const { email, subject, template, data, html } = options;
 
-    function listFilesAndDirectories(directoryPath: string) {
-        try {
-            // Read the contents of the directory
-            const items = fs.readdirSync(directoryPath);
-
-            items.forEach(item => {
-                // Create the full path of the item
-                const fullPath = path.join(directoryPath, item);
-
-                // Check if the item is a directory or file
-                const stats = fs.statSync(fullPath);
-
-                if (stats.isDirectory()) {
-                    console.log(`Directory: ${fullPath}`);
-                } else if (stats.isFile()) {
-                    console.log(`File: ${fullPath}`);
-                }
-            });
-        } catch (error) {
-            console.error(`Error reading directory: ${error}`);
-        }
-    }
-
     let emailHtml;
     if (template && data) {
-        console.log(process.cwd());
-        console.log(process.cwd(), "mails");
-        console.log(listFilesAndDirectories(process.cwd()));
-        const templatePath = path.resolve(process.cwd(), "mails", template);
-        console.log("template", templatePath);
+        const response = await fetch(`https://res.cloudinary.com/dkzfopuco/raw/upload/v1724174045/mails/${template}`);
+        const templateData = await response.text();
+        console.log("data", templateData);
 
         try {
-            emailHtml = await ejs.renderFile(templatePath, data);
+            emailHtml = await ejs.render(templateData, data);
         } catch (error) {
             console.error("Error rendering email template:", error);
             throw new CustomError("Could not render email template", 400);
         }
+
+        console.log("data", emailHtml)
     } else if (html) {
         emailHtml = html;
     }
