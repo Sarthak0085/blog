@@ -1,7 +1,3 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { PulseLoader } from "react-spinners";
 import { savedPostColumns } from "@/components/admin/saved-post/saved-post-columns";
 import { AllSavedPostsTables } from "@/components/admin/saved-post/saved-post-table";
 import { ExtendSavedPost } from "@/utils/types";

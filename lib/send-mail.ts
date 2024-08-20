@@ -2,6 +2,7 @@ import nodemailer, { Transporter } from "nodemailer";
 import ejs from "ejs";
 import path from "path";
 import CustomError from "./customError";
+import { domain } from "./domain";
 
 interface EmailOptions {
     email: string,
@@ -26,8 +27,7 @@ const sendEmail = async (options: EmailOptions): Promise<void> => {
 
     let emailHtml;
     if (template && data) {
-        const templatesDir = path.resolve('public', 'mails');
-        const templatePath = path.join(templatesDir, template);
+        const templatePath = __dirname.split(".next")[0] + `public/mails/${template}`;
         console.log("template", templatePath);
 
         try {
