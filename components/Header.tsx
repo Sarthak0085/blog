@@ -50,6 +50,12 @@ export const Header = ({ user }: { user?: User }) => {
         fetchData();
     }, []);
 
+    const handleClose = () => {
+        setTimeout(() => {
+            setOpen(false);
+        }, 500)
+    }
+
     return (
         <>
             <div className="hidden md:flex w-full z-20 fixed top-0 left-0 h-[80px] items-center justify-between border-b mb-10 px-10 bg-white/50  shadow-md">
@@ -63,6 +69,7 @@ export const Header = ({ user }: { user?: User }) => {
                 </div>
                 <div className="flex items-center space-x-4">
                     <Button
+                        asChild
                         variant={"ghost"}
                         className={cn("!bg-transparent text-muted-foreground hover:!text-blue-500", pathname === "/" && "text-blue-600")}
                     >
@@ -71,6 +78,7 @@ export const Header = ({ user }: { user?: User }) => {
                         </Link>
                     </Button>
                     <Button
+                        asChild
                         variant={"ghost"}
                         className={cn("!bg-transparent text-muted-foreground hover:!text-blue-500", pathname === "/blogs" && "text-blue-600")}
                     >
@@ -79,6 +87,7 @@ export const Header = ({ user }: { user?: User }) => {
                         </Link>
                     </Button>
                     <Button
+                        asChild
                         variant={"ghost"}
                         className={cn("!bg-transparent text-muted-foreground hover:!text-blue-500", pathname === `/${user?.id}/add-blog` && "text-blue-600")}
                     >
@@ -89,6 +98,7 @@ export const Header = ({ user }: { user?: User }) => {
                     {!user &&
                         <>
                             <Button
+                                asChild
                                 variant={"ghost"}
                                 className={cn("!bg-transparent text-muted-foreground hover:!text-blue-500", pathname === `/auth/login` && "text-blue-600")}
                             >
@@ -97,6 +107,7 @@ export const Header = ({ user }: { user?: User }) => {
                                 </Link>
                             </Button>
                             <Button
+                                asChild
                                 variant={"default"}
                                 className={cn("!bg-blue-500 hover:!bg-transparenthover:!text-blue-500")}
                             >
@@ -161,6 +172,7 @@ export const Header = ({ user }: { user?: User }) => {
                             asChild
                             variant={"ghost"}
                             className={cn("!bg-transparent text-[16px] text-muted-foreground hover:!text-blue-500", pathname === "/" && "text-blue-600 text-[18px]")}
+                            onClick={handleClose}
                         >
                             <Link href={"/"}>
                                 Home
@@ -170,6 +182,7 @@ export const Header = ({ user }: { user?: User }) => {
                             asChild
                             variant={"ghost"}
                             className={cn("!bg-transparent text-[16px] text-muted-foreground hover:!text-blue-500", pathname === "/blogs" && "text-blue-600 text-[18px]")}
+                            onClick={handleClose}
                         >
                             <Link href={"/blogs"}>
                                 Blogs
@@ -179,6 +192,7 @@ export const Header = ({ user }: { user?: User }) => {
                             asChild
                             variant={"ghost"}
                             className={cn("!bg-transparent text-[16px] text-muted-foreground hover:!text-blue-500", pathname === "/about" && "text-blue-600 text-[18px]")}
+                            onClick={handleClose}
                         >
                             <Link href={`/about`}>
                                 About
@@ -188,6 +202,7 @@ export const Header = ({ user }: { user?: User }) => {
                             asChild
                             variant={"ghost"}
                             className={cn("!bg-transparent text-[16px] text-muted-foreground hover:!text-blue-500", pathname === `/${user?.id}/add-blog` && "text-blue-600 text-[18px]")}
+                            onClick={handleClose}
                         >
                             <Link href={`/${user?.id}/add-blog`}>
                                 Write
@@ -197,6 +212,7 @@ export const Header = ({ user }: { user?: User }) => {
                             asChild
                             variant={"ghost"}
                             className={cn("!bg-transparent text-[16px] text-muted-foreground hover:!text-blue-500", pathname === `/contact` && "text-blue-600 text-[18px]")}
+                            onClick={handleClose}
                         >
                             <Link href={`/contact`}>
                                 Contact
@@ -205,16 +221,20 @@ export const Header = ({ user }: { user?: User }) => {
                         {!user &&
                             <>
                                 <Button
+                                    asChild
                                     variant={"ghost"}
                                     className={cn("!bg-transparent text-[16px] text-muted-foreground hover:!text-blue-500", pathname === `/auth/login` && "text-blue-600 text-[18px]")}
+                                    onClick={handleClose}
                                 >
                                     <Link href={"/auth/login"}>
                                         Sign In
                                     </Link>
                                 </Button>
                                 <Button
+                                    asChild
                                     variant={"default"}
                                     className={cn("!bg-transparent text-[16px] text-muted-foreground hover:!text-blue-500", pathname === `/auth/register` && "text-blue-600 text-[18px]")}
+                                    onClick={handleClose}
                                 >
                                     <Link href={"/auth/register"} className="flex gap-2 items-center justify-center">
                                         Get Started <FaArrowRightLong />
@@ -223,17 +243,23 @@ export const Header = ({ user }: { user?: User }) => {
                             </>
                         }
                         {user &&
-                            <Link href={`/${user?.id}`}>
-                                <Avatar className={cn("!w-[50px] !h-[50px]", pathname === `/${user?.id}` && "border border-blue-500")}>
-                                    <AvatarImage
-                                        src={user?.image ?? ""}
-                                        alt="Avatar"
-                                    />
-                                    <AvatarFallback className="bg-sky-500">
-                                        <FaUser className="text-white" />
-                                    </AvatarFallback>
-                                </Avatar>
-                            </Link>
+                            <Button
+                                asChild
+                                variant={"icon"}
+                                onClick={handleClose}
+                            >
+                                <Link href={`/${user?.id}`}>
+                                    <Avatar className={cn("!w-[50px] !h-[50px]", pathname === `/${user?.id}` && "border border-blue-500")}>
+                                        <AvatarImage
+                                            src={user?.image ?? ""}
+                                            alt="Avatar"
+                                        />
+                                        <AvatarFallback className="bg-sky-500">
+                                            <FaUser className="text-white" />
+                                        </AvatarFallback>
+                                    </Avatar>
+                                </Link>
+                            </Button>
                         }
                     </div>
                 </div>

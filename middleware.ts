@@ -12,12 +12,11 @@ const { auth } = NextAuth(authConfig);
 //@ts-ignore
 export default auth(async function middleware(req) {
     console.log("middleware");
-    //@ts-ignore
-    const token = await getToken({ req, secret });
     const session = await auth();
-    console.log("token", token, session);
     const { nextUrl } = req;
-    const isLoggedIn = !!session ?? !!token;
+    console.log("token", session);
+
+    const isLoggedIn = !!session;
     console.log("isLoggedIn", isLoggedIn);
 
     const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
@@ -52,7 +51,9 @@ export default auth(async function middleware(req) {
     }
 
     if (isAdminRoute) {
-        console.log("is Admin route")
+        //@ts-ignore
+        const token = await getToken({ req, secret });
+        console.log("is Admin route", token)
         if (!isLoggedIn) {
             return Response.redirect(new URL(`/auth/login?callbackUrl=${encodeURIComponent(nextUrl.pathname)}`, nextUrl));
         }
