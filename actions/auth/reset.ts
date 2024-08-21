@@ -6,19 +6,14 @@ import { domain } from "@/lib/domain";
 import sendEmail from "@/lib/send-mail";
 import { generatePasswordResetToken } from "@/lib/tokens";
 import { ResetSchema } from "@/schemas";
+import { validateResetPassword } from "@/validations";
 import * as z from "zod";
 
 export const reset = async (values: z.infer<typeof ResetSchema>) => {
   try {
-    const validatedFields = ResetSchema.safeParse(values);
+    const validatedData = validateResetPassword(values);
 
-    if (!validatedFields.success) {
-      return {
-        error: "Invalid Fields",
-      };
-    }
-
-    const { email } = validatedFields.data;
+    const { email } = validatedData;
 
     const existingUser = await getUserByEmail(email);
 

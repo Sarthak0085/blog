@@ -18,18 +18,15 @@ import { domain } from "@/lib/domain";
 import { UserBlock } from "@prisma/client";
 import CustomError from "@/lib/customError";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { validateLogin } from "@/validations";
 
 export const login = async (
   values: z.infer<typeof LoginSchema>,
   callbackUrl?: string | null,
 ) => {
-  const validatedFields = LoginSchema.safeParse(values);
+  const validatedData = validateLogin(values);
 
-  if (!validatedFields.success) {
-    return { error: "Invalid Fields" };
-  }
-
-  const { email, password, code } = validatedFields.data;
+  const { email, password, code } = validatedData;
 
   const existingUser = await getUserByEmail(email);
 

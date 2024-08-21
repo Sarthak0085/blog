@@ -18,6 +18,7 @@ import { FaRegThumbsDown, FaRegThumbsUp } from "react-icons/fa";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { User } from "next-auth";
+import { RiLockPasswordLine } from "react-icons/ri";
 
 interface MobileNavbarProps {
     open: boolean;
@@ -53,6 +54,21 @@ export const MobileNavbar = ({ open, setOpen, user }: MobileNavbarProps) => {
                                 className="gap-2"
                             >
                                 <LuUser2 size={20} /> Profile
+                            </Link>
+                        </Button>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="p-0 mx-[20px]">
+                        <Button
+                            className="mx-[20px] !justify-start"
+                            asChild
+                            variant={pathname === `/${user?.id}/new-password` ? "primary" : "outline"}
+                        >
+                            <Link
+                                href={`/${user?.id}/new-password`}
+                                className="gap-2"
+                            >
+                                <RiLockPasswordLine size={20} /> New Password
                             </Link>
                         </Button>
                     </DropdownMenuItem>

@@ -1,19 +1,12 @@
-import authConfig from "./auth.config"
-import NextAuth from "next-auth"
-import { getToken } from 'next-auth/jwt';
 import { adminRoutes, apiAuthPrefix, authRoutes, DEFAULT_LOGIN_REDIRECT, publicRoutes } from "@/routes";
 import { UserRole } from "@prisma/client";
-
-const secret = process.env.AUTH_SECRET ?? "";
-console.log("secret", secret);
-
-const { auth } = NextAuth(authConfig);
+import { auth } from "./auth";
 
 //@ts-ignore
-export default auth(async function middleware(req) {
+export default auth((req) => {
     console.log("middleware");
-    const session = await auth();
     const { nextUrl } = req;
+    const session = req.auth;
     console.log("token", session);
 
     const isLoggedIn = !!session;
@@ -33,7 +26,6 @@ export default auth(async function middleware(req) {
     }
 
     if (isAuthRoute) {
-        console.log("is Api route")
         if (isLoggedIn) {
             return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
         }
@@ -41,7 +33,6 @@ export default auth(async function middleware(req) {
     }
 
     if (!isLoggedIn && !isPublicRoute) {
-        console.log(" is not public route and not logged in")
         let callbackUrl = nextUrl.pathname;
         if (nextUrl.search) {
             callbackUrl += nextUrl.search;
@@ -51,13 +42,11 @@ export default auth(async function middleware(req) {
     }
 
     if (isAdminRoute) {
-        //@ts-ignore
-        const token = await getToken({ req, secret });
-        console.log("is Admin route", token)
+        console.log("is Admin route", session)
         if (!isLoggedIn) {
             return Response.redirect(new URL(`/auth/login?callbackUrl=${encodeURIComponent(nextUrl.pathname)}`, nextUrl));
         }
-        if (token?.role !== UserRole.ADMIN) {
+        if (session?.user?.role !== UserRole.ADMIN) {
             return Response.redirect(new URL('/', nextUrl));
         }
         return null;

@@ -11,6 +11,7 @@ import { LuUser2 } from "react-icons/lu";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
+import { RiLockPasswordLine } from "react-icons/ri";
 import { MobileNavbar } from "./mobile-navbar";
 import { useState } from "react";
 import { User } from "next-auth";
@@ -33,6 +34,18 @@ export const Navbar = ({ user }: { user: User }) => {
               className="gap-2"
             >
               <LuUser2 size={20} /> Profile
+            </Link>
+          </Button>
+          <Button
+            className="mx-[20px] !justify-start"
+            asChild
+            variant={pathname === `/${user?.id}/new-password` ? "primary" : "outline"}
+          >
+            <Link
+              href={`/${user?.id}/new-password`}
+              className="gap-2"
+            >
+              <RiLockPasswordLine size={20} /> New Password
             </Link>
           </Button>
           <Button

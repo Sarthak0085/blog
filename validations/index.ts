@@ -29,6 +29,11 @@ import {
     PublishBlogSchema,
     ProfileSchema,
     ContactSchema,
+    ChangePasswordSchema,
+    RegisterSchema,
+    LoginSchema,
+    ResetSchema,
+    SettingsSchema,
 } from "@/schemas";
 import CustomError from "@/lib/customError";
 import * as z from "zod";
@@ -333,3 +338,53 @@ export const validateContact = (values: z.infer<typeof ContactSchema>) => {
 
     return validatedFields.data;
 };
+
+export const validateChangePassword = (values: z.infer<typeof ChangePasswordSchema>) => {
+    const vaidatedFields = ChangePasswordSchema.safeParse(values);
+
+    if (!vaidatedFields.success) {
+        throw new CustomError("Invalid Fields", 400);
+    }
+
+    return vaidatedFields.data;
+}
+
+export const validateRegistration = (values: z.infer<typeof RegisterSchema>) => {
+    const vaidatedFields = RegisterSchema.safeParse(values);
+
+    if (!vaidatedFields.success) {
+        throw new CustomError("Invalid Fields", 400);
+    }
+
+    return vaidatedFields.data;
+}
+
+export const validateLogin = (values: z.infer<typeof LoginSchema>) => {
+    const vaidatedFields = LoginSchema.safeParse(values);
+
+    if (!vaidatedFields.success) {
+        throw new CustomError("Invalid Fields", 400);
+    }
+
+    return vaidatedFields.data;
+}
+
+export const validateResetPassword = (values: z.infer<typeof ResetSchema>) => {
+    const vaidatedFields = ResetSchema.safeParse(values);
+
+    if (!vaidatedFields.success) {
+        throw new CustomError("Invalid Fields", 400);
+    }
+
+    return vaidatedFields.data;
+}
+
+export const validateSettings = (values: z.infer<typeof SettingsSchema>) => {
+    const vaidatedFields = SettingsSchema.safeParse(values);
+
+    if (!vaidatedFields.success) {
+        throw new CustomError("Invalid Fields", 400);
+    }
+
+    return vaidatedFields.data;
+}

@@ -27,7 +27,6 @@ export const {
     },
     callbacks: {
         async signIn({ user, account }) {
-            console.log("Sign In Callback:", { user, account });
             //Allow OAuth without emailnverification
             if (account?.provider !== "credentials") return true;
 
@@ -36,7 +35,6 @@ export const {
             }
 
             const existingUser = await getUserById(user?.id as string);
-            console.log("Existing User:", existingUser);
 
             // Prevent signin without email verified
             if (!existingUser || !existingUser.emailVerified || existingUser.isBlocked === UserBlock.BLOCK) {
@@ -46,7 +44,6 @@ export const {
             // check if two factor authentication is Enabled
             if (existingUser.isTwoFactorEnabled) {
                 const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(existingUser.id);
-                console.log("Two-Factor Confirmation:", twoFactorConfirmation);
 
                 if (!twoFactorConfirmation) {
                     return false;
@@ -63,8 +60,6 @@ export const {
             return true;
         },
         async session({ token, session }) {
-            console.log("Session Callback:", { token, session });
-
             if (token.sub && session.user) {
                 session.user.id = token.sub;
             }
@@ -88,17 +83,13 @@ export const {
             return session
         },
         async jwt({ token }) {
-            console.log("JWT Callback:", { token });
-
             if (!token.sub) return token;
 
             const existingUser = await getUserById(token.sub);
-            console.log("Existing User in JWT Callback:", existingUser);
 
             if (!existingUser) return token;
 
             const existingAccount = await getAccountByUserId(existingUser.id);
-            console.log("Existing Account in JWT Callback:", existingAccount);
 
             token.OAuth = !!existingAccount;
             token.role = existingUser.role as UserRole;

@@ -17,6 +17,10 @@ import { toast } from "sonner"
 import { FormSuccess } from "../form-success"
 import { useSession } from "next-auth/react"
 import { ExtendUser } from "@/nextauth"
+import { cn } from "@/lib/utils"
+import { CustomInput } from "../custom-input"
+import { LuUser2 } from "react-icons/lu"
+import { MdOutlineMailOutline } from "react-icons/md"
 
 interface ProfileFormProps {
     user: ExtendUser | null;
@@ -145,19 +149,18 @@ export const ProfileForm = ({ user, refetch }: ProfileFormProps) => {
                                 control={form.control}
                                 name="name"
                                 render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Name</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                {...field}
-                                                disabled={isPending}
-                                                placeholder="How to start with Nextjs"
-                                                type="text"
-                                                readOnly={!isMe && true}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
+                                    <CustomInput
+                                        label="Name"
+                                        name={field.name}
+                                        placeholder="John Doe"
+                                        isPending={isPending}
+                                        field={field}
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        onBlur={field.onBlur}
+                                        type="text"
+                                        Icon={LuUser2}
+                                    />
                                 )}
                             />
                         </div>
@@ -166,19 +169,18 @@ export const ProfileForm = ({ user, refetch }: ProfileFormProps) => {
                                 control={form.control}
                                 name="email"
                                 render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Email</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                {...field}
-                                                disabled={isPending}
-                                                placeholder="how-to-start-with-nextjs"
-                                                type="text"
-                                                readOnly={!isMe ? true : isOAuth ? true : false}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
+                                    <CustomInput
+                                        label="Email"
+                                        name={field.name}
+                                        placeholder="John.doe@gmail.com"
+                                        isPending={isPending}
+                                        field={field}
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        onBlur={field.onBlur}
+                                        type="email"
+                                        Icon={MdOutlineMailOutline}
+                                    />
                                 )}
                             />
                         </div>
@@ -208,7 +210,7 @@ export const ProfileForm = ({ user, refetch }: ProfileFormProps) => {
                             />
                         </div>
                         <FormSuccess message={success} />
-                        <Button type="submit" disabled={isPending} className="w-full">
+                        <Button type="submit" disabled={isPending} className={cn(`w-full`, isPending && "cursor-not-allowed")}>
                             Update
                         </Button>
                     </form>

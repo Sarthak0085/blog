@@ -7,18 +7,15 @@ import { domain } from "@/lib/domain";
 import sendEmail from "@/lib/send-mail";
 import { generateVerificationToken } from "@/lib/tokens";
 import { RegisterSchema } from "@/schemas";
+import { validateRegistration } from "@/validations";
 import bcrypt from "bcryptjs";
 import * as z from "zod";
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
   try {
-    const validatedFields = RegisterSchema.safeParse(values);
+    const validatedData = validateRegistration(values);
 
-    if (!validatedFields.success) {
-      return { error: "Invalid Fields" };
-    }
-
-    const { name, email, password } = validatedFields.data;
+    const { name, email, password } = validatedData;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 

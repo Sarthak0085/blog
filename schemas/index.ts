@@ -28,6 +28,24 @@ export const NewPasswordSchema = z.object({
         .min(8, { message: "Password must contains 8 characters" }),
 });
 
+export const ChangePasswordSchema = z.object({
+    oldPassword: z.string()
+        .min(8, { message: "Password must contains 8 characters" }),
+    newPassword: z.string()
+        .min(8, { message: "Password must contains 8 characters" }),
+    confirmPassword: z.string()
+        .min(8, { message: "Password must contains 8 characters" }),
+}).refine((data) => {
+    if (data.newPassword !== data?.confirmPassword) {
+        return false;
+    }
+
+    return true;
+}, {
+    message: "Confirm Password must be equal to New Password",
+    path: ["confirmPassword"]
+});
+
 export const SettingsSchema = z.object({
     name: z.optional(z.string().min(1, "Name is Required.")),
     email: z.optional(z.string().email("Invalid Email")),
