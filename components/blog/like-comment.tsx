@@ -11,13 +11,11 @@ import { User } from "next-auth";
 
 interface LikeCommentProps {
     comment?: Omit<ExtendComment, "blog">;
-    refetch: () => void;
     user: User
 }
 
 export const LikeComment = ({
     comment,
-    refetch,
     user
 }: LikeCommentProps
 ) => {
@@ -42,7 +40,6 @@ export const LikeComment = ({
                 .then((data) => {
                     if (data?.success) {
                         toast.success(data?.success);
-                        refetch();
                     }
                     if (data?.error) {
                         setLike(prevLike);

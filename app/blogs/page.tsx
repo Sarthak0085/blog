@@ -7,6 +7,8 @@ export const metadata: Metadata = {
     title: "Blogs",
     openGraph: {
         title: "Blogs",
+        url: "https://vortex-vista.vercel.app/blogs",
+        images: ["https://vortex-vista.vercel.app/opengraph-image.png"]
     }
 }
 

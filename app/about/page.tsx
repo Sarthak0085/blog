@@ -3,7 +3,12 @@ import { Metadata } from "next";
 import Image from "next/image";
 
 export const metadata: Metadata = {
-    title: "About"
+    title: "About",
+    openGraph: {
+        title: "About",
+        url: "https://vortex-vista.vercel.app/about",
+        images: ["https://vortex-vista.vercel.app/opengraph-image.png"]
+    }
 }
 
 export default function AboutPage() {

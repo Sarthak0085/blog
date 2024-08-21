@@ -6,6 +6,7 @@ import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
 import { DeleteSavedPostSchema } from "@/schemas";
 import { validateDeleteSavedPost } from "@/validations";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 export const deleteSavedPost = async (values: z.infer<typeof DeleteSavedPostSchema>) => {
@@ -32,6 +33,9 @@ export const deleteSavedPost = async (values: z.infer<typeof DeleteSavedPostSche
                 }
             });
 
+            revalidatePath(`/${user?.id}/get-saved-posts`, "page");
+            revalidatePath('/admin/get-saved-posts', "page");
+
             return {
                 success: "Saved Post Deleted Successfully"
             }
@@ -42,7 +46,10 @@ export const deleteSavedPost = async (values: z.infer<typeof DeleteSavedPostSche
                     where: {
                         id: savedPostId,
                     }
-                })
+                });
+
+                revalidatePath(`/${savePost?.userId}/get-saved-posts`, "page");
+                revalidatePath('/admin/get-saved-posts', "page");
 
                 return {
                     success: "Sabe Post deleted successfully"

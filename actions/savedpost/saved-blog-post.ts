@@ -8,6 +8,7 @@ import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
 import { SavedPostSchema } from "@/schemas";
 import { validateSavedPost } from "@/validations";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 export const savedBlogPost = async (values: z.infer<typeof SavedPostSchema>) => {
@@ -30,7 +31,7 @@ export const savedBlogPost = async (values: z.infer<typeof SavedPostSchema>) => 
         const isSaved = await getSavedPostByUserIdAndBlogId(user?.id, blogId);
 
         if (isSaved) {
-            await db.savedPost.delete({
+            const savedPost = await db.savedPost.delete({
                 where: {
                     userId_blogId: {
                         userId: user?.id,
@@ -38,6 +39,15 @@ export const savedBlogPost = async (values: z.infer<typeof SavedPostSchema>) => 
                     },
                 },
             });
+
+            if (!savedPost) {
+                throw new CustomError("An unexpected error occurred. Please try again later.", 500);
+            }
+
+            revalidatePath(`/blogs`, "page");
+            revalidatePath(`/blog/${existedBlog?.slug}`, "page")
+            revalidatePath(`/${user?.id}/get-saved-posts`, "page");
+            revalidatePath('/admin/get-saved-posts', "page");
 
             return {
                 success: "Remove From Saved Posts.",
@@ -53,6 +63,11 @@ export const savedBlogPost = async (values: z.infer<typeof SavedPostSchema>) => 
             if (!savedPost) {
                 throw new CustomError("An unexpected error occurred. Please try again later.", 500);
             }
+
+            revalidatePath(`/blogs`, "page");
+            revalidatePath(`/blog/${existedBlog?.slug}`, "page")
+            revalidatePath(`/${user?.id}/get-saved-posts`, "page");
+            revalidatePath('/admin/get-saved-posts', "page");
 
             return {
                 success: "Add to Saved Post.",

@@ -7,8 +7,8 @@ import { getBlogDetailsBySlug } from "@/actions/blog/blog-details";
 import { BlogDetails } from "./blog-detail";
 import { RelatedBlogs } from "./related-blogs";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { User } from "next-auth";
 import { BlogDetailSkeleton } from "../loader/blog-detail-skeleton";
+import { User } from "next-auth";
 
 export const Blog = () => {
     const { slug } = useParams();
@@ -38,18 +38,11 @@ export const Blog = () => {
         fetchData();
     }, [slug, fetchData]);
 
-    const handleRefetch = () => {
-        fetchData();
-    }
-
-    console.log("user", user);
-
     if (isLoading) {
         return (
             <BlogDetailSkeleton />
         )
     }
-
 
     const backgroundImageUrl =
         "https://tailwindcss.com/_next/static/media/docs@30.8b9a76a2.avif";
@@ -63,15 +56,15 @@ export const Blog = () => {
         >
             <div className="flex items-center justify-center lg:block w-full lg:w-[75%]">
                 <div className="w-full md:w-[80%] lg:w-[75%] xl:w-[70%] px-10 py-10">
-                    {!isLoading && !error && <BlogDetails data={data} user={user as User} refetch={handleRefetch} />}
+                    <BlogDetails data={data as ExtendBlog} user={user as User} />
                 </div>
             </div>
             <div className="fixed hidden lg:block lg:w-[300px] xl:w-[400px] right-2 py-8">
-                {!isLoading && !error && <RelatedBlogs categoryId={data?.categoryId} />}
+                <RelatedBlogs categoryId={data?.categoryId} />
             </div>
             <div className="w-full bg-white/20 shadow-sm my-16 py-10 block lg:hidden">
                 <div className="w-full flex items-center justify-center">
-                    {!isLoading && !error && <RelatedBlogs categoryId={data?.categoryId} />}
+                    <RelatedBlogs categoryId={data?.categoryId} />
                 </div>
             </div>
         </div>

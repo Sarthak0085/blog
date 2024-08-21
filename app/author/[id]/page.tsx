@@ -2,8 +2,27 @@ import { AuthorCard } from "@/components/author/author-card";
 import { BlogsList } from "@/components/author/blogs-list";
 import { Footer } from "@/components/footer";
 import { Separator } from "@/components/ui/separator";
+import { Metadata } from "next";
 
-export default function BlogsPage() {
+interface AuthorPageProps {
+    params: { id: string };
+}
+
+
+export async function generateMetadata({
+    params: { id },
+}: AuthorPageProps): Promise<Metadata> {
+    return {
+        title: "Author",
+        openGraph: {
+            title: "Author",
+            url: `https://vortex-vista.vercel.app/author/${id}`,
+            images: ["https://vortex-vista.vercel.app/opengraph-image.png"]
+        }
+    }
+}
+
+export default function AuthorPage() {
     return (
         <div className="w-full">
             <section className="py-10 bg-transparent">

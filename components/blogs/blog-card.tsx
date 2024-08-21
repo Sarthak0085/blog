@@ -21,10 +21,12 @@ import { useCurrentUser } from "@/hooks/useCurrentUser";
 import LoginButton from "../auth/login-button";
 import { useCustomSearchParams } from "@/hooks/useSearchParams";
 import { FaArrowRight } from "react-icons/fa6";
+import { User } from "next-auth";
 
 interface BlogCardProps {
   data: ExtendBlog;
   refetch: () => void;
+  user?: User
 }
 
 const roboto = Roboto({
@@ -39,22 +41,24 @@ const oxygen = Oxygen({
 
 export const BlogCard = ({
   data,
-  refetch
+  refetch,
+  user
 }: BlogCardProps) => {
-  const user = useCurrentUser();
   const [open, setOpen] = useState(false);
   const [openShareModal, setOpenShareModal] = useState(false);
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [isPending, startTransition] = useTransition();
   const { params, updateParam } = useCustomSearchParams();
   const [favourites, setFavourites] = useState({
-    isFavourite: !!data?.favourites?.find((item) => item.userId === data.user?.id),
+    isFavourite: !!data?.favourites?.find((item) => item.userId === user?.id),
     count: data?.favourites?.length,
   });
   const [savedPost, setSavedPost] = useState({
-    isSaved: !!data?.savedPosts?.find((item) => item.userId === data.user?.id),
+    isSaved: !!data?.savedPosts?.find((item) => item.userId === user?.id),
     count: data?.savedPosts?.length,
   });
+
+  console.log(user, data, savedPost);
 
   const toggleFavourite = (values: z.infer<typeof FavouriteSchema>) => {
     const prevFav = favourites;
@@ -236,7 +240,7 @@ export const BlogCard = ({
           </ul>
           {open &&
             <div className="pb-3">
-              <CommentForm refetch={refetch} blogId={data?.id} isBlogCard={true} />
+              <CommentForm blogId={data?.id} isBlogCard={true} />
             </div>
           }
           <Button asChild variant={"primary"} className="absolute right-1 bottom-2">

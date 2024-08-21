@@ -18,7 +18,8 @@ const MIME_TYPES: Record<string, string> = {
     bmp: 'image/bmp',
 };
 
-export const contentType = 'image/png'
+// export const contentType = 'image/png'
+let contentType;
 
 export default async function Image({ params }: { params: { slug: string } }) {
     const response = await fetch(`${domain}/api/blog/${params.slug}`);
@@ -26,8 +27,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
 
     const imageUrl = blog?.imageUrl as string;
     const extension = imageUrl.split('.').pop()?.toLowerCase() || 'png';
-    const contentType = MIME_TYPES[extension] || 'image/png';
-    const imageBuffer = await fetch(imageUrl).then((res) => res.arrayBuffer());
+    contentType = MIME_TYPES[extension] || 'image/png';
 
     const imageWidth = 1200;
     const imageHeight = 630;
@@ -47,7 +47,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
             >
                 <picture>
                     <img
-                        src={imageBuffer as unknown as string}
+                        src={imageUrl}
                         alt={blog?.slug}
                         style={{
                             width: '100%',
@@ -83,3 +83,5 @@ export default async function Image({ params }: { params: { slug: string } }) {
         }
     )
 }
+
+export { contentType };

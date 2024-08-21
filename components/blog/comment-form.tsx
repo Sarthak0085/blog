@@ -17,7 +17,6 @@ interface CommentFormProps {
     isBlogCard?: boolean;
     commentId?: string | null;
     blogId?: string;
-    refetch: () => void;
     setOpen?: (updater: (prev: Record<string, boolean>) => Record<string, boolean>) => void;
 }
 
@@ -27,7 +26,6 @@ export const CommentForm = ({
     commentId,
     blogId,
     setOpen,
-    refetch
 }: CommentFormProps) => {
     const user = useCurrentUser();
     const [isPending, startTransition] = useTransition();
@@ -52,7 +50,6 @@ export const CommentForm = ({
                             [commentId as string]: !prev[commentId as string],
                         }));
                         form.reset();
-                        refetch();
                     }
                     if (data?.error) {
                         toast.error(data?.error)

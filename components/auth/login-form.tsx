@@ -60,6 +60,7 @@ export const LoginForm = () => {
           }
           if (data?.success) {
             setSuccess(data?.success);
+            window.location.reload();
           }
           if (data?.twoFactor) {
             setShowTwoFactor(true);

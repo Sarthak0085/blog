@@ -6,6 +6,8 @@ export const metadata: Metadata = {
     title: "Contact",
     openGraph: {
         title: "Contact",
+        url: "https://vortex-vista.vercel.app/contact",
+        images: ["https://vortex-vista.vercel.app/opengraph-image.png"]
     }
 }
 

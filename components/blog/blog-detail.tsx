@@ -21,7 +21,12 @@ import { AiOutlineTag } from "react-icons/ai";
 import { User as UserType } from "next-auth";
 import { User } from "@prisma/client";
 
-export const BlogDetails = ({ data, user, refetch }: { data: ExtendBlog | null; user: UserType, refetch: () => void; }) => {
+interface BlogDetailsProps {
+  data: ExtendBlog;
+  user: UserType;
+}
+
+export const BlogDetails = ({ data, user }: BlogDetailsProps) => {
   const [isPending, startTransition] = useTransition();
   const [displayComment, setDisplayComment] = useState(false);
 
@@ -220,7 +225,7 @@ export const BlogDetails = ({ data, user, refetch }: { data: ExtendBlog | null; 
         <AboutAuthor author={data?.user as User} />
       </div>
       <div className="text-black">
-        {displayComment && <BlogComments ref={commentSectionRef} blogId={data?.id} comments={data?.comments} refetch={refetch} user={user} />}
+        {displayComment && <BlogComments ref={commentSectionRef} blogId={data?.id} comments={data?.comments} user={user} />}
       </div>
     </div>
   );

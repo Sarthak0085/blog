@@ -59,6 +59,11 @@ export const addOrRemoveToFavourite = async (values: z.infer<typeof FavouriteSch
                 throw new CustomError("An unexpected error occurred. Please try again later.", 500);
             }
 
+            revalidatePath(`/blogs`, "page");
+            revalidatePath(`/blog/${existedBlog?.slug}`, "page")
+            revalidatePath(`/${user?.id}/get-favourites`, "page");
+            revalidatePath('/admin/get-favourites', "page");
+
             return {
                 success: "Added to Favourite.",
                 data: favourite

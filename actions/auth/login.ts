@@ -133,7 +133,7 @@ export const login = async (
     await signIn("credentials", {
       email,
       password,
-      redirect: true,
+      redirect: callbackUrl ? true : false,
       redirectTo: callbackUrl ?? DEFAULT_LOGIN_REDIRECT,
     });
 

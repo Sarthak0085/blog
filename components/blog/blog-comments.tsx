@@ -12,13 +12,12 @@ import { User } from "next-auth";
 
 interface BlogCommentsProps {
   comments?: Omit<ExtendComment, "blog">[];
-  refetch: () => void;
   blogId?: string;
   user: User
 }
 
 export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props, ref) => {
-  const { comments, refetch, blogId, user } = props;
+  const { comments, blogId, user } = props;
   const [showReplies, setShowReplies] = useState<Record<string, boolean>>({});
   const [openReplyInput, setOpenReplyInputs] = useState<Record<string, boolean>>({});
 
@@ -52,7 +51,7 @@ export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props
   return (
     <div ref={ref} className="w-full mt-6">
       <h2 className="uppercase text-xl font-medium my-2">Post a comment</h2>
-      <CommentForm refetch={refetch} blogId={blogId} />
+      <CommentForm blogId={blogId} />
       <h2 className="text-xl font-medium text-black mb-1">
         Comments
       </h2>
@@ -102,7 +101,7 @@ export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props
                   </div>
                   {
                     openReplyInput[item?.id] &&
-                    <CommentForm isReply={true} refetch={refetch} commentId={item?.id} blogId={blogId} setOpen={setOpenReplyInputs} />
+                    <CommentForm isReply={true} commentId={item?.id} blogId={blogId} setOpen={setOpenReplyInputs} />
                   }
 
                   {!item.parentId && Number(repliesComments(item?.id)?.length) > 0 && (
@@ -121,8 +120,8 @@ export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props
 
               </div>
               <div>
-                <LikeComment comment={item} refetch={refetch} user={user} />
-                <DeleteComment comment={item} refetch={refetch} user={user} />
+                <LikeComment comment={item} user={user} />
+                <DeleteComment comment={item} user={user} />
               </div>
             </div>
           }
@@ -171,8 +170,8 @@ export const BlogComments = forwardRef<HTMLDivElement, BlogCommentsProps>((props
                   </div>
                 </div>
                 <div>
-                  <LikeComment comment={item} refetch={refetch} user={user} />
-                  <DeleteComment comment={item} refetch={refetch} user={user} />
+                  <LikeComment comment={item} user={user} />
+                  <DeleteComment comment={item} user={user} />
                 </div>
               </div>
             )

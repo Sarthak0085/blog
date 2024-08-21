@@ -20,8 +20,9 @@ export const metadata: Metadata = {
       template: "%s - Vortex Vista"
     },
     description: "A blog for you all for share your stories and read other's stories!",
-    siteName: "https://vortex-vista.vercel.app",
+    siteName: "Vortex Vista",
     url: "https://vortex-vista.vercel.app",
+    images: ["https://vortex-vista.vercel.app/opengraph-image.png"]
   },
   twitter: {
     card: "summary_large_image",

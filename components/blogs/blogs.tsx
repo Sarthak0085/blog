@@ -14,6 +14,7 @@ import { useCustomSearchParams } from "@/hooks/useSearchParams";
 import { PulseLoader } from "react-spinners";
 import { cn } from "@/lib/utils";
 import { DisplayQueryParams } from "./display-query-params";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 const ordersBy = [
   {
@@ -35,6 +36,7 @@ const ordersBy = [
 ]
 
 export const Blogs = () => {
+  const user = useCurrentUser();
   const [isLoading, setIsLoading] = useState(true);
   const [refetch, setRefetch] = useState(false);
   const [error, setError] = useState("");
@@ -147,6 +149,7 @@ export const Blogs = () => {
                 <div key={blog?.id} >
                   <BlogCard
                     data={blog}
+                    user={user}
                     refetch={handleRefetch}
                   />
                 </div>

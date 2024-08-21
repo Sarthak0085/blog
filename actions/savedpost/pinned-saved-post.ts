@@ -6,6 +6,7 @@ import CustomError from "@/lib/customError";
 import { db } from "@/lib/db";
 import { SavedPostPinnedSchema } from "@/schemas";
 import { validateSavedPostPinned } from "@/validations";
+import { revalidatePath } from "next/cache";
 import * as z from "zod";
 
 export const pinnedSavedPost = async (values: z.infer<typeof SavedPostPinnedSchema>) => {
@@ -36,6 +37,9 @@ export const pinnedSavedPost = async (values: z.infer<typeof SavedPostPinnedSche
                     isPinned: !isPinned
                 }
             });
+
+            revalidatePath(`/${user?.id}/get-saved-posts`, "page");
+            revalidatePath('/admin/get-saved-posts', "page");
 
             return {
                 success: isPinned ? "Saved Post UnPinned Successfully" : "Saved Post Pinned Successfully"

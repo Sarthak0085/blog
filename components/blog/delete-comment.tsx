@@ -12,11 +12,10 @@ import { User } from "next-auth";
 
 interface DeleteCommentProps {
     comment?: Omit<ExtendComment, "blog">;
-    refetch: () => void;
     user: User
 }
 
-export const DeleteComment = ({ comment, refetch, user }: DeleteCommentProps) => {
+export const DeleteComment = ({ comment, user }: DeleteCommentProps) => {
     const [isPending, startTransition] = useTransition();
     const [openLoginModal, setOpenLoginModal] = useState(false);
 
@@ -26,7 +25,6 @@ export const DeleteComment = ({ comment, refetch, user }: DeleteCommentProps) =>
                 .then((data) => {
                     if (data?.success) {
                         toast.success(data?.success);
-                        refetch();
                     }
                     if (data?.error) {
                         toast.error(data?.error);
