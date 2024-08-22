@@ -123,6 +123,10 @@ export const getAllPublishedBlogs = async ({ category = "", tags = "", author = 
             orderByConditions.createdAt = "asc";
         }
 
+        if (orderby === "most_viewed") {
+            orderByConditions.views = "desc";
+        }
+
         if (category && category !== "") {
             const existedCategory = await getCategoryByName(category)
             if (!existedCategory) {
